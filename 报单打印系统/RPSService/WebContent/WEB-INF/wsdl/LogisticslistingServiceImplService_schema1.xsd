@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://impl.service.service.com/" targetNamespace="http://impl.service.service.com/" version="1.0">
+
+  <xs:element name="deleteLlist" type="tns:deleteLlist"/>
+
+  <xs:element name="deleteLlistResponse" type="tns:deleteLlistResponse"/>
+
+  <xs:element name="findAllLlist" type="tns:findAllLlist"/>
+
+  <xs:element name="findAllLlistResponse" type="tns:findAllLlistResponse"/>
+
+  <xs:element name="findLlistByParams" type="tns:findLlistByParams"/>
+
+  <xs:element name="findLlistByParamsResponse" type="tns:findLlistByParamsResponse"/>
+
+  <xs:element name="findLlistByPkId" type="tns:findLlistByPkId"/>
+
+  <xs:element name="findLlistByPkIdResponse" type="tns:findLlistByPkIdResponse"/>
+
+  <xs:element name="findMaxImportnum" type="tns:findMaxImportnum"/>
+
+  <xs:element name="findMaxImportnumResponse" type="tns:findMaxImportnumResponse"/>
+
+  <xs:element name="saveBatch" type="tns:saveBatch"/>
+
+  <xs:element name="saveBatchResponse" type="tns:saveBatchResponse"/>
+
+  <xs:element name="saveLlist" type="tns:saveLlist"/>
+
+  <xs:element name="saveLlistResponse" type="tns:saveLlistResponse"/>
+
+  <xs:element name="updateLlist" type="tns:updateLlist"/>
+
+  <xs:element name="updateLlistBySql" type="tns:updateLlistBySql"/>
+
+  <xs:element name="updateLlistBySqlResponse" type="tns:updateLlistBySqlResponse"/>
+
+  <xs:element name="updateLlistResponse" type="tns:updateLlistResponse"/>
+
+  <xs:complexType name="updateLlistBySql">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="updateLlistBySqlResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="deleteLlist">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="tns:logisticslisting"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="logisticslisting">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="brand" type="xs:string"/>
+      <xs:element minOccurs="0" name="cargoid" type="xs:string"/>
+      <xs:element minOccurs="0" name="cargoname" type="xs:string"/>
+      <xs:element minOccurs="0" name="cargotype" type="xs:string"/>
+      <xs:element minOccurs="0" name="consigneeaddr" type="xs:string"/>
+      <xs:element minOccurs="0" name="consigneecountry" type="xs:string"/>
+      <xs:element minOccurs="0" name="consigneename" type="xs:string"/>
+      <xs:element minOccurs="0" name="consigneephone" type="xs:string"/>
+      <xs:element minOccurs="0" name="consigneraddr" type="xs:string"/>
+      <xs:element minOccurs="0" name="consignercardid" type="xs:string"/>
+      <xs:element minOccurs="0" name="consignercountry" type="xs:string"/>
+      <xs:element minOccurs="0" name="consignername" type="xs:string"/>
+      <xs:element minOccurs="0" name="consignerphone" type="xs:string"/>
+      <xs:element minOccurs="0" name="count" type="xs:string"/>
+      <xs:element minOccurs="0" name="createtime" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="declarenum" type="xs:string"/>
+      <xs:element minOccurs="0" name="declareprice" type="xs:string"/>
+      <xs:element minOccurs="0" name="declarepricesum" type="xs:string"/>
+      <xs:element minOccurs="0" name="declareweight" type="xs:string"/>
+      <xs:element minOccurs="0" name="expressnum" type="xs:string"/>
+      <xs:element minOccurs="0" name="importnum" type="xs:string"/>
+      <xs:element minOccurs="0" name="importuser" type="xs:string"/>
+      <xs:element minOccurs="0" name="isprint" type="xs:string"/>
+      <xs:element minOccurs="0" name="legalnum" type="xs:string"/>
+      <xs:element minOccurs="0" name="legalunit" type="xs:string"/>
+      <xs:element minOccurs="0" name="netweight" type="xs:string"/>
+      <xs:element minOccurs="0" name="packagecount" type="xs:string"/>
+      <xs:element minOccurs="0" name="pkid" type="xs:string"/>
+      <xs:element minOccurs="0" name="serialnum" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="deleteLlistResponse">
+    <xs:sequence/>
+  </xs:complexType>
+
+  <xs:complexType name="findLlistByParams">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="arg0" nillable="true" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="findLlistByParamsResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:logisticslisting"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="findLlistByPkId">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="findLlistByPkIdResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:logisticslisting"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="findAllLlist">
+    <xs:sequence/>
+  </xs:complexType>
+
+  <xs:complexType name="findAllLlistResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:logisticslisting"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="saveBatch">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="arg0" type="tns:logisticslisting"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="saveBatchResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="saveLlist">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="tns:logisticslisting"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="saveLlistResponse">
+    <xs:sequence/>
+  </xs:complexType>
+
+  <xs:complexType name="findMaxImportnum">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="findMaxImportnumResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="updateLlist">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="tns:logisticslisting"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="updateLlistResponse">
+    <xs:sequence/>
+  </xs:complexType>
+</xs:schema>

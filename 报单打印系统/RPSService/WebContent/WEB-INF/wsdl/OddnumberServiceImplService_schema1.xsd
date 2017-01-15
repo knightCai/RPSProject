@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://impl.service.service.com/" targetNamespace="http://impl.service.service.com/" version="1.0">
+
+  <xs:element name="deleteOddnum" type="tns:deleteOddnum"/>
+
+  <xs:element name="deleteOddnumResponse" type="tns:deleteOddnumResponse"/>
+
+  <xs:element name="findAllOddnum" type="tns:findAllOddnum"/>
+
+  <xs:element name="findAllOddnumResponse" type="tns:findAllOddnumResponse"/>
+
+  <xs:element name="findOddnumByPkId" type="tns:findOddnumByPkId"/>
+
+  <xs:element name="findOddnumByPkIdResponse" type="tns:findOddnumByPkIdResponse"/>
+
+  <xs:element name="getUseOddnumber" type="tns:getUseOddnumber"/>
+
+  <xs:element name="getUseOddnumberResponse" type="tns:getUseOddnumberResponse"/>
+
+  <xs:element name="saveOddnum" type="tns:saveOddnum"/>
+
+  <xs:element name="saveOddnumResponse" type="tns:saveOddnumResponse"/>
+
+  <xs:element name="updateOddnum" type="tns:updateOddnum"/>
+
+  <xs:element name="updateOddnumResponse" type="tns:updateOddnumResponse"/>
+
+  <xs:complexType name="saveOddnum">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="tns:oddnumber"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="oddnumber">
+    <xs:sequence>
+      <xs:element name="amountnum" type="xs:int"/>
+      <xs:element minOccurs="0" name="createtime" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="endnum" type="xs:string"/>
+      <xs:element minOccurs="0" name="pkid" type="xs:string"/>
+      <xs:element minOccurs="0" name="startnum" type="xs:string"/>
+      <xs:element minOccurs="0" name="state" type="xs:string"/>
+      <xs:element name="suplusnum" type="xs:int"/>
+      <xs:element minOccurs="0" name="usenum" type="xs:string"/>
+      <xs:element minOccurs="0" name="userid" type="xs:string"/>
+      <xs:element name="warnnum" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="saveOddnumResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="updateOddnum">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="tns:oddnumber"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="updateOddnumResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="findAllOddnum">
+    <xs:sequence/>
+  </xs:complexType>
+
+  <xs:complexType name="findAllOddnumResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:oddnumber"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="findOddnumByPkId">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="findOddnumByPkIdResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:oddnumber"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="deleteOddnum">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="tns:oddnumber"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="deleteOddnumResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getUseOddnumber">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getUseOddnumberResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:oddnumber"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
