@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="com.service.model.Logisticslisting" table="t_zy_logisticslisting">
+		<id name="pkid" column="pkid" type="string">
+			<generator class="uuid" />
+		</id>
+		<property name="declarenum" column="declarenum" type="string" />
+		<property name="expressnum" column="expressnum" type="string"/>
+		<property name="cargoname" column="cargoname" type="string"/>
+		<property name="declaretype" column="declaretype" type="string"/>
+		<property name="paytype" column="paytype" type="string" />
+		<property name="declarecount" column="declarecount" type="string"/>
+		<property name="declareweight" column="declareweight" type="string"/>
+		<property name="declarevalue" column="declarevalue" type="string"/>
+		<property name="currency" column="currency" type="string" />
+		<property name="consigneename" column="consigneename" type="string"/>
+		<property name="consigneeaddr" column="consigneeaddr" type="string"/>
+		<property name="consigneephone" column="consigneephone" type="string"/>
+		<property name="consignercardtype" column="consignercardtype" type="string" />
+		<property name="consignercardid" column="consignercardid" type="string"/>
+		<property name="consignername" column="consignername" type="string"/>
+		<property name="consignercity" column="consignercity" type="string"/>
+		<property name="consigneraddr" column="consigneraddr" type="string" />
+		<property name="consignerphone" column="consignerphone" type="string"/>
+		<property name="fromcountry" column="fromcountry" type="string"/>
+		<property name="consigneecountry" column="consigneecountry" type="string"/>
+		<property name="consignercountry" column="consignercountry" type="string" />
+		<property name="cargoid" column="cargoid" type="string"/>
+		<property name="cargotype" column="cargotype" type="string"/>
+		<property name="count" column="count" type="string"/>
+		<property name="weight" column="weight" type="string" />
+		<property name="unit" column="unit" type="string"/>
+		<property name="trademode" column="trademode" type="string"/>
+		<property name="packtype" column="packtype" type="string"/>
+		<property name="netweight" column="netweight" type="string"/>
+		<property name="legalnum" column="legalnum" type="string"/>
+		<property name="isprint" column="isprint" type="string"/>
+		<property name="importnum" column="importnum" type="string"/>
+	</class>
+</hibernate-mapping>

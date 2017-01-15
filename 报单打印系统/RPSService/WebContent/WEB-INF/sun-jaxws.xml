@@ -1,0 +1,15 @@
+<?xml version = "1.0"?>
+<endpoints version="2.0"
+	xmlns="http://java.sun.com/xml/ns/jax-ws/ri/runtime">
+	<endpoint name="UserinfoServiceImplPort"
+		implementation="com.service.service.impl.UserinfoServiceImpl"
+		url-pattern="/UserinfoServiceImplPort">
+	</endpoint>
+	<endpoint name="OddnumberServiceImplPort"
+		implementation="com.service.service.impl.OddnumberServiceImpl"
+		url-pattern="/OddnumberServiceImplPort">
+	</endpoint>
+	<endpoint name="LogisticslistingServiceImplPort"
+		implementation="com.service.service.impl.LogisticslistingServiceImpl"
+		url-pattern="/LogisticslistingServiceImplPort">
+	</endpoint></endpoints>

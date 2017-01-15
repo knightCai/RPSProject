@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="com.service.model.Oddnumber" table="t_zy_oddnumber">
+		<id name="pkid" column="pkid" type="string">
+			<generator class="uuid" />
+		</id>
+		<property name="startnum" column="startnum" type="string" />
+		<property name="endnum" column="endnum" type="string"/>
+		<property name="suplusnum" column="suplusnum" type="int"/>
+		<property name="amountnum" column="amountnum" type="int"/>
+		<property name="usenum" column="usenum" type="string" />
+		<property name="state" column="state" type="string"/>
+		<property name="warnnum" column="warnnum" type="int"/>
+		<property name="createtime" column="createtime" type="string"/>
+		<property name="userid" column="userid" type="string"/>
+	</class>
+</hibernate-mapping>
