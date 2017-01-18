@@ -18,7 +18,7 @@ import org.eclipse.swt.ole.win32.Variant;
 import org.eclipse.swt.widgets.Composite;  
   
 /** 
- * @author lifei114@gmail.com,lifei114@126.com 
+ * @author knight
  * 嵌入 Word 的容器，更多的API正在开发中。 
  */  
 public class WordComposite extends Composite {  

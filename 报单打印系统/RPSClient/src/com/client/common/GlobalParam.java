@@ -44,4 +44,10 @@ public class  GlobalParam {
 		COUNTRYIDS.put("133", "Korea, Rep.");
 		COUNTRYIDS.put("116", "Japan");
 	}
+	
+	/**
+	 *  =================================资源路径========================================
+	 */
+	public static String SOURCE_IMPORTTEMPLE = "/source/importTemple.xls";		//导入模板文件的存放路径
+	public static String SOURCE_PRINTMUSIC = "/source/music/b_print.wav";		//扫码正确音效
 }

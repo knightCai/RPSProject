@@ -3,6 +3,11 @@ package com.client.common;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
 
+/**
+ * 监听文本输入事件，只能输入数字
+ * @author knight
+ *
+ */
 public class TextVerifyListener implements VerifyListener{  
 	  
     private int type;  

@@ -1,21 +1,11 @@
 package com.client.common;
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 
-import java.awt.Toolkit;
-import java.awt.RenderingHints;
-import java.awt.font.FontRenderContext;
-import java.awt.font.LineBreakMeasurer;
-import java.awt.font.TextAttribute;
-import java.awt.font.TextLayout;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.awt.print.Book;
 import java.awt.print.PageFormat;
@@ -23,26 +13,12 @@ import java.awt.print.Paper;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
-import java.text.AttributedString;
 
-import javax.swing.ImageIcon;
-import javax.swing.JApplet;
-
-import org.eclipse.swt.SWT;
-import org.jbarcode.JBarcode;
-import org.jbarcode.encode.Code39Encoder;
-import org.jbarcode.encode.EAN13Encoder;
-import org.jbarcode.encode.EAN8Encoder;
-import org.jbarcode.paint.BaseLineTextPainter;
-import org.jbarcode.paint.EAN13TextPainter;
-import org.jbarcode.paint.EAN8TextPainter;
-import org.jbarcode.paint.WideRatioCodedPainter;
-import org.jbarcode.paint.WidthCodedPainter;
-
-import com.barcodelib.barcode.Linear;
-
-
-
+/**
+ * 打印面单类
+ * @author knight
+ *
+ */
 public class PrintTest   implements Printable{
 	
 	public static void drawStringMultiLine(Graphics2D g, String text, int lineWidth, int x, int y) {

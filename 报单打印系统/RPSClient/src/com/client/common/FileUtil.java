@@ -29,7 +29,7 @@ public class FileUtil {
         // 下载本地文件
         String fileName = "报关单导入模板.xls".toString(); // 文件的默认保存名
         // 读到流中
-        InputStream inStream = new FileUtil().getClass().getResourceAsStream("/source/importTemple.xls");// 文件的存放路径
+        InputStream inStream = new FileUtil().getClass().getResourceAsStream(GlobalParam.SOURCE_IMPORTTEMPLE);// 文件的存放路径
         BufferedInputStream bis = null;
         BufferedOutputStream bos = null;
         // 设置输出的格式
