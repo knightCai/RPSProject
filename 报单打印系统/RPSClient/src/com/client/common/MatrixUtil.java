@@ -1,20 +1,11 @@
 package com.client.common;
 
 
-import javax.jws.WebService;
-
-import com.barcodelib.barcode.Linear;
 import com.google.zxing.BarcodeFormat;  
-import com.google.zxing.BinaryBitmap;  
-import com.google.zxing.DecodeHintType;  
 import com.google.zxing.EncodeHintType;  
-import com.google.zxing.LuminanceSource;  
-import com.google.zxing.MultiFormatReader;  
 import com.google.zxing.MultiFormatWriter;  
-import com.google.zxing.Result;  
 import com.google.zxing.WriterException;  
 import com.google.zxing.common.BitMatrix;  
-import com.google.zxing.common.HybridBinarizer;  
   
 import javax.imageio.ImageIO;  
   

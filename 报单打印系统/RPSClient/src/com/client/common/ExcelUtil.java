@@ -483,7 +483,7 @@ public class ExcelUtil {
             cell.setCellValue(llist.getConsigneephone());  
             cell.setCellStyle(styleLeft);
             cell = row.createCell((short) 14);
-            cell.setCellValue("身份证"); 
+            cell.setCellValue("1"); 
             cell.setCellStyle(styleLeft);
             cell = row.createCell((short) 15);
             cell.setCellValue(llist.getConsignercardid());

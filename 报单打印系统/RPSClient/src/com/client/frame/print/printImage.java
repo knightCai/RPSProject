@@ -1,47 +1,32 @@
 package com.client.frame.print;
 
-import java.awt.Font;
 import java.awt.Robot;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
-import org.apache.poi.ss.formula.functions.Roman;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.ImageLoader;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.printing.PrintDialog;
-import org.eclipse.swt.printing.Printer;
-import org.eclipse.swt.printing.PrinterData;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-import com.barcodelib.barcode.Linear;
 import com.client.common.FrameUtil;
 import com.client.common.GlobalParam;
-import com.client.common.ImagePrinterExample;
 import com.client.common.MatrixUtil;
 import com.client.common.PrintTest;
 import com.client.common.SWTUtils;
 
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.jface.dialogs.ImageAndMessageArea;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Canvas;
-import org.eclipse.swt.widgets.Table;
 
 public class printImage {
 
@@ -126,9 +111,10 @@ public class printImage {
 		});
 		shell.open();
 		shell.layout();
-		//判断打印模式
+		//判断打印模式,扫码枪，直接打印
 		if(printType == 1){
 			doprint();
+			FrameUtil.play(this.getClass().getResourceAsStream(GlobalParam.SOURCE_PRINTMUSIC)); 
 		}
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {

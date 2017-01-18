@@ -3,7 +3,9 @@ package com.client.common;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.UUID;
@@ -22,6 +24,14 @@ import org.eclipse.swt.internal.win32.OS;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
+
+/**
+ * 窗口工具类
+ * @author knight
+ *
+ */
 public class FrameUtil {
 	/**
      * 设置窗口位于屏幕中间
@@ -98,6 +108,11 @@ public class FrameUtil {
         
        //System.out.println("captured");   
    }  
+    /**
+     * data日期对象转换为xml传输的日期对象
+     * @param date
+     * @return
+     */
     public static XMLGregorianCalendar convertToXMLGregorianCalendar(Date date) {
 
         GregorianCalendar cal = new GregorianCalendar();
@@ -111,14 +126,37 @@ public class FrameUtil {
         }
         return gc;
     }
+    
+    public static void play(InputStream in){
+    	try{
+    		//用输入流打开一个音频文件
+    		//InputStream in = new FileInputStream(in);
+    		//从输入流中创建一个AudioStream对象
+    		AudioStream as = new AudioStream(in);
+    		AudioPlayer.player.start(as);//用静态成员播放音乐
+    		//AudioPlayer.player.stop(as);//用静态成员关闭音乐
+    		/*AudioData data = as.getData(); 
+    	  　　ContinuousAudioDataStream gg= new ContinuousAudioDataStream (data); 
+    	  　　AudioPlayer.player.start(gg);// Play audio. 
+    	  　　*/ 
+    		//如果要用一个 URL 做为声音流的源(source)，则用下面的代码所示替换输入流来创建声音流： 
+    		/*AudioStream as = new AudioStream (url.openStream()); 
+    	  　　*/
+    	}catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    }
     public static void main(String[] args) throws Exception {
-    	 ImageLoader imageLoader = new ImageLoader();   
+    	for(int i=0;i<10000;i++){
+    		play(new FrameUtil().getClass().getResourceAsStream("/source/music/b_print.wav")); 
+    	}
+    	/*ImageLoader imageLoader = new ImageLoader();   
     	 ImageData[] imageData = imageLoader.load("D:\\1000000000006.jpg");
     	 File directiory=new File("D:\\TEST/ETS");
     	 if(!directiory.exists()){
     		 directiory.mkdirs();
     	 }
          imageLoader.data = imageData;   
-         imageLoader.save("D:\\TEST/ETS/TETS.JPG", SWT.IMAGE_JPEG);   
+         imageLoader.save("D:\\TEST/ETS/TETS.JPG", SWT.IMAGE_JPEG);*/   
 	}
 }

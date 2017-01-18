@@ -464,7 +464,7 @@ public class printComp extends Composite {
 					MessageDialog.openWarning(getShell(),"系统提示","当前运单已打印，扫码枪打印不支持重复打印！运单号："+GlobalParam.PRINT_EXPRESSNUM);
 					return;
 				}
-				printImage pm = new printImage(operType);	
+				printImage pm = new printImage(operType);
 				pm.open();
 				String[] msgcode = logisContrllo.updateLlistBySql(" isprint = '1' where expressnum = '"+GlobalParam.PRINT_EXPRESSNUM+"' and importnum = '"+spinner.getText()+"'" ).split(",");
 				if(msgcode[0].equals("999")){
