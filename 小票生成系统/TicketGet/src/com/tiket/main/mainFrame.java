@@ -54,14 +54,14 @@ public class mainFrame extends ApplicationWindow {
 	private DateTime date_starttime; //开始时间
 	private DateTime date_endtime; //结束时间
 	private SimpleDateFormat sdf;
-	private String classpath =null;
+	private String classpath = "";
+	private Text text_savepath;
 	/**
 	 * Create the application window.
 	 */
 	public mainFrame() {
 		super(null);
 		sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
-		classpath = "D:\\receiptFile";
 		createActions();
 		addToolBar(SWT.FLAT | SWT.WRAP);
 		addMenuBar();
@@ -75,12 +75,10 @@ public class mainFrame extends ApplicationWindow {
 	@Override
 	protected Control createContents(Composite parent) {
 		Composite container = new Composite(parent, SWT.NONE);
-		container.setLayout(new GridLayout(7, false));
-		new Label(container, SWT.NONE);
-		new Label(container, SWT.NONE);
-		new Label(container, SWT.NONE);
-		new Label(container, SWT.NONE);
-		new Label(container, SWT.NONE);
+		GridLayout gl_container = new GridLayout(8, false);
+		gl_container.horizontalSpacing = 10;
+		gl_container.verticalSpacing = 10;
+		container.setLayout(gl_container);
 		new Label(container, SWT.NONE);
 		new Label(container, SWT.NONE);
 		new Label(container, SWT.NONE);
@@ -104,10 +102,12 @@ public class mainFrame extends ApplicationWindow {
 		GridData gd_label = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_label.widthHint = 108;
 		label.setLayoutData(gd_label);
-		label.setText("\u6587\u4EF6\uFF1A");
+		label.setText("导入文件：");
 		
 		text_filepath = new Text(container, SWT.BORDER);
-		text_filepath.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		GridData gd_text_filepath = new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1);
+		gd_text_filepath.widthHint = 427;
+		text_filepath.setLayoutData(gd_text_filepath);
 		
 		//浏览文件按钮
 		Button btn_opfile = new Button(container, SWT.NONE);
@@ -154,24 +154,17 @@ public class mainFrame extends ApplicationWindow {
 		new Label(container, SWT.NONE);
 		new Label(container, SWT.NONE);
 		new Label(container, SWT.NONE);
-		new Label(container, SWT.NONE);
-		new Label(container, SWT.NONE);
-		new Label(container, SWT.NONE);
-		new Label(container, SWT.NONE);
-		new Label(container, SWT.NONE);
-		new Label(container, SWT.NONE);
-		new Label(container, SWT.NONE);
 		
 		Label label_1 = new Label(container, SWT.NONE);
 		label_1.setText("\u5C0F\u7968\u65F6\u95F4\u6BB5\uFF1A");
 		
 		date_starttime = new DateTime(container, SWT.BORDER | SWT.LONG);
-		GridData gd_date_starttime = new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1);
+		GridData gd_date_starttime = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_date_starttime.widthHint = 159;
 		date_starttime.setLayoutData(gd_date_starttime);
 		
 		date_endtime = new DateTime(container, SWT.BORDER | SWT.LONG);
-		GridData gd_date_endtime = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		GridData gd_date_endtime = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
 		gd_date_endtime.widthHint = 158;
 		date_endtime.setLayoutData(gd_date_endtime);
 		new Label(container, SWT.NONE);
@@ -179,43 +172,35 @@ public class mainFrame extends ApplicationWindow {
 		new Label(container, SWT.NONE);
 		new Label(container, SWT.NONE);
 		new Label(container, SWT.NONE);
-		new Label(container, SWT.NONE);
-		new Label(container, SWT.NONE);
-		new Label(container, SWT.NONE);
-		new Label(container, SWT.NONE);
-		new Label(container, SWT.NONE);
-		new Label(container, SWT.NONE);
 		
-		Label label_2 = new Label(container, SWT.NONE);
-		label_2.setText("\u5F53\u524D\u8FDB\u5EA6\uFF1A");
+		Label label_3 = new Label(container, SWT.NONE);
+		label_3.setText("图片保存路径:");
 		
-		progbar = new ProgressBar(container, SWT.NONE);
-		GridData gd_progressBar = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
-		gd_progressBar.heightHint = 16;
-		gd_progressBar.widthHint = 393;
-		progbar.setMinimum(0);
-		progbar.setMaximum(100);
-		progbar.setLayoutData(gd_progressBar);
+		text_savepath = new Text(container, SWT.BORDER);
+		GridData gd_text_savepath = new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1);
+		gd_text_savepath.widthHint = 409;
+		text_savepath.setLayoutData(gd_text_savepath);
 		
-		Button btn_create = new Button(container, SWT.NONE);
-		GridData gd_btn_create = new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1);
-		gd_btn_create.widthHint = 97;
-		btn_create.setLayoutData(gd_btn_create);
-		//生成图片
-		btn_create.addSelectionListener(new SelectionAdapter() {
+		Button btn_selectsavepath = new Button(container, SWT.NONE);
+		btn_selectsavepath.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				//获取导入文件信息
-				String filepath= text_filepath.getText();
-				if(filepath != null){
-					progbar.setSelection(0);
-					text_prcimage.setText("");
-					Map<String,List<List<String>>> ticketmap = new ExcelUtil().read(filepath);
-					createImageBatch(ticketmap);
+				DirectoryDialog savefile = new DirectoryDialog(getShell());
+				//设置文件对话框的标题
+				savefile.setText("保存目录选择");
+				//设置初始路径
+				savefile.setFilterPath("SystemDrive");
+				String savestr = savefile.open();
+				if(savestr != null){
+					text_savepath.setText(savestr);
+					classpath = savestr+"\\receiptFile";
 				}
 			}
 		});
-		btn_create.setText("生成图片");
+		GridData gd_btn_selectsavepath = new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1);
+		gd_btn_selectsavepath.widthHint = 97;
+		btn_selectsavepath.setLayoutData(gd_btn_selectsavepath);
+		btn_selectsavepath.setText("选择");
 		
 		Button button = new Button(container, SWT.NONE);
 		button.addSelectionListener(new SelectionAdapter() {
@@ -237,19 +222,57 @@ public class mainFrame extends ApplicationWindow {
 		gd_button.widthHint = 125;
 		button.setLayoutData(gd_button);
 		button.setText("打开保存文件夹");
+		new Label(container, SWT.NONE);
+		new Label(container, SWT.NONE);
+		new Label(container, SWT.NONE);
 		
-		Label lblNewLabel = new Label(container, SWT.NONE);
+		Label label_2 = new Label(container, SWT.NONE);
+		label_2.setText("\u5F53\u524D\u8FDB\u5EA6\uFF1A");
+		
+		progbar = new ProgressBar(container, SWT.NONE);
+		GridData gd_progressBar = new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1);
+		gd_progressBar.heightHint = 16;
+		gd_progressBar.widthHint = 389;
+		progbar.setMinimum(0);
+		progbar.setMaximum(100);
+		progbar.setLayoutData(gd_progressBar);
+		
+		Button btn_create = new Button(container, SWT.NONE);
+		GridData gd_btn_create = new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1);
+		gd_btn_create.widthHint = 97;
+		btn_create.setLayoutData(gd_btn_create);
+		//生成图片
+		btn_create.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				//获取导入文件信息
+				String filepath= text_filepath.getText();
+				if(filepath != null){
+					if(filepath==null || filepath.equals("") || classpath.equals("") || text_savepath.equals("")){
+						MessageDialog.openWarning(getShell(), "系统提示", "请选择路径信息！");
+						return;
+					}
+					progbar.setSelection(0);
+					text_prcimage.setText("");
+					Map<String,List<List<String>>> ticketmap = new ExcelUtil().read(filepath);
+					createImageBatch(ticketmap);
+				}
+			}
+		});
+		btn_create.setText("生成图片");
+		new Label(container, SWT.NONE);
+		new Label(container, SWT.NONE);
 		new Label(container, SWT.NONE);
 		new Label(container, SWT.NONE);
 		new Label(container, SWT.NONE);
 		
 		text_prcimage = new Text(container, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI);
-		GridData gd_text_prcimage = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
-		gd_text_prcimage.heightHint = 239;
+		GridData gd_text_prcimage = new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1);
+		gd_text_prcimage.heightHint = 257;
 		text_prcimage.setLayoutData(gd_text_prcimage);
 		new Label(container, SWT.NONE);
-		new Label(container, SWT.NONE);
-		new Label(container, SWT.NONE);
+		
+		Label lblNewLabel = new Label(container, SWT.NONE);
 
 		return container;
 	}
@@ -294,6 +317,7 @@ public class mainFrame extends ApplicationWindow {
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		newShell.setText("小票生成系统");
+		newShell.setMinimumSize(920, 560);
 	}
 
 	/**
@@ -405,10 +429,9 @@ public class mainFrame extends ApplicationWindow {
 		
 		g.drawString("SALES RECEIPT",90,125);
 		g.drawString("Item Name",15, 160);
-		g.drawString("Amt.",130, 160);
+		g.drawString("Amt.",140, 160);
 		g.drawString("Amnt.",180, 160);
 		//g.drawString("Gst",260, 160);
-		g.drawString("$",180, 180);
 		g.drawString("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ",10,190);
 		
 		/**
@@ -416,16 +439,19 @@ public class mainFrame extends ApplicationWindow {
 		 */
 		int y = 0;
 		float amount = 0f;
+		//币种
+		String bz = "$";
 		for(List<String> list:logisctis){
 			int amt =Integer.parseInt(list.get(5));
 			//折扣后的单价
 			float amnt = Float.parseFloat(list.get(6));
+			bz = list.get(7);
 			//折扣随机 6~0 折，中国折扣 10 6折 = 60
 			//int gst = 10-(int)(new Random().nextInt(5));
-			//物品名称-品牌-规格
-			g.drawString(list.get(2)+"-"+ list.get(3) +"-" + list.get(4),15,200+y);
+			//品牌 物品名称 规格
+			g.drawString(list.get(3) +" " +list.get(2)+" "+  list.get(4),15,200+y);
 			//购买数量
-			g.drawString(amt+"",130,200+y);
+			g.drawString(amt+"",150,200+y);
 			//购买单价
 			//g.drawString(String.format("%.2f",amnt/(gst*0.1))+ "",180, 200+y);
 			g.drawString(String.format("%.2f",amnt)+ "",180, 200+y);
@@ -434,17 +460,17 @@ public class mainFrame extends ApplicationWindow {
 			amount += amt * amnt;
 			y += 20;
 		}
-		
+		g.drawString(bz,180, 180);
 		/**
 		 * 金额统计信息
 		 * amt * amnt * gst
 		 */
 		g.drawString("Total",15, 220+y);
-		g.drawString("$"+String.format("%.2f", amount),180, 220+y);
+		g.drawString(bz+String.format("%.2f", amount),180, 220+y);
 		g.drawString("Amount to Pay",15, 240+y);
-		g.drawString("$"+String.format("%.2f", amount),180, 240+y);
+		g.drawString(bz+String.format("%.2f", amount),180, 240+y);
 		g.drawString("Cash change",15, 260+y);
-		g.drawString("$0.00",180, 260+y);
+		g.drawString(bz+"0.00",180, 260+y);
 		//生成日期
 		String beginDate = date_starttime.getYear()+"-"+date_starttime.getMonth()+"-"+date_starttime.getDay();
 		String endDate = date_endtime.getYear()+"-"+date_endtime.getMonth()+"-"+date_endtime.getDay();
@@ -452,11 +478,12 @@ public class mainFrame extends ApplicationWindow {
 		g.drawString(sdf.format(randomDate), 70, 285+y);
 		//欢送语
 		String str_hsy = rise.get(4);
-		if(str_hsy.length()>40){
-			g.drawString(str_hsy.substring(0,40),30,300+y);
-			g.drawString(str_hsy.substring(40,str_hsy.length()),80,300+y);
+		if(str_hsy.length()>35){
+			g.drawString(str_hsy.substring(0,35),20,300+y);
+			String tempstr = str_hsy.substring(35,str_hsy.length());
+			g.drawString(tempstr,(250-tempstr.length()*6)/2,320+y);
 		}else{
-			g.drawString(rise.get(4),30,300+y);
+			g.drawString(str_hsy,(250-str_hsy.length()*6)/2,300+y);
 		}
 	}
 	
