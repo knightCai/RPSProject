@@ -2,6 +2,7 @@ package com.client.frame.main;
 
 import java.io.InputStream;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
@@ -78,12 +79,12 @@ public class mainFrame {
        final Composite composite = new printComp(tabFolder, SWT.NONE);  
        //将我们定制的composite附加到tabItem上。  
        comaTabItem.setControl(composite);  
-         
        
-       final TabItem comcTabItem = new TabItem(tabFolder, SWT.NONE);  
+       //屏蔽前台的数据管理功能，报关单号由后台分配
+       /*final TabItem comcTabItem = new TabItem(tabFolder, SWT.NONE);  
        comcTabItem.setText("数据管理");  
        final Composite composite_2 = new DataComp(tabFolder, SWT.NONE);  
-       comcTabItem.setControl(composite_2);  
+       comcTabItem.setControl(composite_2);*/  
 
        final TabItem combTabItem = new TabItem(tabFolder, SWT.NONE);  
        combTabItem.setText("系统管理");  

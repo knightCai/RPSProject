@@ -13,7 +13,6 @@ import org.eclipse.swt.widgets.TabItem;
 
 import com.client.frame.data.declare.DeclareMgrFrame;
 import com.client.frame.print.printComp;
-import com.client.frame.print.oddnumer.OddnumMgrFrame;
 import com.client.frame.system.systemComp;
 
 import org.eclipse.swt.widgets.Button;

@@ -3,21 +3,21 @@ package com.client.model.contrllo;
 import java.util.List;
 
 import com.client.common.FrameUtil;
-import com.service.service.impl.Logisticslisting;
-import com.service.service.impl.LogisticslistingServiceImpl;
-import com.service.service.impl.LogisticslistingServiceImplService;
+import com.service.service.Logisticslisting;
+import com.service.service.LogisticslistingServiceDelegate;
+import com.service.service.LogisticslistingServiceService;
 
 public class LogisticsListContrllo {
-	private LogisticslistingServiceImpl LoglistserImpl;
+	private LogisticslistingServiceDelegate Loglistser;
 	
 	public LogisticsListContrllo() {
-		if(LoglistserImpl == null)
-			LoglistserImpl = new LogisticslistingServiceImplService().getLogisticslistingServiceImplPort();
+		if(Loglistser == null)
+			Loglistser = new LogisticslistingServiceService().getLogisticslistingServicePort();
 	}
 	
 	public void saveLoglist(Logisticslisting Loglist){
 		Loglist.setPkid(FrameUtil.getUUID());
-		LoglistserImpl.saveLlist(Loglist);
+		Loglistser.saveLlist(Loglist);
 	}
 	/**
 	 * 批量保存数据
@@ -25,29 +25,29 @@ public class LogisticsListContrllo {
 	 * @return
 	 */
 	public String saveBatch(List<Logisticslisting> Llists){
-		return LoglistserImpl.saveBatch(Llists);
+		return Loglistser.saveBatch(Llists);
 	}
 	public void deleteLoglist(Logisticslisting Loglist){
-			LoglistserImpl.deleteLlist(Loglist);
+			Loglistser.deleteLlist(Loglist);
 	}
 	
 	public List<Logisticslisting> findAllLoglist(){
-		return LoglistserImpl.findAllLlist();
+		return Loglistser.findAllLlist();
 	}
 
 	public List<Logisticslisting> findLlistByParams(List lsit) {
-		return LoglistserImpl.findLlistByParams(lsit);
+		return Loglistser.findLlistByParams(lsit);
 	}
 	
 	public void updateLlist(Logisticslisting Llist) {
-		LoglistserImpl.updateLlist(Llist);
+		//Loglistser.updateLlist(Llist);
 	}
 
 	public String updateLlistBySql(String sql) {
-		return LoglistserImpl.updateLlistBySql(sql);
+		return Loglistser.updateLlistBySql(sql);
 	}
 	
 	public String findMaxImportnum(String userid){
-		return LoglistserImpl.findMaxImportnum(userid);	
+		return Loglistser.findMaxImportnum(userid);	
 	}
 }

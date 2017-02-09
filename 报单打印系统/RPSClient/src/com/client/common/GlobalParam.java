@@ -17,7 +17,7 @@ public class  GlobalParam {
 	public static String PRINT_CONSIGNERADDR = " ";	//寄件人地址
 	public static String PRINT_CONSIGNERPHONE = " ";	//寄件人电话
 	public static String PRINT_CONSIGNEENAME = " ";	//收件人名称
-	public static String PRINT_CONSIGNEEADDR = " ";	//收件人地址
+	public static String PRINT_CONSIGNEEADDR = "阿斯|顺丰|蒂芬";	//收件人地址
 	public static String PRINT_CONSIGNEEPHONE = " ";	//收件人电话
 	public static String PRINT_CARGONAME_CARGOTYPE = "品名+品牌+数量+规格型号";	//货物内容描述：品名+品牌+数量+规格型号
 	public static String PRINT_WEIGHT = "0";			//实际重量
@@ -50,4 +50,12 @@ public class  GlobalParam {
 	 */
 	public static String SOURCE_IMPORTTEMPLE = "/source/importTemple.xls";		//导入模板文件的存放路径
 	public static String SOURCE_PRINTMUSIC = "/source/music/b_print.wav";		//扫码正确音效
+	public static String SOURCE_TWOPRINTMUSIC = "/source/music/twoprint.wav";	//重复扫描提示音效
+	public static String SOURCE_ERRORMUSIC = "/source/music/p_error.wav";		//系统错误音效
+	
+	/**
+	 *  =================================系统信息========================================
+	 */
+	public static String SYSTEM_LOGINUSER = "admin";	//当前登录用户
+	public final static String SYSTEM_VERRSION = "1.6.2";	//系统当前版本
 }

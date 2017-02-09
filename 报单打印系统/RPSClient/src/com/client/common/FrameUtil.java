@@ -146,6 +146,17 @@ public class FrameUtil {
     		e.printStackTrace();
     	}
     }
+    
+    public static void isOk_printmusic(){
+    	FrameUtil.play(FrameUtil.class.getResourceAsStream(GlobalParam.SOURCE_PRINTMUSIC)); 
+    }
+    
+    public static void istwo_printmusic(){
+    	FrameUtil.play(FrameUtil.class.getResourceAsStream(GlobalParam.SOURCE_TWOPRINTMUSIC)); 
+    }
+    public static void isError_systemmusic(){
+    	FrameUtil.play(FrameUtil.class.getResourceAsStream(GlobalParam.SOURCE_ERRORMUSIC)); 
+    }
     public static void main(String[] args) throws Exception {
     	for(int i=0;i<10000;i++){
     		play(new FrameUtil().getClass().getResourceAsStream("/source/music/b_print.wav")); 

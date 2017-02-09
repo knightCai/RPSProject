@@ -2,6 +2,7 @@ package com.client.common;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,7 +23,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import com.service.service.impl.Logisticslisting;
+import com.service.service.Logisticslisting;
 
 /**
  * Excel 工具类
@@ -45,11 +46,12 @@ public class ExcelUtil {
 	* @param fileName
      * @return
 	 * @author 蔡鑫
+     * @throws FileNotFoundException 
 	 * @throws Exception 
 	 * @time:2016-10-27 上午10:07:28
      * @throws IOException
      */
-    public List<ArrayList<String>> read(String fileName)
+    public List<ArrayList<String>> read(String fileName) throws FileNotFoundException, Exception
     {
         List<ArrayList<String>> dataLst = new ArrayList<ArrayList<String>>();
         
@@ -73,15 +75,8 @@ public class ExcelUtil {
             return dataLst;
         }
         
-        try
-        {
-            /** 调用本类提供的根据流读取的方法 */
-            dataLst = read(new FileInputStream(file), isExcel2003);
-        }
-        catch (Exception ex)
-        {
-            ex.printStackTrace();
-        }
+        /** 调用本类提供的根据流读取的方法 */
+        dataLst = read(new FileInputStream(file), isExcel2003);
         
         /** 返回最后读取的结果 */
         return dataLst;
@@ -96,10 +91,9 @@ public class ExcelUtil {
 	 * @author 蔡鑫
 	 * @throws Exception 
 	 * @time:2016-10-27 上午10:07:28
-     * @throws IOException
      */
     public List<ArrayList<String>> read(InputStream inputStream,
-            boolean isExcel2003) throws IOException
+            boolean isExcel2003) throws Exception
     {
         List<ArrayList<String>> dataLst = null;
             /** 根据版本选择创建Workbook的方式 */
@@ -149,73 +143,77 @@ public class ExcelUtil {
 	 * @time:2016-10-27 上午10:07:28
      * @throws IOException
      */
-    private List<ArrayList<String>> read(Workbook wb)
+    private List<ArrayList<String>> read(Workbook wb) throws Exception
     {
-        List<ArrayList<String>> dataLst = new ArrayList<ArrayList<String>>();
-        
-        /** 得到第一个shell */
-        Sheet sheet = wb.getSheetAt(0);
-        this.totalRows = sheet.getPhysicalNumberOfRows();
-        if (this.totalRows >= 1 && sheet.getRow(0) != null)
-        {
-            this.totalCells = sheet.getRow(0).getPhysicalNumberOfCells();
-        }
-        
-        /** 循环Excel的行 */
-        for (int r = 0; r < this.totalRows; r++)
-        {
-            Row row = sheet.getRow(r);
-            if (row == null)
-            {
-                continue;
-            }
-            
-            ArrayList<String> rowLst = new ArrayList<String>();
-            /** 循环Excel的列 */
-            for (short c = 0; c < this.getTotalCells(); c++)
-            {
-                Cell cell = row.getCell(c);
-                String cellValue = "";
-                if (cell == null)
-                {
-                    rowLst.add(cellValue);
-                    continue;
-                }
-                
-                /** 处理数字型的,自动去零 */
-                if (Cell.CELL_TYPE_NUMERIC == cell.getCellType())
-                {
-                    /** 在excel里,日期也是数字,在此要进行判断 */
-                    if (HSSFDateUtil.isCellDateFormatted(cell))
-                    {
-                        cellValue = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(cell.getDateCellValue());
-                    }
-                    else
-                    {
-                        cellValue = getRightStr(cell.getNumericCellValue() + "");
-                    }
-                }
-                /** 处理字符串型 */
-                else if (Cell.CELL_TYPE_STRING == cell.getCellType())
-                {
-                    cellValue = cell.getStringCellValue();
-                }
-                /** 处理布尔型 */
-                else if (Cell.CELL_TYPE_BOOLEAN == cell.getCellType())
-                {
-                    cellValue = cell.getBooleanCellValue() + "";
-                }
-                /** 其它的,非以上几种数据类型 */
-                else
-                {
-                    cellValue = cell.toString() + "";
-                }
-                
-                rowLst.add(cellValue);
-            }
-            dataLst.add(rowLst);
-        }
-        this.totalRows--;//数据总数除去列名行
+    	List<ArrayList<String>> dataLst = new ArrayList<ArrayList<String>>();
+    	try{
+	        /** 得到第一个shell */
+	        Sheet sheet = wb.getSheetAt(0);
+	        this.totalRows = sheet.getPhysicalNumberOfRows();
+	        if (this.totalRows >= 1 && sheet.getRow(0) != null)
+	        {
+	            this.totalCells = sheet.getRow(0).getPhysicalNumberOfCells();
+	        }
+	        
+	        /** 循环Excel的行 
+	         * 过滤第一行列名
+	         * */
+	        for (int r = 1; r <= this.totalRows; r++)
+	        {
+	            Row row = sheet.getRow(r);
+	            if (row == null)
+	            {
+	                continue;
+	            }
+	            
+	            ArrayList<String> rowLst = new ArrayList<String>();
+	            /** 循环Excel的列 */
+	            for (short c = 0; c < this.getTotalCells(); c++)
+	            {
+	                Cell cell = row.getCell(c);
+	                String cellValue = "";
+	                if (cell == null)
+	                {
+	                    rowLst.add(cellValue);
+	                    continue;
+	                }
+	                
+	                /** 处理数字型的,自动去零 */
+	                if (Cell.CELL_TYPE_NUMERIC == cell.getCellType())
+	                {
+	                    /** 在excel里,日期也是数字,在此要进行判断 */
+	                    if (HSSFDateUtil.isCellDateFormatted(cell))
+	                    {
+	                        cellValue = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(cell.getDateCellValue());
+	                    }
+	                    else
+	                    {
+	                        cellValue = getRightStr(cell.getNumericCellValue() + "");
+	                    }
+	                }
+	                /** 处理字符串型 */
+	                else if (Cell.CELL_TYPE_STRING == cell.getCellType())
+	                {
+	                    cellValue = cell.getStringCellValue();
+	                }
+	                /** 处理布尔型 */
+	                else if (Cell.CELL_TYPE_BOOLEAN == cell.getCellType())
+	                {
+	                    cellValue = cell.getBooleanCellValue() + "";
+	                }
+	                /** 其它的,非以上几种数据类型 */
+	                else
+	                {
+	                	cellValue = cell.toString() + "";
+	                }
+	                rowLst.add(cellValue);
+	            }
+	            dataLst.add(rowLst);
+	        }
+	        this.totalRows--;//数据总数除去列名行
+    	}catch (Exception e) {
+    		throw new Exception("导入清单格式必须为文本格式，不能包含其他格式内容,详细错误:"+e.getMessage());
+		}
         return dataLst;
     }
     
@@ -477,7 +475,8 @@ public class ExcelUtil {
             cell.setCellValue(llist.getConsigneename());
             cell.setCellStyle(styleLeft);
             cell = row.createCell((short) 12);
-            cell.setCellValue(llist.getConsigneeaddr());  
+            String[] addSplit = llist.getConsigneeaddr().split("\\|");
+            cell.setCellValue(addSplit.length>1?addSplit[2]:llist.getConsigneeaddr());  
             cell.setCellStyle(styleLeft);
             cell = row.createCell((short) 13);
             cell.setCellValue(llist.getConsigneephone());  

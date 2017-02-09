@@ -36,6 +36,8 @@ public class PrintTest   implements Printable{
 		    y += m.getHeight();
 		    currentLine = words[i];
 		   }
+		   if(i>5)
+			   break;
 		  }
 		  if(currentLine.trim().length() > 0) {
 		   g.drawString(currentLine, x, y);
@@ -63,6 +65,7 @@ public class PrintTest   implements Printable{
 	           //设置打印字体（字体名称、样式和点大小）（字体名称可以是物理或者逻辑名称）
 	           //Java平台所定义的五种字体系列：Serif、SansSerif、Monospaced、Dialog 和 DialogInput
 	           Font font = new Font("Microsoft YaHei UI", Font.PLAIN,10);
+	           Font font1 = new Font("Microsoft YaHei UI", Font.BOLD,11);
 	           g2.setFont(font);//设置字体
 	           //BasicStroke   bs_3=new   BasicStroke(0.5f);   
 	           float[]   dash1   =   {2.0f}; 
@@ -116,8 +119,13 @@ public class PrintTest   implements Printable{
 	           String text_consigneephone = GlobalParam.PRINT_CONSIGNEEPHONE;
 	           g2.drawString(text_consigneephone,210,155);
 	           String acceptAddress = "地址:";
-	           g2.drawString(acceptAddress,12,170);
-	           String text_consigneeaddr = GlobalParam.PRINT_CONSIGNEEADDR;
+	           g2.drawString(acceptAddress,12,172);
+	           String[] splitAddr = GlobalParam.PRINT_CONSIGNEEADDR.split("\\|");
+	           //省市
+	           g2.setFont(font1);//设置字体
+	           g2.drawString(splitAddr[0]+" "+splitAddr[1],50,173);
+	           g2.setFont(font);//设置字体
+	           String text_consigneeaddr = splitAddr[2];
 	           if(text_consigneeaddr.length()>28){
 	        	   text_consigneeaddr = text_consigneeaddr.substring(0, 28)+"\r\n" +text_consigneeaddr.substring(28,text_consigneeaddr.length());
 	           }
