@@ -69,6 +69,7 @@ public class printImage {
 	private Label label_20;
 	private Label label_21;
 	private Label label_19;
+	private Text text_shengshi;
 	
 	public printImage(int type) {
 		printType = type;
@@ -113,8 +114,9 @@ public class printImage {
 		shell.layout();
 		//判断打印模式,扫码枪，直接打印
 		if(printType == 1){
+			//完成打印后提示音
+			FrameUtil.isOk_printmusic();
 			doprint();
-			FrameUtil.play(this.getClass().getResourceAsStream(GlobalParam.SOURCE_PRINTMUSIC)); 
 		}
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
@@ -152,13 +154,13 @@ public class printImage {
 		text_consignerphone.setBounds(269, 167, 130, 33);
 		
 		text_consigneename = new Text(composite, SWT.NONE);
-		text_consigneename.setBounds(83, 269, 125, 26);
+		text_consigneename.setBounds(88, 262, 125, 26);
 		
 		text_consigneeaddr = new Text(composite, SWT.WRAP | SWT.MULTI);
 		text_consigneeaddr.setBounds(31, 325, 398, 44);
 		
 		text_consigneephone = new Text(composite, SWT.NONE);
-		text_consigneephone.setBounds(269, 262, 130, 33);
+		text_consigneephone.setBounds(269, 262, 130, 26);
 		
 		text_cargoname_cargotype = new Text(composite, SWT.WRAP | SWT.MULTI);
 		text_cargoname_cargotype.setBounds(31, 406, 249, 114);
@@ -184,11 +186,11 @@ public class printImage {
 		
 		text = new Text(composite, SWT.CENTER);
 		text.setFont(SWTResourceManager.getFont("Microsoft YaHei UI", 10, SWT.BOLD));
-		text.setBounds(209, 79, 130, 26);
+		text.setBounds(209, 79, 190, 26);
 		
 		text_1 = new Text(composite, SWT.CENTER);
 		text_1.setFont(SWTResourceManager.getFont("Microsoft YaHei UI", 10, SWT.BOLD));
-		text_1.setBounds(41, 626, 147, 20);
+		text_1.setBounds(41, 626, 184, 20);
 		
 		txtLeaderExpress = new Text(composite, SWT.MULTI);
 		txtLeaderExpress.setFont(SWTResourceManager.getFont("Microsoft YaHei UI", 9, SWT.BOLD));
@@ -235,7 +237,7 @@ public class printImage {
 		label_5.setText("地址:");
 		label_5.setFont(SWTResourceManager.getFont("Microsoft YaHei UI", 9, SWT.BOLD));
 		label_5.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		label_5.setBounds(29, 299, 76, 20);
+		label_5.setBounds(29, 299, 57, 20);
 		
 		label_6 = new Label(composite, SWT.NONE);
 		label_6.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
@@ -319,6 +321,10 @@ public class printImage {
 		label_19 = new Label(composite, SWT.SEPARATOR);
 		label_19.setBackground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 		label_19.setBounds(448, 11, 2, 709);
+		
+		text_shengshi = new Text(composite, SWT.NONE);
+		text_shengshi.setFont(SWTResourceManager.getFont("Microsoft YaHei UI", 11, SWT.BOLD));
+		text_shengshi.setBounds(88, 293, 230, 26);
 	}
 	/**
 	 * 打印字段赋值
@@ -329,7 +335,9 @@ public class printImage {
 		text_consigneraddr.setText(GlobalParam.PRINT_CONSIGNERADDR);;
 		text_consignerphone.setText(GlobalParam.PRINT_CONSIGNERPHONE);;
 		text_consigneename.setText(GlobalParam.PRINT_CONSIGNEENAME);
-		text_consigneeaddr.setText(GlobalParam.PRINT_CONSIGNEEADDR);;
+		String[] splitAddr = GlobalParam.PRINT_CONSIGNEEADDR.split("\\|");
+		text_shengshi.setText(splitAddr[0]+" "+splitAddr[1]);
+		text_consigneeaddr.setText(splitAddr[2]);
 		text_consigneephone.setText(GlobalParam.PRINT_CONSIGNEEPHONE);
 		text_cargoname_cargotype.setText(GlobalParam.PRINT_CARGONAME_CARGOTYPE);
 		text_weight.setText(GlobalParam.PRINT_WEIGHT + "Kg");

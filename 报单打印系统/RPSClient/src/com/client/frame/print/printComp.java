@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.xml.ws.WebServiceException;
+
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ControlEditor;
@@ -28,12 +30,15 @@ import org.eclipse.swt.widgets.Text;
 
 import com.client.common.ExcelUtil;
 import com.client.common.FileUtil;
+import com.client.common.FrameUtil;
 import com.client.common.GlobalParam;
 import com.client.frame.print.oddnumer.OddnumberDialog;
 import com.client.model.contrllo.LogisticsListContrllo;
-import com.service.service.impl.Logisticslisting;
+import com.client.model.contrllo.OddnumberContrllo;
+import com.service.service.Logisticslisting;
 
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -50,16 +55,19 @@ public class printComp extends Composite {
 	private OddnumberDialog oddnumDialog = null;
 	private Table table;
 	private Composite composite = null; 
-	private Spinner spinner;	//导入批次
+	private Text text_importnum;	//总运单号（航空单号）
 	private DateTime dateCreate;	//导入时间
 	private Combo comisprint;	//打印状态
 	private List condition;	//查询参数
 	private String expressnum;//运单号
-	private LogisticsListContrllo logisContrllo; //运单控制层
+	private String importnum;	//总运单号（航空）
+	private LogisticsListContrllo logisContrllo; //运单接口处理类
+	private OddnumberContrllo oddnumcor;	//报关单号接口处理类
 	private Button btn_isshama;	//是否扫码枪模式
 
 	public printComp(Composite parent, int style) {  
-        super(parent, style);
+		super(parent, style);
+		logisContrllo = new LogisticsListContrllo();
         composite = this;
         /*InputStream in = this.getClass().getResourceAsStream("/images/system/bg-main.jpg");
         composite.setBackgroundImage(new  Image(this.getShell().getDisplay(), in));*/
@@ -89,6 +97,7 @@ public class printComp extends Composite {
         btn_isshama.setSelection(true);
         
         Button button = new Button(this, SWT.NONE);
+        button.setFont(SWTResourceManager.getFont("Microsoft YaHei UI", 10, SWT.NORMAL));
         GridData gd_button = new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1);
         gd_button.heightHint = 37;
         gd_button.widthHint = 153;
@@ -98,18 +107,24 @@ public class printComp extends Composite {
         button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
+				importnum = text_importnum.getText();
 				expressnum = text.getText();//获取运单号
 				//如果有运单查询框有值，则用填写的内容查询运单信息进行打印，否则判断并使用选择的列进行打印
-				if(expressnum.equals("")){
-					TableItem[] items = table.getSelection();
-					if(items.length < 1){
-						MessageDialog.openConfirm(getShell(), "系统提示","请选择需要打印的内容");
+				if(!importnum.equals("")){
+					if(expressnum.equals("")){
+						TableItem[] items = table.getSelection();
+						if(items.length < 1){
+							MessageDialog.openConfirm(getShell(), "系统提示","请选择需要打印的内容");
+						}else{
+							expressnum = items[0].getText(3);
+							printLogistics(0);//预览打印
+						}
 					}else{
-						expressnum = items[0].getText(3);
-						printLogistics(0);//预览打印
+						printLogistics(0);
 					}
 				}else{
-					printLogistics(0);
+					FrameUtil.isError_systemmusic();
+					MessageDialog.openInformation(getShell(), "系统提示", "总运(航空)单号不能为空！");
 				}
 			}
 		});
@@ -128,15 +143,21 @@ public class printComp extends Composite {
         new Label(this, SWT.NONE);
         
         Label label_1 = new Label(this, SWT.NONE);
-        label_1.setText("导入批次：");
-        
-        String max = new LogisticsListContrllo().findMaxImportnum("admin");
+        label_1.setText("总运单号：");
+        text_importnum = new Text(this, SWT.BORDER);
+        GridData gd_textzydh = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+        gd_textzydh.widthHint = 122;
+        text_importnum.setLayoutData(gd_textzydh);
+        String max = logisContrllo.findMaxImportnum(GlobalParam.SYSTEM_LOGINUSER);
+		max = max==null?"":max;
+		text_importnum.setText(max);
+        /*String max = logisContrllo.findMaxImportnum("admin");
 		max = max==null?"1":max;
         spinner = new Spinner(this, SWT.BORDER);
         GridData gd_spinner = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
         gd_spinner.widthHint = 122;
         spinner.setSelection(Integer.parseInt(max));
-        spinner.setLayoutData(gd_spinner);
+        spinner.setLayoutData(gd_spinner);*/
 
         Label label_2 = new Label(this, SWT.NONE);
         label_2.setAlignment(SWT.RIGHT);
@@ -152,7 +173,7 @@ public class printComp extends Composite {
         comisprint.add("未打印");
         comisprint.add("已打印");
         
-        Label label_3 = new Label(this, SWT.NONE);
+        /*Label label_3 = new Label(this, SWT.NONE);
         label_3.setAlignment(SWT.RIGHT);
         GridData gd_label_3 = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
         gd_label_3.widthHint = 115;
@@ -162,9 +183,9 @@ public class printComp extends Composite {
         dateCreate = new DateTime(this, SWT.BORDER);
         GridData gd_dateCreate = new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1);
         gd_dateCreate.widthHint = 144;
-        dateCreate.setLayoutData(gd_dateCreate);
+        dateCreate.setLayoutData(gd_dateCreate);*/
         
-        Label label_4 = new Label(this, SWT.NONE);
+        /*Label label_4 = new Label(this, SWT.NONE);
         label_4.setEnabled(false);
         label_4.setText("航班号：");
         new Label(this, SWT.NONE);
@@ -174,26 +195,24 @@ public class printComp extends Composite {
         text_1.setEditable(false);
         GridData gd_text_1 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
         gd_text_1.widthHint = 87;
-        text_1.setLayoutData(gd_text_1);
-        
-        Button btnNewButton = new Button(this, SWT.NONE);
-        GridData gd_btnNewButton = new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1);
-        gd_btnNewButton.widthHint = 67;
-        btnNewButton.setLayoutData(gd_btnNewButton);
-        btnNewButton.setText("查询");
+        text_1.setLayoutData(gd_text_1);*/
         //运单号文本框：添加键盘输入事件，当输入回车字符时，直接查询并打印面单
         text.addTraverseListener(new TraverseListener() {
 			@Override
 			public void keyTraversed(TraverseEvent e) {
 				if (e.keyCode == 13) {
 					expressnum = text.getText();//获取运单号
-					//运单号不为空才进行处理
-					if(!expressnum.equals("")){
+					importnum = text_importnum.getText();//获取总运单号
+					//总运单号不为空才进行处理
+					if(!importnum.equals("")){
 						if(btn_isshama.getSelection()){
 							printLogistics(1);//直接打印
 						}else{
-							printLogistics(0);//直接打印
+							printLogistics(0);//预览打印
 						}
+					}else{
+						FrameUtil.isError_systemmusic();
+						MessageDialog.openInformation(getShell(), "系统提示", "总运(航空)单号不能为空！");
 					}
 					text.setText("");
 					text.setFocus();
@@ -204,25 +223,33 @@ public class printComp extends Composite {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				if(oddnumDialog == null){
+					oddnumDialog =  new OddnumberDialog(getShell(),SWT.NULL);
 				}
-				oddnumDialog =  new OddnumberDialog(getShell(),SWT.NULL);
-				oddnumDialog.open();
+            	Object obj = oddnumDialog.open();
+            	if(obj.toString().equals("true")){
+	            	String max = logisContrllo.findMaxImportnum(GlobalParam.SYSTEM_LOGINUSER);
+	        		max = max==null?"":max;
+	        		text_importnum.setText(max);
+	        		Display.getDefault().syncExec(new Runnable() {
+	                    public void run() {  
+							table.removeAll();
+							loadTable(table);
+	                    }
+	                });
+            	}
 			}
 		});
         //物流清单导出
         button_2.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				String importnum = spinner.getText();
+				importnum = text_importnum.getText();
 				String nowdate = new SimpleDateFormat("yyyyMMdd").format(new Date());
 				FileDialog filedialog = new FileDialog(getShell(),SWT.SAVE);
 				filedialog.setFileName(nowdate+"物流清单导出-批次【"+importnum+"】");
 				String filepath = filedialog.open();
-				if(logisContrllo == null){
-		    		logisContrllo = new LogisticsListContrllo();
-		    	}
 				condition  = new ArrayList();
-				condition.add("importnum:"+spinner.getText());
+				condition.add("importnum:"+importnum);
 				List<Logisticslisting> logislist = logisContrllo.findLlistByParams(condition);
 				try {
 					ExcelUtil.createExcel(logislist,filepath);
@@ -231,28 +258,25 @@ public class printComp extends Composite {
 				}
 			}
 		});
-        btnNewButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				table.removeAll();
-				loadTable(table);
-			}
-		});
         //面单导出按钮
         btn_exportpic.addSelectionListener(new SelectionAdapter() {
         	@Override
         	public void widgetSelected(SelectionEvent e) {
         		try {
-        		String importnum = spinner.getText();
-        		FileDialog file = new FileDialog(getShell(),SWT.SAVE);
-        		String nowdate = new SimpleDateFormat("yyyyMMdd").format(new Date());
-        		file.setFileName(nowdate+"面单图片导出-批次【"+importnum+"】.zip");
-        		String zipFileName = file.open();
-        		if(zipFileName != null){
-	        		String filepath = GlobalParam.PRINT_IMAGEPATH+importnum+"/";
-						FileUtil.downloadPics(zipFileName,filepath);
-						MessageDialog.openInformation(getShell(), "系统提示", "文件导出成功！");
-				}
+        			importnum = text_importnum.getText();
+	        		if(importnum != null && !importnum.isEmpty()){
+		        		FileDialog file = new FileDialog(getShell(),SWT.SAVE);
+		        		String nowdate = new SimpleDateFormat("yyyyMMdd").format(new Date());
+		        		file.setFileName(nowdate+"面单图片导出-批次【"+importnum+"】.zip");
+		        		String zipFileName = file.open();
+		        		if(zipFileName != null){
+			        		String filepath = GlobalParam.PRINT_IMAGEPATH+importnum+"/";
+								FileUtil.downloadPics(zipFileName,filepath);
+								MessageDialog.openInformation(getShell(), "系统提示", "文件导出成功！");
+						}
+	        		}else{
+	        			MessageDialog.openInformation(getShell(), "系统提示", "总运(航空)单号不能为空！");
+	        		}
         		} catch (Exception e1) {
         			e1.printStackTrace();
         			MessageDialog.openInformation(getShell(), "系统提示", "文件导出失败！错误信息："+e1.getMessage());
@@ -267,6 +291,37 @@ public class printComp extends Composite {
 	// 创建表格  
     private void createTable()  
     {  
+        new Label(this, SWT.NONE);
+        new Label(this, SWT.NONE);
+        
+        Button btnNewButton = new Button(this, SWT.NONE);
+        btnNewButton.setFont(SWTResourceManager.getFont("Microsoft YaHei UI", 10, SWT.NORMAL));
+        GridData gd_btnNewButton = new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1);
+        gd_btnNewButton.heightHint = 36;
+        gd_btnNewButton.widthHint = 101;
+        btnNewButton.setLayoutData(gd_btnNewButton);
+        btnNewButton.setText("查询");
+        btnNewButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				importnum = text_importnum.getText();
+				if(!importnum.equals("")){
+					Display.getDefault().syncExec(new Runnable() {
+	                    public void run() {  
+							table.removeAll();
+							loadTable(table);
+	                    }
+                    });
+				}else{
+					FrameUtil.isError_systemmusic();
+					MessageDialog.openInformation(getShell(), "系统提示", "总运(航空)单号不能为空！");
+				}
+			}
+		});
+        new Label(this, SWT.NONE);
+        new Label(this, SWT.NONE);
+        new Label(this, SWT.NONE);
+        new Label(this, SWT.NONE);
     	// 表格布局  
         GridData gridData = new org.eclipse.swt.layout.GridData();  
         gridData.horizontalSpan = 13;
@@ -283,8 +338,8 @@ public class printComp extends Composite {
         
         // 创建表头的字符串数组  
         String[] tableHeader = {"        导入序号        ", "        打印状态        ", "        报关单号        ", "        物流单号        ","        收件人姓名        ",
-        		"        收件人地址        ","        收件人电话        ","        导入批次        ",
-        		"        实际重量        ","        货品名称        ","        规格型号        "};  
+        		"        收件人地址        ","        收件人电话        ","        总运单号        ",
+        		"        实际重量        ","        货品名称        ","        规格型号        ","        导入时间        "};  
         for (int i = 0; i < tableHeader.length; i++)  
         {  
             TableColumn tableColumn = new TableColumn(table, SWT.NONE);  
@@ -354,7 +409,7 @@ public class printComp extends Composite {
      */
     private void putCondition(){
     	condition  = new ArrayList();
-    	String importnum= spinner.getText();
+    	String importnum= text_importnum.getText();
     	int isprint = comisprint.getSelectionIndex();
     	String expressnum = text.getText();//获取运单号
     	if(isprint>=0){
@@ -363,17 +418,15 @@ public class printComp extends Composite {
     	if(!expressnum.equals("")){
     		condition.add("expressnum:"+expressnum);
     	}
-    	condition.add("importnum:"+spinner.getText());
-		condition.add("createtime:"+dateCreate.getYear()+"-"+(dateCreate.getMonth()+1)+"-"+dateCreate.getDay());	//SWT 日期组件需要年月日单独拼接
+    	condition.add("importnum:"+importnum);
+		//condition.add("createtime:"+dateCreate.getYear()+"-"+(dateCreate.getMonth()+1)+"-"+dateCreate.getDay());	//SWT 日期组件需要年月日单独拼接
+		condition.add("importuser:"+GlobalParam.SYSTEM_LOGINUSER);
 	}
     /**
 	 * 查询后台数据，加载table
 	 * @param table
 	 */
     private void loadTable(Table table){
-    	if(logisContrllo == null){
-    		logisContrllo = new LogisticsListContrllo();
-    	}
     	putCondition();
 		List<Logisticslisting> logislist = logisContrllo.findLlistByParams(condition);
 		TableItem item;
@@ -381,8 +434,8 @@ public class printComp extends Composite {
 		for(int i = 0;i < logislist.size(); i++){
 			logis = logislist.get(i);
 			item = new TableItem(table, SWT.NONE);
-			// {"导入序号", "打印状态", "报关单号", "物流单号","收件人姓名","收件人地址","收件人电话","导入批次","实际重量","货品名称","规格型号"};  
-			String str = logis.getConsigneeaddr();
+			// {"导入序号", "打印状态", "报关单号", "物流单号","收件人姓名","收件人地址","收件人电话","总运单号","实际重量","货品名称","规格型号","导入时间"};  
+			String[] str = logis.getConsigneeaddr().split("\\|");
 			item.setText(new String[]{
 				logis.getSerialnum(),
 				logis.getIsprint().equals("1")?"已打印":"未打印",
@@ -395,7 +448,7 @@ public class printComp extends Composite {
 				logis.getDeclarevalue (),
 				logis.getCurrency(),*/
 				logis.getConsigneename(),
-				logis.getConsigneeaddr().replaceAll("^",""),
+				str.length>1?str[2]:logis.getConsigneeaddr(),
 				logis.getConsigneephone(),
 				/*logis.getConsignercardtype(),
 				logis.getConsignercardid(),
@@ -410,7 +463,8 @@ public class printComp extends Composite {
 				logis.getImportnum(),
 				logis.getDeclareweight(),
 			   	logis.getCargoname(),
-			   	logis.getCargotype()
+			   	logis.getCargotype(),
+			   	logis.getCreatetime().toString().substring(0, 10)
 			   	/*logis.getCount(),
 			   	logis.getUnit(),
 			   	logis.getTrademode(),
@@ -429,12 +483,9 @@ public class printComp extends Composite {
      */
     private void printLogistics(int operType){
     	try {
-    		if(logisContrllo == null){
-        		logisContrllo = new LogisticsListContrllo();
-        	}
 	    	condition = new ArrayList();
 			condition.add("expressnum:"+expressnum);
-			condition.add("importnum:"+spinner.getText());
+			condition.add("importnum:"+text_importnum.getText());
 			//通过运单号查询运单信息
 			List<Logisticslisting> logislist = logisContrllo.findLlistByParams(condition);
 			//若无数据不进行操作
@@ -451,7 +502,7 @@ public class printComp extends Composite {
 					GlobalParam.PRINT_CONSIGNERADDR = logis.getConsigneraddr();
 					GlobalParam.PRINT_CONSIGNERPHONE = logis.getConsignerphone();
 					GlobalParam.PRINT_CONSIGNEENAME = logis.getConsigneename();
-					GlobalParam.PRINT_CONSIGNEEADDR = logis.getConsigneeaddr().replaceAll("|","".replaceAll("|",""));
+					GlobalParam.PRINT_CONSIGNEEADDR = logis.getConsigneeaddr();
 					GlobalParam.PRINT_CONSIGNEEPHONE = logis.getConsigneephone();
 					GlobalParam.PRINT_CARGONAME_CARGOTYPE += logis.getCargoname() + "*"+ logis.getCount()+ "  " + logis.getBrand() + "，"  + logis.getCargotype()+ lineChg;
 					GlobalParam.PRINT_WEIGHT = (Float.parseFloat(GlobalParam.PRINT_WEIGHT) + Float.parseFloat(logis.getDeclareweight())) + "";
@@ -461,18 +512,33 @@ public class printComp extends Composite {
 					GlobalParam.PRINT_IMPORTSER = logis.getImportnum()+"";
 				}
 				if(isprint.equals("1")&&operType == 1){
+					//已打印运单号重复扫描提示音
+					FrameUtil.istwo_printmusic();
 					MessageDialog.openWarning(getShell(),"系统提示","当前运单已打印，扫码枪打印不支持重复打印！运单号："+GlobalParam.PRINT_EXPRESSNUM);
 					return;
 				}
 				printImage pm = new printImage(operType);
 				pm.open();
-				String[] msgcode = logisContrllo.updateLlistBySql(" isprint = '1' where expressnum = '"+GlobalParam.PRINT_EXPRESSNUM+"' and importnum = '"+spinner.getText()+"'" ).split(",");
+				String[] msgcode = logisContrllo.updateLlistBySql(" isprint = '1' where expressnum = '"+GlobalParam.PRINT_EXPRESSNUM+"' and importnum = '"+text_importnum.getText()+"'" ).split(",");
 				if(msgcode[0].equals("999")){
 					MessageDialog.openWarning(getShell(), "系统提示", "修改打印状态失败："+msgcode[1]);
 				}
+				if(operType==1){
+					text.setText("");
+				}
+				Display.getDefault().syncExec(new Runnable() {
+                    public void run() {  
+						table.removeAll();
+						loadTable(table);
+                    }
+                });
+			}else{
+				//运单号查询无数据提示音
+				FrameUtil.isError_systemmusic();
 			}
     	} catch (Exception e) {
     		e.printStackTrace();
     	}
     }
+    
 }

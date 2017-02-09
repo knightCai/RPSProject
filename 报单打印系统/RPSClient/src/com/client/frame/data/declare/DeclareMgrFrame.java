@@ -22,8 +22,9 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
+import com.client.common.GlobalParam;
 import com.client.model.contrllo.OddnumberContrllo;
-import com.service.service.impl.Oddnumber;
+import com.service.service.Oddnumber;
 import org.eclipse.swt.layout.GridLayout;
 
 public class DeclareMgrFrame extends Composite {
@@ -250,7 +251,7 @@ public class DeclareMgrFrame extends Composite {
 	 * @param table
 	 */
 	private void loadTable(Table table){
-		List<Oddnumber> oddnumlist = oddnumCon.findAllOddnum();
+		List<Oddnumber> oddnumlist = oddnumCon.findAllOddnum(GlobalParam.SYSTEM_LOGINUSER);
 		TableItem item;
 		Oddnumber oddnum;
 		for(int i = 0;i < oddnumlist.size(); i++){

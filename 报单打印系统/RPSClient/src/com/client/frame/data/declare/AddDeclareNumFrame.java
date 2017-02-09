@@ -16,8 +16,9 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Text;
 
 import com.client.common.FrameUtil;
+import com.client.common.GlobalParam;
 import com.client.common.TextVerifyListener;
-import com.service.service.impl.Oddnumber;
+import com.service.service.Oddnumber;
 import com.client.model.contrllo.OddnumberContrllo;
 
 import org.eclipse.swt.widgets.Button;
@@ -152,7 +153,7 @@ public class AddDeclareNumFrame {
 					MessageDialog.openInformation(shell,"系统提示",logStr);
 				}else{
 					//如果单号已存在不允许再次添加
-					List<Oddnumber> oddlist = oddnumCon.findAllOddnum();
+					List<Oddnumber> oddlist = oddnumCon.findAllOddnum(GlobalParam.SYSTEM_LOGINUSER);
 					Long startnumf = Long.parseLong(startnum);
 					Long endnumf = Long.parseLong(endnum);
 					for(Oddnumber oddnum1 : oddlist){
@@ -173,7 +174,7 @@ public class AddDeclareNumFrame {
 					oddnum.setSuplusnum(amountnum);
 					oddnum.setAmountnum(amountnum);
 					oddnum.setState("0");
-					oddnum.setUserid("admin");
+					oddnum.setUserid(GlobalParam.SYSTEM_LOGINUSER);
 					oddnumCon.saveOddNum(oddnum);
 					MessageDialog.openInformation(shell,"系统提示","单号添加成功！");
 					shell.dispose();

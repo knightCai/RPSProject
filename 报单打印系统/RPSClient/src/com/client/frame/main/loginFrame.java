@@ -1,5 +1,6 @@
 package com.client.frame.main;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -9,11 +10,22 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.client.common.FrameUtil;
+import com.client.common.GlobalParam;
+import com.client.frame.system.systemUp;
+import com.client.model.contrllo.SysparamContrllo;
+import com.client.model.contrllo.UserinfoContrllo;
+import com.service.service.Sysparam;
+import com.service.service.Userinfo;
+
 public class loginFrame {
 
 	protected Shell shell;
 	private Text textusername;
 	private Text textpasswrod;
+	private UserinfoContrllo usercon;
+	private SysparamContrllo syscon;
+	
 	/**
 	 * Launch the application.
 	 * @param args
@@ -31,13 +43,27 @@ public class loginFrame {
 	 * Open the window.
 	 */
 	public void open() {
+		usercon = new UserinfoContrllo();
+		syscon = new SysparamContrllo();
 		Display display = Display.getDefault();
-		createContents();
-		shell.open();
-		shell.layout();
-		while (!shell.isDisposed()) {
-			if (!display.readAndDispatch()) {
-				display.sleep();
+		Sysparam sys = syscon.findSysByParamname("SYS_VERSION");
+		if(!sys.getValue().equals(GlobalParam.SYSTEM_VERRSION)){
+			if(MessageDialog.openConfirm(shell, "系统提示", "系统已有更新版本，请先完成系统升级后使用！")){
+				//在线升级
+				systemUp window = new systemUp();
+				window.open();
+			}else{
+				System.exit(0);
+			}
+		}else{
+			createContents();
+			FrameUtil.center(shell);
+			shell.open();
+			shell.layout();
+			while (!shell.isDisposed()) {
+				if (!display.readAndDispatch()) {
+					display.sleep();
+				}
 			}
 		}
 	}
@@ -47,7 +73,7 @@ public class loginFrame {
 	 */
 	protected void createContents() {
 		shell = new Shell();
-		shell.setSize(450, 300);
+		shell.setSize(450, 280);
 		shell.setText("报单打印系统");
 		
 		textusername = new Text(shell, SWT.BORDER);
@@ -69,11 +95,27 @@ public class loginFrame {
 		buttonlogin.setText("登录");
 		
 		buttonlogin.addSelectionListener(new SelectionAdapter() {
+			@SuppressWarnings("unused")
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				mainFrame mainwoindow = new mainFrame();
-				mainwoindow.open();
-				shell.dispose();
+				String username = textusername.getText();
+				String pwd = textpasswrod.getText();
+				if(!username.equals("") && !pwd.equals("")){
+					Userinfo user = new Userinfo();
+					user.setUserid(username);
+					user.setPassword(pwd);
+					if(usercon.userLogin(user)){
+							//保存当前登录用户账号
+							shell.dispose();
+							GlobalParam.SYSTEM_LOGINUSER = username;
+							mainFrame mainwoindow = new mainFrame();
+							mainwoindow.open();
+					}else{
+						MessageDialog.openQuestion(shell,"系统提示","用户名或密码错误！");
+					}
+				}else{
+					MessageDialog.openQuestion(shell, "系统提示", "请输入您的用户名及密码！");
+				}
 			}
 		});
 		

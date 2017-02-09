@@ -3,16 +3,16 @@ package com.client.model.contrllo;
 import java.util.List;
 
 import com.client.common.FrameUtil;
-import com.service.service.impl.Oddnumber;
-import com.service.service.impl.OddnumberServiceImpl;
-import com.service.service.impl.OddnumberServiceImplService;
+import com.service.service.Oddnumber;
+import com.service.service.OddnumberServiceDelegate;
+import com.service.service.OddnumberServiceService;
 
 public class OddnumberContrllo {
-	private OddnumberServiceImpl oddnumserImpl;
+	private OddnumberServiceDelegate oddnumserImpl;
 	
 	public OddnumberContrllo() {
 		if(oddnumserImpl == null)
-			oddnumserImpl = new OddnumberServiceImplService().getOddnumberServiceImplPort();
+			oddnumserImpl = new OddnumberServiceService().getOddnumberServicePort();
 	}
 	
 	public void saveOddNum(Oddnumber oddnum){
@@ -24,7 +24,7 @@ public class OddnumberContrllo {
 			oddnumserImpl.deleteOddnum(oddnum);
 	}
 	
-	public List<Oddnumber> findAllOddnum(){
-		return oddnumserImpl.findAllOddnum();
+	public List<Oddnumber> findAllOddnum(String userid){
+		return oddnumserImpl.findAllOddnumByUserid(userid);
 	}
 }
