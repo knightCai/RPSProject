@@ -25,7 +25,7 @@ public class  GlobalParam {
 	public static String PRINT_DECLARENUM = "1000000000007";		//报关单号
 	public static String PRINT_CONSIGNERCOUNTRY = "501";//发件人国家
 	public static String PRINT_PASSPORT = "西安";		//过关口岸默认"西安"
-	public static String PRINT_IMAGEPATH = "d:/rps_images/";		//生成的图片保存路径，也是打印图片路径
+	public static String PRINT_IMAGEPATH = System.getProperty("user.dir")+"/rps_images/";		//生成的图片保存路径，也是打印图片路径
 	public static String PRINT_IMPORTSER = "0";		//导入批次
 	
 	/**
@@ -57,5 +57,5 @@ public class  GlobalParam {
 	 *  =================================系统信息========================================
 	 */
 	public static String SYSTEM_LOGINUSER = "admin";	//当前登录用户
-	public final static String SYSTEM_VERRSION = "1.6.2";	//系统当前版本
+	public final static String SYSTEM_VERRSION = "1.6.5";	//系统当前版本
 }

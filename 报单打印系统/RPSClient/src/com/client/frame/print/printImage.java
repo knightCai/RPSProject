@@ -70,6 +70,7 @@ public class printImage {
 	private Label label_21;
 	private Label label_19;
 	private Text text_shengshi;
+	private boolean flag;
 	
 	public printImage(int type) {
 		printType = type;
@@ -91,8 +92,9 @@ public class printImage {
 	 * Open the window.
 	 * @throws Exception 
 	 */
-	public void open() throws Exception {
+	public boolean open() throws Exception {
 		Display display = Display.getDefault();
+		flag = false;
 		createContents();
 //		Rectangle bs = printimg.getBounds();
 		shell.setSize(498, 832);
@@ -123,6 +125,7 @@ public class printImage {
 				display.sleep();
 			}
 		}
+		return flag;
 		
 	}
 
@@ -357,10 +360,11 @@ public class printImage {
 	public void doprint(){
 		try {
 			//生成打印的图片并保存在指定目录
-			FrameUtil.captureCompositeToImage(shell, composite,0,0,650,877,GlobalParam.PRINT_IMAGEPATH + GlobalParam.PRINT_IMPORTSER +"/"+GlobalParam.PRINT_DECLARENUM + ".jpg");
+			//FrameUtil.captureCompositeToImage(shell, composite,0,0,650,877,GlobalParam.PRINT_IMAGEPATH + GlobalParam.PRINT_IMPORTSER +"/"+GlobalParam.PRINT_DECLARENUM + ".jpg");
 			//调用打印机进行打印
 			PrintTest.doPrint();
 			//ImagePrinterExample.ImagePrinter(shell);
+			flag = true;
 			shell.dispose();	//打印完成销毁窗口
 		} catch (Exception e1) {
 			e1.printStackTrace();

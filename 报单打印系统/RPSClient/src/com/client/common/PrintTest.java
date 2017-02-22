@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 
 import java.awt.image.BufferedImage;
 import java.awt.print.Book;
@@ -53,15 +54,14 @@ public class PrintTest   implements Printable{
 	   try {
 	      //转换成Graphics2D
 	      Graphics2D g2 = (Graphics2D) gra;
-	      //设置打印颜色为黑色
-	      g2.setColor(Color.black);
-	
 	      //打印起点坐标
-	      double x = pf.getImageableX();
-	      double y = pf.getImageableY();
-	       
+	      /*double x = pf.getImageableX();
+	      double y = pf.getImageableY();*/
 	      switch(pageIndex){
 	         case 0:
+        	   g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING , RenderingHints.VALUE_ANTIALIAS_ON);
+	           //设置打印颜色为黑色
+	   	       g2.setColor(Color.black);
 	           //设置打印字体（字体名称、样式和点大小）（字体名称可以是物理或者逻辑名称）
 	           //Java平台所定义的五种字体系列：Serif、SansSerif、Monospaced、Dialog 和 DialogInput
 	           Font font = new Font("Microsoft YaHei UI", Font.PLAIN,10);

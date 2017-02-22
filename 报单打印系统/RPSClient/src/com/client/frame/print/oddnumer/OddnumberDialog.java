@@ -203,9 +203,9 @@ public class OddnumberDialog extends Dialog {
 	 * 跳过第一行列名以及没有运单号的数据
 	 * @param list
 	 * @return
-	 * @throws DatatypeConfigurationException 
+	 * @throws Exception 
 	 */
-	public List<Logisticslisting> packgeLogistics(List<ArrayList<String>> list) throws DatatypeConfigurationException{
+	public List<Logisticslisting> packgeLogistics(List<ArrayList<String>> list) throws Exception{
 		List<Logisticslisting> llist = new ArrayList<Logisticslisting>();
 		Logisticslisting logis;
 		int i = 1;
@@ -244,7 +244,9 @@ public class OddnumberDialog extends Dialog {
 	   		llist.add(logis);
 	   		i++;
 	   		if(Double.parseDouble(logis.getNetweight()) > Double.parseDouble(logis.getDeclareweight())){
-	   			MessageDialog.openWarning(shell, "系统提示", "第【"+ i+"】行数据有误,净重不能大于毛重!");
+	   			throw new Exception("第【"+ i+"】行数据有误,净重不能大于毛重!");
+	   		}else if(!(Double.parseDouble(logis.getNetweight())>0)){
+	   			throw new Exception("第【"+ i+"】行数据有误,净重不能为0或小于0!");
 	   		}
 		}
 		return llist;
