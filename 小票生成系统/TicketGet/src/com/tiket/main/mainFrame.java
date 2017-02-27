@@ -339,10 +339,13 @@ public class mainFrame extends ApplicationWindow {
 		//提单号及订单号map
 		Map<String, String> map = new HashMap<String, String>();
 		/**
-		 * 遍历物品信息集合，去除重复的订单号-提单号信息
+		 * 遍历物品信息集合，去除重复的：序号+订单号-提单号信息
 		 */
 		for(List<String> list1:logisticsList){
-			map.put(list1.get(1), list1.get(0));
+			if(list1.get(2).equals("")||list1.get(1).equals("")){
+				continue;
+			}
+			map.put(list1.get(0)+ "-" + list1.get(2), list1.get(1));
 		}
 		/**
 		 * 通过"订单号-提单号"筛选同类信息，打印在同一张小票内
@@ -357,16 +360,16 @@ public class mainFrame extends ApplicationWindow {
 			//遍历集合
 			for(List list2:logisticsList){
 				//筛选
-				if(list2.get(0).equals(value_tdh) && list2.get(1).equals(key_ddh)){
+				if(list2.get(1).equals(value_tdh) && (list2.get(0).toString()+"-" +list2.get(2).toString()).equals(key_ddh)){
 					tmplist.add(list2);
 				}
 			}
 			String oldinfo = text_prcimage.getText();
 			//把当前筛选出来的单个物品信息集合写入图片
 			if(drawTicketImage(riseList.get(x),tmplist)){
-				oldinfo += "订单号:"+key_ddh + ",小票生成成功！" + "\r\n";
+				oldinfo += "序号-订单号:"+key_ddh + ",小票生成成功！" + "\r\n";
 			}else{
-				oldinfo += "----->订单号:"+key_ddh + ",小票生成失败！<-------" + "\r\n";
+				oldinfo += "----->序号-订单号:"+key_ddh + ",小票生成失败！<-------" + "\r\n";
 			}
 			text_prcimage.setText(oldinfo);
 			prog++;
@@ -379,27 +382,27 @@ public class mainFrame extends ApplicationWindow {
 	 * @param logisctis
 	 */
 	private boolean drawTicketImage(List rise,List<List<String>> logisctis){
-		ImageIcon imgIcon=new ImageIcon(getClass().getResource("/source/template.png"));
-		Image theImg =imgIcon.getImage(); 
-		int width = 250;//theImg.getWidth(null)==-1?300:theImg.getWidth(null); 
-		int height = 600;//theImg.getHeight(null)==-1?600:theImg.getHeight(null); 
-		BufferedImage bimage = new BufferedImage(width,height, BufferedImage.TYPE_INT_RGB); 
-		Graphics2D g=bimage.createGraphics(); 
-		g.setColor(Color.BLACK); 
-		g.setBackground(Color.WHITE); 
-		g.drawImage(theImg, 0, 0, null ); 
-		g.setFont(new Font(null,Font.BOLD,11)); //字体、字型、字号
-		//写入文字信息
-		drawString(g, rise, logisctis);
-		
-		g.dispose(); 
 		try 
 		{ 
-			File dire = new File(classpath+"/"+logisctis.get(0).get(0));
+			ImageIcon imgIcon=new ImageIcon(getClass().getResource("/source/template.png"));
+			Image theImg =imgIcon.getImage(); 
+			int width = 250;//theImg.getWidth(null)==-1?300:theImg.getWidth(null); 
+			int height = 600;//theImg.getHeight(null)==-1?600:theImg.getHeight(null); 
+			BufferedImage bimage = new BufferedImage(width,height, BufferedImage.TYPE_INT_RGB); 
+			Graphics2D g=bimage.createGraphics(); 
+			g.setColor(Color.BLACK); 
+			g.setBackground(Color.WHITE); 
+			g.drawImage(theImg, 0, 0, null ); 
+			g.setFont(new Font(null,Font.BOLD,11)); //字体、字型、字号
+			//写入文字信息
+			drawString(g, rise, logisctis);
+			
+			g.dispose(); 
+			File dire = new File(classpath+"/"+logisctis.get(0).get(1));
 			if(!dire.exists()){
 				dire.mkdirs();
 			}
-			FileOutputStream out=new FileOutputStream(classpath+"/"+logisctis.get(0).get(0)+"/"+logisctis.get(0).get(1)+".jpg"); //先用一个特定的输出文件名 
+			FileOutputStream out=new FileOutputStream(classpath+"/"+logisctis.get(0).get(1)+"/"+logisctis.get(0).get(0)+"-"+logisctis.get(0).get(2)+".jpg"); //先用一个特定的输出文件名 
 			JPEGImageEncoder encoder =JPEGCodec.createJPEGEncoder(out); 
 			JPEGEncodeParam param = encoder.getDefaultJPEGEncodeParam(bimage); 
 			param.setQuality(2, true); 
@@ -442,14 +445,14 @@ public class mainFrame extends ApplicationWindow {
 		//币种
 		String bz = "$";
 		for(List<String> list:logisctis){
-			int amt =Integer.parseInt(list.get(5));
+			int amt =Integer.parseInt(list.get(6));
 			//折扣后的单价
-			float amnt = Float.parseFloat(list.get(6));
-			bz = list.get(7);
+			float amnt = Float.parseFloat(list.get(7));
+			bz = list.get(8);
 			//折扣随机 6~0 折，中国折扣 10 6折 = 60
 			//int gst = 10-(int)(new Random().nextInt(5));
 			//品牌 物品名称 规格
-			g.drawString(list.get(3) +" " +list.get(2)+" "+  list.get(4),15,200+y);
+			g.drawString(list.get(4) +" " +list.get(3)+" "+  list.get(5),15,200+y);
 			//购买数量
 			g.drawString(amt+"",150,200+y);
 			//购买单价
