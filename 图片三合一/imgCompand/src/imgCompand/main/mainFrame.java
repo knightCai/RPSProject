@@ -16,7 +16,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -58,14 +60,17 @@ public class mainFrame {
 	private Label label_6;
 	private ProgressBar progressBar;
 	private Label lblNewLabel_1;
-
+	private static String error_msg;	//错误信息
+	private String mdtp,sfztp,xptp,hctp,drxx;
+	private Thread downth;
+	
 	/**
 	 * Launch the application.
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		try {
-//			merge(new String[]{"D:\\receiptFile\\999160101010.jpg","D:\\receiptFile\\20170120094926.jpg","D:\\receiptFile\\999160101011.jpg"}, 1,"C:\\Users\\knight\\Desktop\\sdfasf.jpg");
+			//merge(new String[]{"D:\\receiptFile\\999160101010.jpg","D:\\receiptFile\\1324513.jpg","D:\\receiptFile\\999160101011.jpg"}, 1,"C:\\Users\\knight\\Desktop\\sdfasf.jpg");
 			mainFrame window = new mainFrame();
 			window.open();
 		} catch (Exception e) {
@@ -334,44 +339,19 @@ public class mainFrame {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				//导入信息
-				String drxx = text.getText();
+				drxx = text.getText();
 				//保存路径
-				String hctp = text_hctp.getText();
+				hctp = text_hctp.getText();
 				//面单图片路径
-				String mdtp = text_mdtp.getText();
+				mdtp = text_mdtp.getText();
 				//身份证图片路径
-				String sfztp = text_sfztp.getText();
+				sfztp = text_sfztp.getText();
 				//小票图片路径
-				String xptp = text_xptp.getText();
+				xptp = text_xptp.getText();
+				//清空信息框
+				text_info.setText("");
 				if(!drxx.equals("")&&!hctp.equals("")&&!mdtp.equals("")&&!sfztp.equals("")&&!xptp.equals("")){
-					//解析后的数据
-					List<ArrayList<String>> datalist = new ExcelUtil().read(drxx);
-					File dir  = new File(hctp);
-					if(!dir.exists()){
-						try {
-							dir.mkdirs();
-						} catch (Exception e1) {
-							e1.printStackTrace();
-						}
-					}
-					int prog = 1;
-					for(List pic:datalist){
-						String[] files = {mdtp,sfztp,xptp};
-						String savepath = hctp;
-						files[0] += "\\"+pic.get(1)+".jpg";
-						files[1] += "\\"+pic.get(2)+".jpg";
-						files[2] += "\\"+pic.get(3)+".jpg";
-						savepath += "\\"+pic.get(0)+".jpg";
-						String oldinfo = text_info.getText();
-						if(merge(files, 1, savepath)){
-							oldinfo += "报关单号:"+pic.get(0) + ",图片合成成功！" + "\r\n";
-						}else{
-							oldinfo += "----->报关单号:"+pic.get(0) + ",图片合成失败！<-------" + "\r\n";
-						}
-						text_info.setText(oldinfo);
-						progressBar.setSelection(prog/datalist.size()*100);
-						prog++;
-					}
+					(new IncresingOperator()).start();
 				}else{
 					MessageDialog.openWarning(shell, "系统提示","各路径选项不能为空！");
 				}
@@ -417,7 +397,31 @@ public class mainFrame {
 	        int[][] ImageArrays = new int[len][];  
 	        for (int i = 0; i < len; i++) {  
 	            src[i] = new File(files[i]);  
+	            if(!src[i].exists()){
+	            	switch (i) {
+					case 0:
+						error_msg = "未找到对应的面单图片："+files[i];
+						return false;
+					case 1:
+						error_msg = "未找到对应的身份证图片："+files[i];
+						return false;
+					default:
+						error_msg = "未找到对应的小票图片："+files[i];
+						return false;
+					}
+	            }
 	            images[i] = ImageIO.read(src[i]);  
+	            if(i==1){
+	            	if(images[i].getHeight() < images[i].getWidth()){
+	            		images[i] = rotate90SX(images[i]);
+	            	}
+	            	if(images[i].getHeight()>724){
+		            	BufferedImage img2 = new BufferedImage(300, 724,
+		            		       BufferedImage.TYPE_INT_RGB);
+		            	img2.getGraphics().drawImage(images[i], 0, 0,300, 724, null);
+		            	images[i] = img2;
+	            	}
+	            }
 	            int width = images[i].getWidth();  
 	            int height = images[i].getHeight();  
 	            ImageArrays[i] = new int[width * height];// 从图片中读取RGB  
@@ -476,6 +480,7 @@ public class mainFrame {
               
         } catch (Exception e) {  
             e.printStackTrace();  
+            error_msg = "系统异常:" +e.getMessage(); 
             return false;  
         }  
     	return true;
@@ -504,4 +509,86 @@ public class mainFrame {
         //定位对象窗口坐标
         shell.setLocation(((screenW - shellW) / 2), ((screenH - shellH) / 2));
     }
+    
+    //90°翻转图片 Y轴
+    public static BufferedImage rotate90DX(BufferedImage bi)
+    {
+        int width = bi.getWidth();
+        int height = bi.getHeight();
+         
+        BufferedImage biFlip = new BufferedImage(height, width, bi.getType());
+         
+        for(int i=0; i<width; i++)
+            for(int j=0; j<height; j++)
+                biFlip.setRGB(height-1-j, width-1-i, bi.getRGB(i, j));
+         
+        return biFlip;
+    }
+     
+    //90°旋转图片
+    public static BufferedImage rotate90SX(BufferedImage bi)
+    {
+        int width = bi.getWidth();
+        int height = bi.getHeight();
+         
+        BufferedImage biFlip = new BufferedImage(height, width, bi.getType());
+         
+        for(int i=0; i<width; i++)
+            for(int j=0; j<height; j++)
+            	biFlip.setRGB(height - j -1 , i, bi.getRGB(i, j));
+         
+        return biFlip;
+    }
+    
+    class IncresingOperator extends Thread { 
+    	  public void run() { 
+    	   Display.getDefault().asyncExec(new Runnable() { 
+    	    public void run() { 
+
+    	     	//解析后的数据
+				final List<ArrayList<String>> datalist = new ExcelUtil().read(drxx);
+				File dir  = new File(hctp);
+				if(!dir.exists()){
+					try {
+						dir.mkdirs();
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+				}
+				Map<String, String> error_map = new HashMap<String, String>();
+				float prog = 1;
+				for(List pic:datalist){
+					String[] files = {mdtp,sfztp,xptp};
+					String savepath = hctp;
+					files[0] += "\\"+pic.get(1)+".jpg";
+					files[1] += "\\"+pic.get(2)+".jpg";
+					files[2] += "\\"+pic.get(3)+".jpg";
+					savepath += "\\"+pic.get(0)+".jpg";
+					String oldinfo = text_info.getText();
+					if(merge(files, 1, savepath)){
+						oldinfo += "报关单号:"+pic.get(0) + ",图片合成成功！" + "\r\n";
+					}else{
+						oldinfo += "----->报关单号:"+pic.get(0) + ",图片合成失败！【"+error_msg+"】<-------" + "\r\n";
+						error_map.put(pic.get(0).toString(), error_msg);
+					}
+					final int bar = (int) (prog/datalist.size()*100);
+					final String oldinfof = oldinfo;
+					progressBar.setSelection(bar);
+					text_info.setText(oldinfof);
+					prog++;
+				}
+				if(error_map.size()>0){
+					try {
+						ExcelUtil.createExcel(error_map, hctp+"\\图片合成异常信息");
+					} catch (Exception e1) {
+						MessageDialog.openWarning(shell, "系统异常",e1.getMessage());
+					}
+				}else{
+					MessageDialog.openInformation(shell, "系统提示","图片合成完成！");
+				}
+    	    } 
+    	   }); 
+    	  } 
+    	 }
+	 
 }
