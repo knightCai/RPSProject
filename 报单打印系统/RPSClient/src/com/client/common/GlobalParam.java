@@ -44,6 +44,15 @@ public class  GlobalParam {
 		COUNTRYIDS.put("133", "Korea, Rep.");
 		COUNTRYIDS.put("116", "Japan");
 	}
+	/**
+	 * =================================国别对应发货人代码表========================================
+	 */
+	public static Map<String, String> NERNAME_OF_COUNTRYS = new HashMap<String, String>();
+	static{
+		NERNAME_OF_COUNTRYS.put("501", "Quick logistis");
+		NERNAME_OF_COUNTRYS.put("502", "soonda");
+		NERNAME_OF_COUNTRYS.put("601", "Longmen express");
+	}
 	
 	/**
 	 *  =================================资源路径========================================
@@ -52,10 +61,12 @@ public class  GlobalParam {
 	public static String SOURCE_PRINTMUSIC = "/source/music/b_print.wav";		//扫码正确音效
 	public static String SOURCE_TWOPRINTMUSIC = "/source/music/twoprint.wav";	//重复扫描提示音效
 	public static String SOURCE_ERRORMUSIC = "/source/music/p_error.wav";		//系统错误音效
+	public static String SOURCE_LOGONAME = "/images/system/logo.ico";		//系统logo图标
 	
 	/**
 	 *  =================================系统信息========================================
 	 */
 	public static String SYSTEM_LOGINUSER = "admin";	//当前登录用户
-	public final static String SYSTEM_VERRSION = "1.6.5";	//系统当前版本
+	public final static String SYSTEM_VERRSION = "1.6.8";	//系统当前版本
+	public static final String SYSTEM_SYSNAME = "报关打印系统";	//系统名称
 }

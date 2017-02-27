@@ -1,9 +1,12 @@
 package com.client.frame.main;
 
+import java.io.InputStream;
+
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
@@ -58,6 +61,8 @@ public class loginFrame {
 		}else{
 			createContents();
 			FrameUtil.center(shell);
+			InputStream in = this.getClass().getResourceAsStream(GlobalParam.SOURCE_LOGONAME);
+			shell.setImage(new  Image(shell.getDisplay(), in));
 			shell.open();
 			shell.layout();
 			while (!shell.isDisposed()) {
@@ -74,7 +79,7 @@ public class loginFrame {
 	protected void createContents() {
 		shell = new Shell();
 		shell.setSize(450, 280);
-		shell.setText("报单打印系统");
+		shell.setText(GlobalParam.SYSTEM_SYSNAME);
 		
 		textusername = new Text(shell, SWT.BORDER);
 		textusername.setBounds(180, 32, 173, 26);

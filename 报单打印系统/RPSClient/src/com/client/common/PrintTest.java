@@ -93,7 +93,8 @@ public class PrintTest   implements Printable{
 	           g2.drawLine(6, 65, 290, 65);// 第二条横线
 	           String senduser = "寄件人/Form:";
 	           g2.drawString(senduser,12,80);
-	           String text_consignername = GlobalParam.PRINT_CONSIGNERNAME;
+	           String text_consignername = GlobalParam.NERNAME_OF_COUNTRYS.get(GlobalParam.PRINT_CONSIGNERCOUNTRY);
+	           text_consignername = text_consignername==null?GlobalParam.PRINT_CONSIGNERNAME:text_consignername;
 	           g2.drawString(text_consignername,80,80);
 	           String sendAddress2 = "进口口岸:";
 	           g2.drawString(sendAddress2,180,80);
@@ -180,7 +181,8 @@ public class PrintTest   implements Printable{
       
    }
    public static void main(String[] args) {
-	   doPrint();
+	   System.out.println(GlobalParam.NERNAME_OF_COUNTRYS.get(""));
+	   //doPrint();
 	   //System.out.println("辽宁锦州市太和区天桥街道经济技术开发区渤海大道2段金".length());
 }
    public static void doPrint() {

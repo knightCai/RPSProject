@@ -6,7 +6,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
@@ -169,7 +171,13 @@ public class OddnumberDialog extends Dialog {
 							oddcount = oddcount+oddnum.getSuplusnum();
 						}
 					}
-					if(oddcount<list.size()){
+					Map<String, String> numMap = new HashMap<String, String>();
+					//通过报关单号及序号筛选同一物流包裹
+					//key：序号+运单号 value：后续存放 报关单号
+			    	for (Logisticslisting logis : llist) {
+						numMap.put(logis.getSerialnum()+logis.getExpressnum(),null );
+					}
+					if(oddcount<numMap.size()){
 						MessageDialog.openError(shell,"系统提示","系统库存报关单号数量少于货物导入数量！请先添加报关单号再进行导入操作！");
 						shell.dispose();
 						return;

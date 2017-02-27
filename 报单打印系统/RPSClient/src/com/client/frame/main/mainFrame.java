@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.client.common.FrameUtil;
+import com.client.common.GlobalParam;
 import com.client.common.WordComposite;
 import com.client.frame.data.DataComp;
 import com.client.frame.print.printComp;
@@ -58,9 +59,9 @@ public class mainFrame {
 	protected void createContents() {
 		shell = new Shell();
 		shell.setMinimumSize(1080,768);
-		shell.setText("报单打印系统");
-		//InputStream in = this.getClass().getResourceAsStream("/images/system/printer-blue.ico");
-		//shell.setImage(new  Image(shell.getDisplay(), in));
+		shell.setText(GlobalParam.SYSTEM_SYSNAME);
+		InputStream in = this.getClass().getResourceAsStream(GlobalParam.SOURCE_LOGONAME);
+		shell.setImage(new  Image(shell.getDisplay(), in));
 		FrameUtil.center(shell);
 		showCTabFolder(shell);
 	}

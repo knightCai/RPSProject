@@ -3,6 +3,7 @@ package com.client.frame.print;
 import java.awt.Robot;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
@@ -33,7 +34,6 @@ public class printImage {
 	protected Shell shell;
 	protected Composite composite;	//用于生成打印图片的图层
 	private Image printimg;	//设置背景图片为打印模板
-	private String filename = "printmodel.png";
 	private Text text_consignername;	//寄件人名称
 	private Text text_consigneraddr;	//寄件人地址
 	private Text text_consignerphone;	//寄件人电话
@@ -72,16 +72,16 @@ public class printImage {
 	private Text text_shengshi;
 	private boolean flag;
 	
-	public printImage(int type) {
+/*	public printImage(int type) {
 		printType = type;
-	}
+	}*/
 	/**
 	 * Launch the application.
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		try {
-			printImage window = new printImage(0);
+			printImage window = new printImage();
 			window.open();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -98,6 +98,8 @@ public class printImage {
 		createContents();
 //		Rectangle bs = printimg.getBounds();
 		shell.setSize(498, 832);
+		InputStream in = this.getClass().getResourceAsStream(GlobalParam.SOURCE_LOGONAME);
+		shell.setImage(new  Image(shell.getDisplay(), in));
 		FrameUtil.center(shell);
 		Button btnNewButton = new Button(shell, SWT.NONE);
 		btnNewButton.setBounds(30, 10, 98, 30);
@@ -114,12 +116,12 @@ public class printImage {
 		});
 		shell.open();
 		shell.layout();
-		//判断打印模式,扫码枪，直接打印
+		/*//判断打印模式,扫码枪，直接打印
 		if(printType == 1){
 			//完成打印后提示音
 			FrameUtil.isOk_printmusic();
 			doprint();
-		}
+		}*/
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
@@ -334,7 +336,9 @@ public class printImage {
 	 * @throws Exception 
 	 */
 	private void initPrintParams() throws Exception{
-		text_consignername.setText(GlobalParam.PRINT_CONSIGNERNAME);
+		String consignername = GlobalParam.NERNAME_OF_COUNTRYS.get(GlobalParam.PRINT_CONSIGNERCOUNTRY);
+		consignername = consignername==null?GlobalParam.PRINT_CONSIGNERNAME:consignername;
+		text_consignername.setText(consignername);
 		text_consigneraddr.setText(GlobalParam.PRINT_CONSIGNERADDR);;
 		text_consignerphone.setText(GlobalParam.PRINT_CONSIGNERPHONE);;
 		text_consigneename.setText(GlobalParam.PRINT_CONSIGNEENAME);
