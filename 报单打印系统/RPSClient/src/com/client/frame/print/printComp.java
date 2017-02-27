@@ -4,7 +4,9 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.ws.WebServiceException;
 
@@ -32,6 +34,7 @@ import com.client.common.ExcelUtil;
 import com.client.common.FileUtil;
 import com.client.common.FrameUtil;
 import com.client.common.GlobalParam;
+import com.client.common.PrintTest;
 import com.client.frame.print.oddnumer.OddnumberDialog;
 import com.client.model.contrllo.LogisticsListContrllo;
 import com.client.model.contrllo.OddnumberContrllo;
@@ -115,6 +118,7 @@ public class printComp extends Composite {
 					if(expressnum.equals("")){
 						TableItem[] items = table.getSelection();
 						if(items.length < 1){
+							FrameUtil.isError_systemmusic();
 							MessageDialog.openConfirm(getShell(), "系统提示","请选择需要打印的内容");
 						}else{
 							expressnum = items[0].getText(3);
@@ -176,6 +180,7 @@ public class printComp extends Composite {
 	                    public void run() {  
 	                    	try {
 								ExcelUtil.createExcel(logislist,filepath);
+								MessageDialog.openInformation(getShell(), "系统提示", "文件导出成功！");
 							} catch (Exception e) {
 								FrameUtil.isError_systemmusic();
 								MessageDialog.openError(getShell(), "系统提示", "物流清单导出异常！"+e.getMessage());
@@ -455,6 +460,7 @@ public class printComp extends Composite {
     private void loadTable(Table table){
     	putCondition();
 		List<Logisticslisting> logislist = logisContrllo.findLlistByParams(condition);
+		Map<String,String> calmap = new HashMap<String, String>();
 		TableItem item;
 		Logisticslisting logis;
 		float weightsum = 0f; 
@@ -504,9 +510,10 @@ public class printComp extends Composite {
 			   	logis.getLegalnum()*/
 			});
             //item.setText(new String[]{oddnum.getStartnum(), oddnum.getEndnum(),oddnum.getSuplusnum() + "",oddnum.getUsenum(),oddnum.getState().equals("0")?"未使用":oddnum.getState().equals("1")?"正在使用":"禁用",oddnum.getWarnnum()+"",oddnum.getCreatetime().toString().substring(0,10),oddnum.getPkid()}); 
+			calmap.put(logis.getDeclarenum(),logis.getExpressnum());
 		}
 		DecimalFormat fnum = new DecimalFormat("##0.00");
-		lblkg.setText("包裹总数:"+logislist.size()+"  总重量:"+fnum.format(weightsum)+"Kg");
+		lblkg.setText("包裹总数:"+calmap.size()+"  总重量:"+fnum.format(weightsum)+"Kg");
 	} 
     
     
@@ -551,22 +558,17 @@ public class printComp extends Composite {
 					MessageDialog.openWarning(getShell(),"系统提示","当前运单已打印，扫码枪打印不支持重复打印！运单号："+GlobalParam.PRINT_EXPRESSNUM);
 					return;
 				}
-				printImage pm = new printImage(operType);
-				if(pm.open()){
-					String[] msgcode = logisContrllo.updateLlistBySql(" isprint = '1' where expressnum = '"+GlobalParam.PRINT_EXPRESSNUM+"' and importnum = '"+text_importnum.getText()+"'" ).split(",");
-					if(msgcode[0].equals("999")){
-						FrameUtil.isError_systemmusic();
-						MessageDialog.openWarning(getShell(), "系统提示", "修改打印状态失败："+msgcode[1]);
+				if(operType == 1){
+					//调用打印机进行打印
+					//完成打印后提示音
+					FrameUtil.isOk_printmusic();
+					PrintTest.doPrint();
+					afterPrint();
+				}else{
+					printImage pm = new printImage();
+					if(pm.open()){
+						afterPrint();
 					}
-					/*if(operType==1){
-						text.setText("");
-					}*/
-					Display.getDefault().syncExec(new Runnable() {
-	                    public void run() {  
-							table.removeAll();
-							loadTable(table);
-	                    }
-	                });
 				}
 			}else{
 				//运单号查询无数据提示音
@@ -575,6 +577,26 @@ public class printComp extends Composite {
     	} catch (Exception e) {
     		e.printStackTrace();
     	}
+    }
+    
+    /**
+     * 完成打印后更新打印状态，重新加载数据
+     */
+    private void afterPrint(){
+    	String[] msgcode = logisContrllo.updateLlistBySql(" isprint = '1' where expressnum = '"+GlobalParam.PRINT_EXPRESSNUM+"' and importnum = '"+text_importnum.getText()+"'" ).split(",");
+		if(msgcode[0].equals("999")){
+			FrameUtil.isError_systemmusic();
+			MessageDialog.openWarning(getShell(), "系统提示", "修改打印状态失败："+msgcode[1]);
+		}
+		/*if(operType==1){
+			text.setText("");
+		}*/
+		Display.getDefault().syncExec(new Runnable() {
+            public void run() {  
+				table.removeAll();
+				loadTable(table);
+            }
+        });
     }
     
 }

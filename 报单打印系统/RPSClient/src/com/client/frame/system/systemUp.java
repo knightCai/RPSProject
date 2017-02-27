@@ -20,8 +20,10 @@ import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 
 import com.client.common.FrameUtil;
+import com.client.common.GlobalParam;
 import com.client.model.contrllo.SysparamContrllo;
 import com.service.service.Sysparam;
 
@@ -58,6 +60,8 @@ public class systemUp {
 		createContents();
 		shell.open();
 		shell.layout();
+		InputStream in = this.getClass().getResourceAsStream(GlobalParam.SOURCE_LOGONAME);
+		shell.setImage(new  Image(shell.getDisplay(), in));
 		FrameUtil.center(shell);
 		syscon = new SysparamContrllo();
 		Label label = new Label(shell, SWT.NONE);
