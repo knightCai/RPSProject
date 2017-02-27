@@ -9,6 +9,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
@@ -242,6 +243,70 @@ public class ExcelUtil {
         return resultStr;
     }
   
+    /**
+	 * 方法描述：生成excel文件
+	 * 
+	 * @param list	代扣文件对象
+	 * @param filePath 文件导出路径 
+	 * @author 蔡鑫
+	 * @throws Exception 
+	 * @time:2016-10-27 上午10:07:28
+	 * @throws IOException
+	 */
+    @SuppressWarnings("deprecation")
+	public static boolean createExcel(Map<String,String> errormap,String filePath) throws Exception  
+    {  
+    	boolean flag = true;
+    	// 第一步，创建一个webbook，对应一个Excel文件  
+        HSSFWorkbook wb = new HSSFWorkbook();  
+        // 第二步，在webbook中添加一个sheet,对应Excel文件中的sheet  
+        HSSFSheet sheet = wb.createSheet("三合一异常信息");  
+        // 第三步，在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制short  
+        HSSFRow row = sheet.createRow((int) 0);  
+        // 第四步，创建单元格，并设置值表头 设置表头居中  
+        HSSFCellStyle style = wb.createCellStyle();  
+        style.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式  
+        HSSFCellStyle styleLeft = wb.createCellStyle();  
+        styleLeft.setAlignment(HSSFCellStyle.ALIGN_LEFT); // 创建一个左对齐格式
+        HSSFCellStyle styleRight = wb.createCellStyle();  
+        styleRight.setAlignment(HSSFCellStyle.ALIGN_RIGHT); // 创建一个右对齐格式
+
+        HSSFCell cell = row.createCell((short) 0);  
+        cell.setCellValue("报关单号");  									
+        cell.setCellStyle(style);  
+        cell = row.createCell((short) 1);  
+        cell.setCellValue("异常信息");  
+        cell.setCellStyle(style);  
+        
+        int i = 1;
+        // 第五步，写入实体数据   
+        for (String key:errormap.keySet())  
+        {  
+            row = sheet.createRow(i);  
+         // 第四步，创建单元格，并设置值 
+            cell = row.createCell((short) 0);
+            cell.setCellValue(key);
+            cell.setCellStyle(styleLeft);
+            cell = row.createCell((short) 1);
+            cell.setCellValue(errormap.get(key)); 
+            cell.setCellStyle(styleLeft);
+            i++;
+        }  
+     // 第六步，将文件存到指定位置  
+        try  
+        {  
+            FileOutputStream fout = new FileOutputStream(filePath +".xls");  
+            wb.write(fout);  
+            fout.close();  
+        }  
+        catch (Exception e)  
+        {  
+            e.printStackTrace();
+            return false;
+        }  
+        return flag;
+    }  
+    
     /**
 	 * 方法描述：测试方法
 	 * 
