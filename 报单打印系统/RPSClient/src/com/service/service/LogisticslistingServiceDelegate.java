@@ -101,4 +101,26 @@ public interface LogisticslistingServiceDelegate {
 	@ResponseWrapper(localName = "findMaxImportnumResponse", targetNamespace = "http://service.service.com/", className = "com.service.service.FindMaxImportnumResponse")
 	public String findMaxImportnum(@WebParam(name = "userid", targetNamespace = "") String userid);
 
+	/**
+	 * 
+	 * @param llists
+	 * @return returns java.lang.String
+	 */
+	@WebMethod
+	@WebResult(targetNamespace = "")
+	@RequestWrapper(localName = "updateBatch", targetNamespace = "http://service.service.com/", className = "com.service.service.UpdateBatch")
+	@ResponseWrapper(localName = "updateBatchResponse", targetNamespace = "http://service.service.com/", className = "com.service.service.UpdateBatchResponse")
+	public String updateBatch(@WebParam(name = "Llists", targetNamespace = "") List<Logisticslisting> llists);
+
+	/**
+	 * 
+	 * @param pkids
+	 * @return returns java.lang.String
+	 */
+	@WebMethod
+	@WebResult(targetNamespace = "")
+	@RequestWrapper(localName = "deleteBatch", targetNamespace = "http://service.service.com/", className = "com.service.service.DeleteBatch")
+	@ResponseWrapper(localName = "deleteBatchResponse", targetNamespace = "http://service.service.com/", className = "com.service.service.DeleteBatchResponse")
+	public String deleteBatch(@WebParam(name = "pkids", targetNamespace = "") List<String> pkids);
+
 }

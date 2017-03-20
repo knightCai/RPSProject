@@ -58,6 +58,7 @@ public class  GlobalParam {
 	 *  =================================资源路径========================================
 	 */
 	public static String SOURCE_IMPORTTEMPLE = "/source/importTemple.xls";		//导入模板文件的存放路径
+	public static String SOURCE_UPDATETEMPLE = "/source/updateLogisTemple.xls";		//修改模板文件的存放路径
 	public static String SOURCE_PRINTMUSIC = "/source/music/b_print.wav";		//扫码正确音效
 	public static String SOURCE_TWOPRINTMUSIC = "/source/music/twoprint.wav";	//重复扫描提示音效
 	public static String SOURCE_ERRORMUSIC = "/source/music/p_error.wav";		//系统错误音效
@@ -67,6 +68,8 @@ public class  GlobalParam {
 	 *  =================================系统信息========================================
 	 */
 	public static String SYSTEM_LOGINUSER = "admin";	//当前登录用户
-	public final static String SYSTEM_VERRSION = "1.6.8";	//系统当前版本
+	public static String SYSTEM_ADMINUSER = "admin";	//系统管理员
+	public final static String SYSTEM_VERRSION = "1.6.11";	//系统当前版本
 	public static final String SYSTEM_SYSNAME = "报关打印系统";	//系统名称
+	public static final String DES_PASSWORD = "9588028820109132570743325311898426347857298773549468758875018579537757772163084478873699447306034466200616411960574122434059469100235892702736860872901247123456";		//DES密钥
 }

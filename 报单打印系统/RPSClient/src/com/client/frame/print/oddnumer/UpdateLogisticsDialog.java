@@ -38,7 +38,7 @@ import com.service.service.Logisticslisting;
 import com.service.service.Oddnumber;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-public class OddnumberDialog extends Dialog {
+public class UpdateLogisticsDialog extends Dialog {
 
 	protected Object result = "false";
 	protected Shell shell;
@@ -52,7 +52,7 @@ public class OddnumberDialog extends Dialog {
 	 * @param parent
 	 * @param style
 	 */
-	public OddnumberDialog(Shell parent, int style) {
+	public UpdateLogisticsDialog(Shell parent, int style) {
 		super(parent, style);
 		logiscor = new LogisticsListContrllo();
 		oddnumcor = new OddnumberContrllo();
@@ -136,9 +136,9 @@ public class OddnumberDialog extends Dialog {
 					dd.setText("setText");  
 					dd.setFilterPath("C://");  
 					String saveFile=dd.open();  
-					boolean flg= FileUtil.downloadLocal("报关单导入模板.xls",saveFile,GlobalParam.SOURCE_IMPORTTEMPLE);
+					boolean flg= FileUtil.downloadLocal("报关信息修改导入模板.xls",saveFile,GlobalParam.SOURCE_UPDATETEMPLE);
 					if(flg){
-						MessageDialog.openInformation(shell, "系统提示", "模板下载成功!保存路径为："+saveFile+"/报关单导入模板.xls");
+						MessageDialog.openInformation(shell, "系统提示", "模板下载成功!保存路径为："+saveFile+"/报关信息修改导入模板.xls");
 					}else{
 						MessageDialog.openError(shell, "系统提示", "模板下载失败！");
 					}
@@ -165,43 +165,17 @@ public class OddnumberDialog extends Dialog {
 					List<ArrayList<String>> list = new ExcelUtil().read(text.getText());
 					List<Logisticslisting> llist;
 					llist = packgeLogistics(list);
-					//查询该总运单号是否已存在
-					List<String> param = new ArrayList<String>();
-					param.add("importuser:"+GlobalParam.SYSTEM_LOGINUSER);
-					param.add("importnum:"+llist.get(0).getImportnum());
-					param.add("serialnum<5 and '1':1");
-					if(logiscor.findLlistByParams(param).size()>0){
-						throw new Exception("总运单号：【"+llist.get(0).getImportnum()+"】系统中已导入，请修改总运单号！");
-					}
-					List<Oddnumber> oddnums = oddnumcor.findAllOddnum(GlobalParam.SYSTEM_LOGINUSER);
-					int oddcount = 0;
-					for(Oddnumber oddnum:oddnums){
-						if(oddnum.getState().equals("0")){
-							oddcount = oddcount+oddnum.getSuplusnum();
-						}
-					}
-					Map<String, String> numMap = new HashMap<String, String>();
-					//通过报关单号及序号筛选同一物流包裹
-					//key：序号+运单号 value：后续存放 报关单号
-			    	for (Logisticslisting logis : llist) {
-						numMap.put(logis.getSerialnum()+logis.getExpressnum(),null );
-					}
-					if(oddcount<numMap.size()){
-						MessageDialog.openError(shell,"系统提示","系统库存报关单号数量少于货物导入数量！请先添加报关单号再进行导入操作！");
-						shell.dispose();
-						return;
-					}
-					String result = logiscor.saveBatch(llist);
+					String result = logiscor.updateBatch(llist);
 					resultStr = result.split(",");
 					if(resultStr[0].equals("999")){
-						msg = "数据导入失败！异常原因：" + resultStr[1];
+						msg = "数据批量修改失败！异常原因：" + resultStr[1];
 					}else{
-						msg = "数据导入成功！";
+						msg = "数据批量修改成功！";
 						result = "true";
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
-					msg = "数据导入失败！异常原因：" + e.getMessage();
+					msg = "数据批量修改失败！异常原因：" + e.getMessage();
 					FrameUtil.isError_systemmusic();
 				}
 				MessageDialog.openInformation(shell,"系统提示",msg);
@@ -227,53 +201,22 @@ public class OddnumberDialog extends Dialog {
 		Logisticslisting logis;
 		int i = 1;
 		for(List temp:list){
-			if(temp.get(2).toString().equals("")){
-	   			continue;
-	   		}
+			if(temp.get(0).toString().equals("")){
+				continue;
+			}
 			logis = new  Logisticslisting();
-			logis.setPkid(FrameUtil.getUUID());
-			logis.setDeclarenum(temp.get(2).toString());
-			logis.setSerialnum(temp.get(0).toString());
-			logis.setExpressnum(temp.get(2).toString());
-			logis.setBrand(temp.get(3).toString());
-			logis.setCargoname(temp.get(4).toString());
-			logis.setCargotype(temp.get(5).toString());
-			logis.setDeclareweight(temp.get(6).toString());
-			logis.setDeclareprice(temp.get(7).toString());
-			logis.setDeclarepricesum(temp.get(8).toString());
-			logis.setLegalnum(temp.get(9).toString());
-			//logis.setLegalunit(temp.get(10).toString());
-			logis.setNetweight(temp.get(10).toString());
-			//logis.setCargoid(temp.get(12).toString());
-			logis.setPackagecount(temp.get(11).toString());
-			logis.setCount(temp.get(12).toString());
-			logis.setConsigneename(temp.get(13).toString());
+			logis.setDeclarenum(temp.get(0).toString());
+			logis.setConsigneename(temp.get(1).toString());
 			//地址内容：收货人省份+收货人城市+收货人详细地址
-			logis.setConsigneeaddr(temp.get(14).toString()+"|"+ temp.get(15).toString() +"|"+temp.get(16).toString());
-			logis.setConsigneephone(temp.get(17).toString());
-			logis.setConsignercardid(temp.get(18).toString());
-			logis.setConsignername(temp.get(19).toString());
-			logis.setConsigneraddr(temp.get(20).toString());
-			logis.setConsignerphone(temp.get(21).toString());
-			logis.setConsignercountry(temp.get(22).toString());
-			//logis.setConsigneecountry(temp.get(24).toString());
-			logis.setIsprint("0");
-			logis.setImportnum(temp.get(1).toString());
-			logis.setImportuser(GlobalParam.SYSTEM_LOGINUSER);
+			logis.setConsigneeaddr(temp.get(2).toString()+"|"+ temp.get(3).toString() +"|"+temp.get(4).toString());
+			logis.setConsigneephone(temp.get(5).toString());
+			logis.setConsignercardid(temp.get(6).toString());
 			logis.setCreatetime(FrameUtil.convertToXMLGregorianCalendar(new Date()));
 	   		llist.add(logis);
 	   		i++;
-	   		if(Double.parseDouble(logis.getNetweight()) > Double.parseDouble(logis.getDeclareweight())){
-	   			throw new Exception("第【"+ i+"】行数据有误,净重不能大于毛重!");
-	   		}else if(!(Double.parseDouble(logis.getNetweight())>0)){
-	   			throw new Exception("第【"+ i+"】行数据有误,净重不能为0或小于0!");
-	   		}
 	   		if(!Pattern.compile("^\\d{15}|\\d{17}[0-9A-Z]$").matcher(logis.getConsignercardid()).matches()){
 				throw new Exception("第【"+ i+"】行数据有误,身份证格式不正确!");
 			}
-		}
-		if(llist.size()==0){
-			throw new Exception("没有找到需要导入的数据！");
 		}
 		return llist;
 	}
