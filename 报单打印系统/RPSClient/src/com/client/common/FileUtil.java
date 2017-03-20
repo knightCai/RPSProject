@@ -13,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Date;
@@ -21,6 +22,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
 import javax.xml.datatype.DatatypeFactory;
@@ -31,6 +34,7 @@ import org.apache.tools.zip.ZipOutputStream; //这个包在ant.jar里，要到�
 import org.eclipse.swt.SWT;
 
 import com.service.service.Logisticslisting;
+import com.service.service.Userinfo;
 
 public class FileUtil {
 	
@@ -40,11 +44,10 @@ public class FileUtil {
 	 * @return
 	 * @throws FileNotFoundException
 	 */
-	public static boolean downloadLocal(String filepath) throws FileNotFoundException {
+	public static boolean downloadLocal(String fileName,String filepath,String sourcepath) throws FileNotFoundException {
         // 下载本地文件
-        String fileName = "报关单导入模板.xls".toString(); // 文件的默认保存名
         // 读到流中
-        InputStream inStream = new FileUtil().getClass().getResourceAsStream(GlobalParam.SOURCE_IMPORTTEMPLE);// 文件的存放路径
+        InputStream inStream = new FileUtil().getClass().getResourceAsStream(sourcepath);// 文件的存放路径
         BufferedInputStream bis = null;
         BufferedOutputStream bos = null;
         // 设置输出的格式
@@ -219,7 +222,7 @@ public class FileUtil {
 					GlobalParam.PRINT_CONSIGNEEADDR = logis.getConsigneeaddr();
 					GlobalParam.PRINT_CONSIGNEEPHONE = logis.getConsigneephone();
 					GlobalParam.PRINT_CARGONAME_CARGOTYPE += logis.getCargoname() + "*"+ logis.getCount()+ "  " + logis.getBrand() + "，"  + logis.getCargotype()+ lineChg;
-					GlobalParam.PRINT_WEIGHT = (Float.parseFloat(GlobalParam.PRINT_WEIGHT) + Float.parseFloat(logis.getDeclareweight())) + "";
+					GlobalParam.PRINT_WEIGHT = new BigDecimal(GlobalParam.PRINT_WEIGHT).add(new BigDecimal(logis.getDeclareweight())).toString();
 					GlobalParam.PRINT_EXPRESSNUM = logis.getExpressnum();
 					GlobalParam.PRINT_DECLARENUM = logis.getDeclarenum();
 					GlobalParam.PRINT_CONSIGNERCOUNTRY = logis.getConsignercountry();
@@ -264,7 +267,14 @@ public class FileUtil {
 	}
     public static void main(String[] args) throws Exception
      {
-    	downLoadFromUrl("http://47.91.140.252:7001/RPSService/imgCompand.zip", "rpsclient.zip", "D:\\");
+    	Userinfo user = new Userinfo();
+    	user.setUserid("test");
+    	user.setPassword("123123");
+    	saveLoginInfo(user);
+    	user = getLoginInfo();
+    	System.out.println(user.getUserid() + "=========" + user.getPassword());
+    	//System.out.println(Pattern.compile("^\\d{15}|\\d{17}[0-9A-Z]$").matcher("36072719940127281X").matches());
+    	//downLoadFromUrl("http://47.91.140.252:7001/RPSService/imgCompand.zip", "rpsclient.zip", "D:\\");
        //new FileUtil().zip("D:\\rps_images\\");
        /*File f = new File("D:\\rps_images\\20000001.jpg");
        FileInputStream fis = new FileInputStream(f);
@@ -285,5 +295,44 @@ public class FileUtil {
        bis.close();
        zos.close(); */
      }
-
+    
+    /**
+     * 保存用户登录信息
+     * @param user
+     * @throws Exception
+     */
+    public static void saveLoginInfo(Userinfo user) throws Exception{
+    	String filepath = System.getProperty("user.dir")+"/userinfo.properties";
+    	File file = new File(filepath);
+    	FileOutputStream ofile = new FileOutputStream(file);
+    	Properties pre = new Properties();
+    	pre.setProperty("userid",user.getUserid());
+    	byte[] r = DESSecurity.encrypt(user.getPassword().getBytes(), GlobalParam.DES_PASSWORD);
+    	pre.setProperty("pwd",new String(r,"ISO-8859-1"));
+    	pre.setProperty("isSave", user.getState());
+    	DESSecurity.decrypt(r,GlobalParam.DES_PASSWORD);
+    	pre.store(ofile, "userinfo.properties");
+    	ofile.close();
+    }
+    /**
+     * 获取用户登录信息
+     * @return
+     * @throws Exception
+     */
+    public static Userinfo getLoginInfo() throws Exception{
+    	Userinfo user = new Userinfo();
+    	String filepath = System.getProperty("user.dir")+"/userinfo.properties";
+    	File file = new File(filepath);
+    	if(!file.exists()){
+    		return user;
+    	}
+    	FileInputStream ifile = new FileInputStream(file);
+    	Properties pre = new Properties();
+    	pre.load(ifile);
+    	user.setUserid(pre.getProperty("userid"));
+    	user.setPassword(new String(DESSecurity.decrypt(pre.getProperty("pwd").getBytes("ISO-8859-1"),GlobalParam.DES_PASSWORD)));
+    	user.setState(pre.getProperty("isSave"));
+    	ifile.close();
+    	return user;
+    }
 }

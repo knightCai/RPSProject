@@ -488,7 +488,10 @@ public class ExcelUtil {
             cell.setCellValue(llist.getConsignercardid());
             cell.setCellStyle(styleLeft);
             cell = row.createCell((short) 16);
-            cell.setCellValue(llist.getConsignername());
+            String text_consignername = GlobalParam.NERNAME_OF_COUNTRYS.get(llist.getConsignercountry());
+            text_consignername = text_consignername==null?llist.getConsignername():text_consignername;
+            cell.setCellValue(text_consignername);
+            //cell.setCellValue(llist.getConsignername());
             cell.setCellStyle(styleLeft);
             cell = row.createCell((short) 17);
             cell.setCellValue(llist.getConsignercountry());

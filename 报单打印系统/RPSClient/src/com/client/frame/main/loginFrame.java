@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.client.common.FileUtil;
 import com.client.common.FrameUtil;
 import com.client.common.GlobalParam;
 import com.client.frame.system.systemUp;
@@ -28,6 +29,7 @@ public class loginFrame {
 	private Text textpasswrod;
 	private UserinfoContrllo usercon;
 	private SysparamContrllo syscon;
+	private Button btnCheckSaveLogin;
 	
 	/**
 	 * Launch the application.
@@ -96,33 +98,64 @@ public class loginFrame {
 		label_1.setBounds(83, 78, 76, 20);
 		
 		Button buttonlogin = new Button(shell, SWT.NONE);
-		buttonlogin.setBounds(159, 129, 98, 30);
+		buttonlogin.setBounds(154, 137, 98, 30);
 		buttonlogin.setText("登录");
 		
+		btnCheckSaveLogin = new Button(shell, SWT.CHECK);
+		btnCheckSaveLogin.setBounds(154, 186, 121, 20);
+		btnCheckSaveLogin.setText("记住登录密码");
+
 		buttonlogin.addSelectionListener(new SelectionAdapter() {
 			@SuppressWarnings("unused")
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				String username = textusername.getText();
-				String pwd = textpasswrod.getText();
-				if(!username.equals("") && !pwd.equals("")){
-					Userinfo user = new Userinfo();
-					user.setUserid(username);
-					user.setPassword(pwd);
-					if(usercon.userLogin(user)){
-							//保存当前登录用户账号
-							shell.dispose();
-							GlobalParam.SYSTEM_LOGINUSER = username;
-							mainFrame mainwoindow = new mainFrame();
-							mainwoindow.open();
+				try {
+					String username = textusername.getText();
+					String pwd = textpasswrod.getText();
+					if(!username.equals("") && !pwd.equals("")){
+						Userinfo user = new Userinfo();
+						user.setUserid(username);
+						user.setPassword(pwd);
+						if(usercon.userLogin(user)){
+							//如果选择了记住密码，保存密码信息
+								if(btnCheckSaveLogin.getSelection()){
+									user.setState("1");
+								}else{
+									user.setUserid("");
+									user.setPassword("");
+									user.setState("0");
+								}
+								FileUtil.saveLoginInfo(user);
+								//记住当前登录用户账号
+								shell.dispose();
+								GlobalParam.SYSTEM_LOGINUSER = username;
+								mainFrame mainwoindow = new mainFrame();
+								mainwoindow.open();
+						}else{
+							MessageDialog.openQuestion(shell,"系统提示","用户名或密码错误！");
+						}
 					}else{
-						MessageDialog.openQuestion(shell,"系统提示","用户名或密码错误！");
+						MessageDialog.openQuestion(shell, "系统提示", "请输入您的用户名及密码！");
 					}
-				}else{
-					MessageDialog.openQuestion(shell, "系统提示", "请输入您的用户名及密码！");
+				} catch (Exception e) {
+					MessageDialog.openQuestion(shell, "系统提示", "登录异常，请联系管理员！");
 				}
 			}
 		});
+		
+		//获取用户本地保存的账户信息
+		try {
+			Userinfo user = FileUtil.getLoginInfo();
+			boolean isSave = "1".equals(user.getState())?true:false;
+			if(isSave){
+				btnCheckSaveLogin.setSelection(true);
+				textusername.setText(user.getUserid());
+				textpasswrod.setText(user.getPassword());
+			}
+		} catch (Exception e) {
+			MessageDialog.openQuestion(shell, "系统提示", "获取本地账户信息异常，请联系管理员！");
+			e.printStackTrace();
+		}
 		
 	}
 

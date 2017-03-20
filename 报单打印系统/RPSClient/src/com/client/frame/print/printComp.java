@@ -1,14 +1,12 @@
 package com.client.frame.print;
 
-import java.io.InputStream;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.xml.ws.WebServiceException;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
@@ -18,14 +16,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.TraverseEvent;
 import org.eclipse.swt.events.TraverseListener;
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.printing.PrintDialog;
-import org.eclipse.swt.printing.Printer;
-import org.eclipse.swt.printing.PrinterData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -36,14 +27,14 @@ import com.client.common.FrameUtil;
 import com.client.common.GlobalParam;
 import com.client.common.PrintTest;
 import com.client.frame.print.oddnumer.OddnumberDialog;
+import com.client.frame.print.oddnumer.UpdateLogisticsDialog;
 import com.client.model.contrllo.LogisticsListContrllo;
 import com.client.model.contrllo.OddnumberContrllo;
-import com.ibm.icu.text.DecimalFormat;
 import com.service.service.Logisticslisting;
+import com.service.service.Oddnumber;
 
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -66,13 +57,14 @@ public class printComp extends Composite {
 	private String expressnum;//运单号
 	private String importnum;	//总运单号（航空）
 	private LogisticsListContrllo logisContrllo; //运单接口处理类
-	private OddnumberContrllo oddnumcor;	//报关单号接口处理类
+	private OddnumberContrllo oddnumContrllo;	//报关单号接口处理类
 	private Button btn_isshama;	//是否扫码枪模式
 	private Label lblkg;	//包裹总数
 
 	public printComp(Composite parent, int style) {  
 		super(parent, style);
 		logisContrllo = new LogisticsListContrllo();
+		oddnumContrllo = new OddnumberContrllo();
         composite = this;
         /*InputStream in = this.getClass().getResourceAsStream("/images/system/bg-main.jpg");
         composite.setBackgroundImage(new  Image(this.getShell().getDisplay(), in));*/
@@ -121,7 +113,7 @@ public class printComp extends Composite {
 							FrameUtil.isError_systemmusic();
 							MessageDialog.openConfirm(getShell(), "系统提示","请选择需要打印的内容");
 						}else{
-							expressnum = items[0].getText(3);
+							expressnum = items[0].getText(4);
 							printLogistics(0);//预览打印
 						}
 					}else{
@@ -136,26 +128,36 @@ public class printComp extends Composite {
         
         Button button_1 = new Button(this, SWT.NONE);
         button_1.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
-        button_1.setText("报关清单导入");
+        String buttonStr = "报关清单导入";
+        if(GlobalParam.SYSTEM_LOGINUSER.equalsIgnoreCase(GlobalParam.SYSTEM_ADMINUSER)){
+        	buttonStr = "报关信息修改";
+        }
+        button_1.setText(buttonStr);
         //报关清单导入
         button_1.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				if(oddnumDialog == null){
-					oddnumDialog =  new OddnumberDialog(getShell(),SWT.NULL);
+				//判断是否为系统管理员，系统管理员该功能为报关信息修改
+				if(!GlobalParam.SYSTEM_LOGINUSER.equalsIgnoreCase(GlobalParam.SYSTEM_ADMINUSER)){
+					if(oddnumDialog == null){
+						oddnumDialog =  new OddnumberDialog(getShell(),SWT.NULL);
+					}
+	            	Object obj = oddnumDialog.open();
+	            	if(obj.toString().equals("true")){
+		            	String max = logisContrllo.findMaxImportnum(GlobalParam.SYSTEM_LOGINUSER);
+		        		max = max==null?"":max;
+		        		text_importnum.setText(max);
+		        		Display.getDefault().syncExec(new Runnable() {
+		                    public void run() {  
+								table.removeAll();
+								loadTable(table);
+		                    }
+		                });
+	            	}
+				}else{
+					UpdateLogisticsDialog uplogis = new UpdateLogisticsDialog(getShell(), SWT.NULL);
+					Object obj = uplogis.open();
 				}
-            	Object obj = oddnumDialog.open();
-            	if(obj.toString().equals("true")){
-	            	String max = logisContrllo.findMaxImportnum(GlobalParam.SYSTEM_LOGINUSER);
-	        		max = max==null?"":max;
-	        		text_importnum.setText(max);
-	        		Display.getDefault().syncExec(new Runnable() {
-	                    public void run() {  
-							table.removeAll();
-							loadTable(table);
-	                    }
-	                });
-            	}
 			}
 		});
         
@@ -229,7 +231,48 @@ public class printComp extends Composite {
         		}
         	}
 		});
-        new Label(this, SWT.NONE);
+        //清单删除按钮
+        Button btn_delete = new Button(this, SWT.NONE);
+        GridData gd_btn_delete = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+        gd_btn_delete.widthHint = 102;
+        btn_delete.setLayoutData(gd_btn_delete);
+        btn_delete.setText("删除");
+        btn_delete.addSelectionListener(new SelectionAdapter() {
+        	@Override
+        	public void widgetSelected(SelectionEvent e) {
+        		//table 总列数
+        		int lastcum = table.getColumnCount()-1;
+        		//获取选中行的pkid，通过pkid删除清单对象
+        		List<String> delpkids = new ArrayList<String>();
+        		for(TableItem it:table.getItems()){
+        			if(it.getChecked()){
+        				//获取存放在最后一列的pkid
+        				delpkids.add(it.getText(lastcum));
+        			}
+        		}
+        		if(delpkids.size()>0){
+        			if(MessageDialog.openConfirm(getShell(), "系统提示", "确定要删除你所选定的数据吗？")){
+        				//批量删除
+        				String[] msgcode = logisContrllo.deleteBatch(delpkids).split(",");
+        				if(msgcode[0].equals("999")){
+        					FrameUtil.isError_systemmusic();
+        					MessageDialog.openError(getShell(), "系统提示", "删除失败："+msgcode[1]);
+        				}else{
+	        				Display.getDefault().syncExec(new Runnable() {
+	        		            public void run() {  
+	        						table.removeAll();
+	        						loadTable(table);
+	        		            }
+	        		        });
+	        				MessageDialog.openInformation(getShell(), "系统提示", "删除成功！");
+        				}
+        			}
+        		}else{
+        			FrameUtil.isError_systemmusic();
+        			MessageDialog.openInformation(getShell(), "系统提示", "请勾选需要删除的数据！");
+        		}
+        	}
+        });
         new Label(this, SWT.NONE);
         new Label(this, SWT.NONE);
         new Label(this, SWT.NONE);
@@ -300,6 +343,15 @@ public class printComp extends Composite {
 				}
 			}
 		});
+        List<Oddnumber> oddnums = oddnumContrllo.findAllOddnum(GlobalParam.SYSTEM_LOGINUSER);
+        for(Oddnumber odd:oddnums){
+        	if(odd.getSuplusnum()<odd.getWarnnum()){
+        		FrameUtil.isError_systemmusic();
+				MessageDialog.openInformation(getShell(), "系统提示", "【"+odd.getStartnum()+"】批次的报关单号目前剩余【"+odd.getSuplusnum()+"】," +
+						"已小于预警数【"+odd.getWarnnum()+"】请联系管理员添加单号！");
+				break;
+        	}
+        }
         createTable();
         text.setFocus();
     }  
@@ -361,23 +413,38 @@ public class printComp extends Composite {
         gridData.grabExcessVerticalSpace = true;  
         gridData.verticalAlignment = SWT.FILL;  
     	// 创建表格，使用SWT.FULL_SELECTION样式，可同时选中一行  
-        table = new Table(composite, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);  
+        table = new Table(composite, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION | SWT.MULTI);  
         table.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 11, 1));
         table.setHeaderVisible(true);// 设置显示表头  
         table.setLayoutData(gridData);// 设置表格布局  
         table.setLinesVisible(true);
         
+        TableColumn tableColumn = new TableColumn(table, SWT.NONE);  
+        tableColumn.setText("全/反选");  
+        // 设置表头可移动，默认为false  
+        tableColumn.setMoveable(true);  
+        //全选反选事件
+        tableColumn.addSelectionListener(new SelectionAdapter() {
+        	@Override
+        	public void widgetSelected(SelectionEvent e) {
+        		for(TableItem tmpt:table.getItems()){
+        			tmpt.setChecked(!tmpt.getChecked());
+        		}
+        	}
+		});
         // 创建表头的字符串数组  
-        String[] tableHeader = {"        导入序号        ", "        打印状态        ", "        报关单号        ", "        物流单号        ","        收件人姓名        ",
+        String[] tableHeader = {"  导入序号     ", "   打印状态      ", "        报关单号        ", "        物流单号        ","        收件人姓名        ",
         		"        收件人地址        ","        收件人电话        ","        总运单号        ",
         		"        实际重量        ","        货品名称        ","        规格型号        ","        导入时间        "};  
         for (int i = 0; i < tableHeader.length; i++)  
         {  
-            TableColumn tableColumn = new TableColumn(table, SWT.NONE);  
+        	tableColumn = new TableColumn(table, SWT.NONE);  
             tableColumn.setText(tableHeader[i]);  
             // 设置表头可移动，默认为false  
             tableColumn.setMoveable(true);  
-        }  
+        }
+        tableColumn = new TableColumn(table, SWT.NONE);  
+        tableColumn.setText("pkid");  
         // 设置图标  
         // item.setImage( ImageFactory.loadImage(  
         // table.getDisplay(),ImageFactory.ICON_GIRL));  
@@ -399,7 +466,7 @@ public class printComp extends Composite {
         });  
         // ******************************************************/  
         // 重新布局表格  
-        for (int i = 0; i < tableHeader.length; i++)  
+        for (int i = 0; i < tableHeader.length+1; i++)  
         {  
             table.getColumn(i).pack();  
         }  
@@ -418,6 +485,7 @@ public class printComp extends Composite {
                     // 如果该行为选中状态，改变背景色和前景色，否则颜色设置  
                     if (table.isSelected(i))  
                     {  
+                    	item.setChecked(!item.getChecked());
                         item.setBackground(getShell().getDisplay().getSystemColor(  
                                 SWT.COLOR_BLUE));  
                         item.setForeground(getShell().getDisplay().getSystemColor(  
@@ -463,16 +531,17 @@ public class printComp extends Composite {
 		Map<String,String> calmap = new HashMap<String, String>();
 		TableItem item;
 		Logisticslisting logis;
-		float weightsum = 0f; 
+		String weightsum = "0"; 
 		for(int i = 0;i < logislist.size(); i++){
 			logis = logislist.get(i);
 			//统计毛重总和
-			weightsum += Float.parseFloat(logis.getDeclareweight());
+			weightsum = new BigDecimal(weightsum).add(new BigDecimal(logis.getDeclareweight())).toString();
 			item = new TableItem(table, SWT.NONE);
 			//地址：省、市 与详细地址”|“分割存放在同一字段
 			String[] str = logis.getConsigneeaddr().split("\\|");
 			// {"导入序号", "打印状态", "报关单号", "物流单号","收件人姓名","收件人地址","收件人电话","总运单号","实际重量","货品名称","规格型号","导入时间"};  
 			item.setText(new String[]{
+				"",
 				logis.getSerialnum(),
 				logis.getIsprint().equals("1")?"已打印":"未打印",
 				logis.getDeclarenum(),
@@ -501,7 +570,8 @@ public class printComp extends Composite {
 				//logis.getNetweight(),
 			   	logis.getCargoname(),
 			   	logis.getCargotype(),
-			   	logis.getCreatetime().toString().substring(0, 10)
+			   	logis.getCreatetime().toString().substring(0, 10),
+			   	logis.getPkid()
 			   	/*logis.getCount(),
 			   	logis.getUnit(),
 			   	logis.getTrademode(),
@@ -509,11 +579,9 @@ public class printComp extends Composite {
 			   	logis.getNetweight(),
 			   	logis.getLegalnum()*/
 			});
-            //item.setText(new String[]{oddnum.getStartnum(), oddnum.getEndnum(),oddnum.getSuplusnum() + "",oddnum.getUsenum(),oddnum.getState().equals("0")?"未使用":oddnum.getState().equals("1")?"正在使用":"禁用",oddnum.getWarnnum()+"",oddnum.getCreatetime().toString().substring(0,10),oddnum.getPkid()}); 
 			calmap.put(logis.getDeclarenum(),logis.getExpressnum());
 		}
-		DecimalFormat fnum = new DecimalFormat("##0.00");
-		lblkg.setText("包裹总数:"+calmap.size()+"  总重量:"+fnum.format(weightsum)+"Kg");
+		lblkg.setText("包裹总数:"+calmap.size()+"  总重量:"+weightsum+"Kg");
 	} 
     
     
@@ -546,7 +614,7 @@ public class printComp extends Composite {
 					GlobalParam.PRINT_CONSIGNEEADDR = logis.getConsigneeaddr();
 					GlobalParam.PRINT_CONSIGNEEPHONE = logis.getConsigneephone();
 					GlobalParam.PRINT_CARGONAME_CARGOTYPE += logis.getCargoname() + "*"+ logis.getCount()+ "  " + logis.getBrand() + "，"  + logis.getCargotype()+ lineChg;
-					GlobalParam.PRINT_WEIGHT = (Float.parseFloat(GlobalParam.PRINT_WEIGHT) + Float.parseFloat(logis.getDeclareweight())) + "";
+					GlobalParam.PRINT_WEIGHT = new BigDecimal(GlobalParam.PRINT_WEIGHT).add(new BigDecimal(logis.getDeclareweight())).toString();
 					GlobalParam.PRINT_EXPRESSNUM = logis.getExpressnum();
 					GlobalParam.PRINT_DECLARENUM = logis.getDeclarenum();
 					GlobalParam.PRINT_CONSIGNERCOUNTRY = logis.getConsignercountry();

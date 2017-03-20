@@ -1,5 +1,6 @@
 package com.client.model.contrllo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.client.common.FrameUtil;
@@ -49,5 +50,13 @@ public class LogisticsListContrllo {
 	
 	public String findMaxImportnum(String userid){
 		return Loglistser.findMaxImportnum(userid);	
+	}
+
+	public String updateBatch(List<Logisticslisting> llist) {
+		return Loglistser.updateBatch(llist);
+	}
+	
+	public String deleteBatch(List<String> delpkids) {
+		return Loglistser.deleteBatch(delpkids);
 	}
 }
