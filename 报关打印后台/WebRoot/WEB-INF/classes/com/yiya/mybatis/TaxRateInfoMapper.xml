@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yiya.mapper.TaxRateInfoMapper" > 
+	<!-- Result Map-->
+	<resultMap id="BaseResultMap" type="com.yiya.bean.TaxRateInfo" >
+			    	<result column="id" property="id"/>
+			    	<result column="taxnum" property="taxnum"/>
+			    	<result column="rate" property="rate"/>
+			    	<result column="mmo1" property="mmo1"/>
+			    	<result column="mmo2" property="mmo2"/>
+			</resultMap>
+	       
+	<!-- TbcClassify table all fields -->
+	<sql id="Base_Column_List" >
+		id,taxnum,rate,mmo1,mmo2
+	</sql>
+	   
+	   
+	<!-- 查询条件 -->
+	<sql id="Example_Where_Clause">
+	where  1=1
+	<trim  suffixOverrides="," >
+					    	<if test="id != null and id != ''" >
+				    and id like CONCAT('%', #{id}, '%')
+				</if>
+					    	<if test="taxnum != null and taxnum != ''" >
+				    and taxnum like CONCAT('%', #{taxnum}, '%')
+				</if>
+					    	<if test="rate != null and rate != ''" >
+				    and rate like CONCAT('%', #{rate}, '%')
+				</if>
+					    	<if test="mmo1 != null and mmo1 != ''" >
+				    and mmo1 like CONCAT('%', #{mmo1}, '%')
+				</if>
+					    	<if test="mmo2 != null and mmo2 != ''" >
+				    and mmo2 like CONCAT('%', #{mmo2}, '%')
+				</if>
+				</trim>
+	</sql>
+	   
+	
+	<!-- 插入记录 -->
+	<insert id="add" parameterType="Object" >
+	  <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+		SELECT LAST_INSERT_ID()
+	  </selectKey>
+		insert into t_zy_taxrateinfo(id,taxnum,rate,mmo1,mmo2)
+ values(#{id},#{taxnum},#{rate},#{mmo1},#{mmo2})
+	</insert>
+	
+	<!-- 批量插入 -->
+	<insert id="insertbatch" parameterType="java.util.List">
+		insert into t_zy_taxrateinfo(id,taxnum,rate,mmo1,mmo2) values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(
+				    		#{item.id},
+				    		#{item.taxnum},
+				    		#{item.rate},
+				    		#{item.mmo1},
+				    		#{item.mmo2},
+						)
+		</foreach>
+	</insert>
+	
+	<!-- 修改记录-->  
+	 <update id="update" parameterType="Object" >
+	  	update t_zy_taxrateinfo set taxnum=#{taxnum},rate=#{rate},mmo1=#{mmo1},mmo2=#{mmo2} where id=#{id}
+	 </update>
+	 
+	 <!--修改技术，为null 这不修改 -->
+	<update id="updateBySelective" parameterType="Object" >
+		update t_zy_taxrateinfo set 
+	<trim  suffixOverrides="," >
+	<if test="taxnum != null  and taxnum != '' ">
+		taxnum=#{taxnum},
+	</if>
+	<if test="rate != null  and rate != '' ">
+		rate=#{rate},
+	</if>
+	<if test="mmo1 != null  and mmo1 != '' ">
+		mmo1=#{mmo1},
+	</if>
+	<if test="mmo2 != null  and mmo2 != '' ">
+		mmo2=#{mmo2},
+	</if>
+	</trim> where id=#{id}
+	</update>
+	
+	<!-- 删除 -->
+	<update id="delete" parameterType="Object">
+		delete 	 from t_zy_taxrateinfo where id = #{id}
+	</update>
+	 
+	<!-- 删除品名重复的内容 -->
+	<update id="deleteDouble" parameterType="Object">
+		delete a.* from
+		t_zy_taxrateinfo as a,(SELECT min(t.id) id,t.paramname FROM
+		t_zy_taxrateinfo as t GROUP BY t.paramname having count(1) >1) as b
+		where a.paramname=b.paramname and a.id != b.id
+	</update>
+	
+	<!-- 分类列表 -->
+	<select id="queryById"  resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select <include refid="Base_Column_List" /> 
+	 from t_zy_taxrateinfo where id = #{id}
+	</select>
+	  	
+	<!-- 分类 列表总数-->
+	<select id="queryByCount" resultType="java.lang.Integer"  parameterType="Object">
+		select count(1) from t_zy_taxrateinfo 
+		<include refid="Example_Where_Clause"/>
+	</select>
+	  	
+	<!-- 根据id查询分类 -->
+	<select id="queryByList" resultMap="BaseResultMap"  parameterType="Object">
+		select 
+		<include refid="Base_Column_List"/>
+		from t_zy_taxrateinfo 
+		<include refid="Example_Where_Clause"/>
+		<if test="pager.orderCondition != null and pager.orderCondition != ''" >
+	      ${pager.orderCondition}
+	    </if>
+	    ${pager.mysqlQueryCondition}
+	</select>
+</mapper>   

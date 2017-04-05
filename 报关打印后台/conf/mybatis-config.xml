@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	
+ 
+ 
+ <typeAliases>
+	</typeAliases>
+	
+ 
+ 
+ <mappers>
+		
+  
+  
+  <mapper resource="com/yiya/mybatis/SiteMainMapper.xml"/>
+		
+  
+  
+  <mapper resource="com/yiya/mybatis/SiteTypeMapper.xml"/>
+		
+  
+  
+  <mapper resource="com/yiya/mybatis/SiteColumnMapper.xml"/>
+		
+  
+  
+  <mapper resource="com/yiya/mybatis/SiteScoreMapper.xml"/>
+		
+  
+  
+  <mapper resource="com/yiya/mybatis/SysMenuMapper.xml"/>
+		
+  
+  
+  <mapper resource="com/yiya/mybatis/SysUserMapper.xml"/>
+		
+  
+  
+  <mapper resource="com/yiya/mybatis/SysRoleMapper.xml"/>
+		
+  
+  
+  <mapper resource="com/yiya/mybatis/SysRoleRelMapper.xml"/>
+		
+  
+  
+  <mapper resource="com/yiya/mybatis/SysMenuBtnMapper.xml"/>
+		
+  
+  
+  <!-- 客户管理 -->
+		
+  
+  
+  <mapper resource="com/yiya/mybatis/KhUserMapper.xml"/>
+		
+  
+  
+  <mapper resource="com/yiya/mybatis/OddNumMapper.xml"/>
+		
+  
+  
+  <mapper resource="com/yiya/mybatis/LogisTicsMapper.xml"/>
+		
+  
+  
+  <mapper resource="com/yiya/mybatis/XysbhParamMapper.xml"/>
+		
+  
+  
+  <mapper resource="com/yiya/mybatis/ZypmdzParamMapper.xml"/>
+		
+  
+  
+  <mapper resource="com/yiya/mybatis/OddnumerDiyMapper.xml"/>
+	
+  
+  
+  <mapper resource="com/yiya/mybatis/TaxRateInfoMapper.xml"/>
+ 
+ 
+  <mapper resource="com/yiya/mybatis/TicketInfoMapper.xml"/>
+ </mappers>
+
+
+
+</configuration>

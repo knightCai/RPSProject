@@ -1,0 +1,51 @@
+$package('YiYa.${lowerName}');
+YiYa.${lowerName} = function(){
+	var _box = null;
+	var _this = {
+		config:{
+  			dataGrid:{
+  				title:'${codeName}列表',
+	   			url:'dataList.do',
+	   			columns:[[
+		#foreach($filed in ${columnDatas})
+			#if($filed.getColumnName()=='pkid'||$filed.getColumnName()=='id')
+				{field:'id',checkbox:true},
+			#elseif($filed.getColumnName()=='state')
+				{field:'state',title:'状态',width:80,align:'center',sortable:true,styler:function(value,row,index){
+					if(value == 1){
+					  return 'color:red;';  
+					}
+				},
+				formatter:function(value,row,index){
+					if(value == 0){
+						return "可用";
+					}
+					if(value == 1){
+						return "禁用";
+					}
+				}},
+			#else
+				{field:'$filed.getColumnName()',title:'$filed.getColumnComment()',width:80,sortable:true},
+			#end
+		#end
+				]],
+				toolbar:[
+							{id:'btnadd',text:'新增',btnType:'add'},
+							{id:'btnedit',text:'信息修改',btnType:'edit'},
+							{id:'btndelete',text:'删除',btnType:'remove'},
+							{id:'btnimports',text:'批量导入',btnType:'imports'}
+						]
+					}
+				},
+				init:function(){
+					//_this.initForm();
+					_box = new YDataGrid(_this.config); 
+					_box.init();
+				}
+			}
+			return _this;
+		}();
+
+$(function(){
+	YiYa.${lowerName}.init();
+});	

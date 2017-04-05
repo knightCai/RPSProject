@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yiya.mapper.OddNumMapper" > 
+<!-- Result Map-->
+<resultMap id="BaseResultMap" type="com.yiya.bean.OddNum" >
+	<result column="pkid" property="id"/>
+	<result column="startnum" property="startnum"/>
+	<result column="endnum" property="endnum"/>
+	<result column="suplusnum" property="suplusnum"/>
+	<result column="amountnum" property="amountnum"/>
+	<result column="usenum" property="usenum"/>
+	<result column="state" property="state"/>
+	<result column="warnnum" property="warnnum"/>
+	<result column="createtime" property="createtime"/>
+	<result column="userid" property="userid"/>
+</resultMap>
+       
+<!-- t_zy_oddnumber table all fields -->
+<sql id="Base_Column_List" >
+	 pkid,startnum,endnum,suplusnum,amountnum,usenum,state,warnnum,createtime,userid
+</sql>
+   
+   
+<!-- 查询条件 -->
+<sql id="Example_Where_Clause">
+where 1=1
+<trim  suffixOverrides="," >
+	<if test="id != null" >
+	    and pkid =  #{id}
+	</if>
+ 	<if test="userid != null and userid != ''" >
+	     and userid like CONCAT('%', #{userid}, '%')
+	</if>
+	<if test="state != null" >
+	    and state =  #{state}
+	</if>
+</trim>
+</sql>
+   
+
+<!-- 插入记录 -->
+<insert id="add" parameterType="Object" >
+<!--   <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+	SELECT LAST_INSERT_ID()
+  </selectKey> -->
+  insert into t_zy_oddnumber(pkid,startnum,endnum,suplusnum,amountnum,usenum,state,warnnum,createtime,userid)
+ values(#{id},#{startnum},#{endnum},#{suplusnum},#{amountnum},#{usenum},#{state},#{warnnum},#{createtime},#{userid})
+</insert>
+
+<!-- 根据id，修改记录-->  
+ <update id="update" parameterType="Object" >
+  update t_zy_oddnumber set startnum =#{startnum},endnum=#{endnum},suplusnum=#{suplusnum},amountnum=#{amountnum},usenum=#{usenum},state=#{state},warnnum=#{warnnum},createtime=#{createtime},userid=#{userid} where pkid =#{id}
+ </update>
+ 
+ <!-- 修改记录，只修改值不为空的字段 -->
+<update id="updateBySelective" parameterType="Object" >
+	update t_zy_oddnumber set 
+	<trim  suffixOverrides="," >
+	<if test="userid != null  and userid != '' ">
+		userid=#{userid},
+	</if>
+	<if test="startnum != null  and startnum != '' ">
+		startnum=#{startnum},
+	</if>
+	<if test="endnum != null  and endnum != '' ">
+		endnum=#{endnum},
+	</if>
+	<if test="suplusnum != null  and suplusnum != '' ">
+		suplusnum=#{suplusnum},
+	</if>
+	<if test="amountnum != null  and amountnum != '' ">
+		amountnum=#{amountnum},
+	</if>
+	<if test="usenum != null  and usenum != '' ">
+		usenum=#{usenum},
+	</if>
+	<if test="state != null  and state != ''  ">
+		state=#{state},
+	</if>
+	<if test="warnnum != null  and warnnum != '' ">
+		warnnum=#{warnnum},
+	</if>
+	<if test="createtime != null  and createtime != '' ">
+		createtime=#{createtime},
+	</if>
+	</trim> where pkid=#{id}
+</update>
+
+<!-- 删除记录 -->
+<delete id="delete" parameterType="Object">
+	delete 	 from t_zy_oddnumber where pkid = #{id}
+</delete>
+ 
+<!-- 根据id查询 系统用户 -->
+<select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+	select <include refid="Base_Column_List" /> 
+	 from t_zy_oddnumber where pkid = #{id}
+</select>
+
+<!-- 系统用户 列表总数-->
+<select id="queryByCount" resultType="java.lang.Integer"  parameterType="Object">
+	select count(1) from t_zy_oddnumber 
+	<include refid="Example_Where_Clause"/>
+</select>
+  	
+<!-- 查询系统用户列表 -->
+<select id="queryByList" resultMap="BaseResultMap"  parameterType="Object">
+	select 
+	<include refid="Base_Column_List"/>
+	from t_zy_oddnumber
+	<include refid="Example_Where_Clause"/>
+	<if test="pager.orderCondition != null and pager.orderCondition != ''" >
+      ${pager.orderCondition}
+    </if>
+    <if test="pager.mysqlQueryCondition != null and pager.mysqlQueryCondition != ''" >
+       ${pager.mysqlQueryCondition}
+    </if>
+</select>
+  	
+</mapper>   

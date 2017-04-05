@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yiya.mapper.TicketInfoMapper" > 
+	<!-- Result Map-->
+	<resultMap id="BaseResultMap" type="com.yiya.bean.TicketInfo" >
+			    	<result column="id" property="id"/>
+			    	<result column="sernum" property="sernum"/>
+			    	<result column="bino" property="bino"/>
+			    	<result column="delnum" property="delnum"/>
+			    	<result column="wpname" property="wpname"/>
+			    	<result column="brand" property="brand"/>
+			    	<result column="spec" property="spec"/>
+			    	<result column="count" property="count"/>
+			    	<result column="price" property="price"/>
+			    	<result column="currency" property="currency"/>
+			    	<result column="discount" property="discount"/>
+			</resultMap>
+	       
+	<!-- TbcClassify table all fields -->
+	<sql id="Base_Column_List" >
+		id,sernum,bino,delnum,wpname,brand,spec,count,price,currency,discount
+	</sql>
+	   
+	   
+	<!-- 查询条件 -->
+	<sql id="Example_Where_Clause">
+	where  1=1
+	<trim  suffixOverrides="," >
+					    	<if test="id != null and id != ''" >
+				    and id like CONCAT('%', #{id}, '%')
+				</if>
+					    	<if test="sernum != null and sernum != ''" >
+				    and sernum like CONCAT('%', #{sernum}, '%')
+				</if>
+					    	<if test="bino != null and bino != ''" >
+				    and bino like CONCAT('%', #{bino}, '%')
+				</if>
+					    	<if test="delnum != null and delnum != ''" >
+				    and delnum like CONCAT('%', #{delnum}, '%')
+				</if>
+					    	<if test="wpname != null and wpname != ''" >
+				    and wpname like CONCAT('%', #{wpname}, '%')
+				</if>
+					    	<if test="brand != null and brand != ''" >
+				    and brand like CONCAT('%', #{brand}, '%')
+				</if>
+					    	<if test="spec != null and spec != ''" >
+				    and spec like CONCAT('%', #{spec}, '%')
+				</if>
+					    	<if test="count != null and count != ''" >
+				    and count like CONCAT('%', #{count}, '%')
+				</if>
+					    	<if test="price != null and price != ''" >
+				    and price like CONCAT('%', #{price}, '%')
+				</if>
+					    	<if test="currency != null and currency != ''" >
+				    and currency like CONCAT('%', #{currency}, '%')
+				</if>
+					    	<if test="discount != null and discount != ''" >
+				    and discount like CONCAT('%', #{discount}, '%')
+				</if>
+				</trim>
+	</sql>
+	   
+	
+	<!-- 插入记录 -->
+	<insert id="add" parameterType="Object" >
+	  <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+		SELECT LAST_INSERT_ID()
+	  </selectKey>
+		insert into t_sys_ticketinfo(id,sernum,bino,delnum,wpname,brand,spec,count,price,currency,discount)
+ values(#{id},#{sernum},#{bino},#{delnum},#{wpname},#{brand},#{spec},#{count},#{price},#{currency},#{discount})
+	</insert>
+	
+	<!-- 批量插入 -->
+	<insert id="insertbatch" parameterType="java.util.List">
+		insert into t_sys_ticketinfo(id,sernum,bino,delnum,wpname,brand,spec,count,price,currency,discount) values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(
+				    		#{item.id},
+				    		#{item.sernum},
+				    		#{item.bino},
+				    		#{item.delnum},
+				    		#{item.wpname},
+				    		#{item.brand},
+				    		#{item.spec},
+				    		#{item.count},
+				    		#{item.price},
+				    		#{item.currency},
+				    		#{item.discount},
+						)
+		</foreach>
+	</insert>
+	
+	<!-- 修改记录-->  
+	 <update id="update" parameterType="Object" >
+	  	update t_sys_ticketinfo set sernum=#{sernum},bino=#{bino},delnum=#{delnum},wpname=#{wpname},brand=#{brand},spec=#{spec},count=#{count},price=#{price},currency=#{currency},discount=#{discount} where id=#{id}
+	 </update>
+	 
+	 <!--修改技术，为null 这不修改 -->
+	<update id="updateBySelective" parameterType="Object" >
+		update t_sys_ticketinfo set 
+	<trim  suffixOverrides="," >
+	<if test="sernum != null  and sernum != '' ">
+		sernum=#{sernum},
+	</if>
+	<if test="bino != null  and bino != '' ">
+		bino=#{bino},
+	</if>
+	<if test="delnum != null  and delnum != '' ">
+		delnum=#{delnum},
+	</if>
+	<if test="wpname != null  and wpname != '' ">
+		wpname=#{wpname},
+	</if>
+	<if test="brand != null  and brand != '' ">
+		brand=#{brand},
+	</if>
+	<if test="spec != null  and spec != '' ">
+		spec=#{spec},
+	</if>
+	<if test="count != null  and count != '' ">
+		count=#{count},
+	</if>
+	<if test="price != null  and price != '' ">
+		price=#{price},
+	</if>
+	<if test="currency != null  and currency != '' ">
+		currency=#{currency},
+	</if>
+	<if test="discount != null  and discount != '' ">
+		discount=#{discount},
+	</if>
+	</trim> where id=#{id}
+	</update>
+	
+	<!-- 删除 -->
+	<update id="delete" parameterType="Object">
+		delete 	 from t_sys_ticketinfo where id = #{id}
+	</update>
+	 
+	<!-- 删除品名重复的内容 -->
+	<update id="deleteDouble" parameterType="Object">
+		delete a.* from
+		t_sys_ticketinfo as a,(SELECT min(t.id) id,t.paramname FROM
+		t_sys_ticketinfo as t GROUP BY t.paramname having count(1) >1) as b
+		where a.paramname=b.paramname and a.id != b.id
+	</update>
+	
+	<!-- 分类列表 -->
+	<select id="queryById"  resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select <include refid="Base_Column_List" /> 
+	 from t_sys_ticketinfo where id = #{id}
+	</select>
+	  	
+	<!-- 分类 列表总数-->
+	<select id="queryByCount" resultType="java.lang.Integer"  parameterType="Object">
+		select count(1) from t_sys_ticketinfo 
+		<include refid="Example_Where_Clause"/>
+	</select>
+	  	
+	<!-- 根据id查询分类 -->
+	<select id="queryByList" resultMap="BaseResultMap"  parameterType="Object">
+		select 
+		<include refid="Base_Column_List"/>
+		from t_sys_ticketinfo 
+		<include refid="Example_Where_Clause"/>
+		<if test="pager.orderCondition != null and pager.orderCondition != ''" >
+	      ${pager.orderCondition}
+	    </if>
+	    ${pager.mysqlQueryCondition}
+	</select>
+</mapper>   

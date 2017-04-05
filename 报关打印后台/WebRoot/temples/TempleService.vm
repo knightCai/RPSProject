@@ -1,0 +1,42 @@
+/*
+ * 文件名：
+ * 版权：Copyright 2017-2020 517na Tech. Co. Ltd. All Rights Reserved. 
+ * 描述： ${className}
+ * 修改人：knight
+ * 修改时间：${date}
+ * 修改内容：新增
+ */
+package com.yiya.service;
+
+import java.util.List;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.yiya.bean.${className};
+import com.yiya.mapper.${className}Mapper;
+
+/**
+ * ${className}.
+ * @author knight
+ */
+@Service("${lowerName}Service")
+public class ${className}Service<T> extends BaseService<T> {
+	private final static Logger log= Logger.getLogger(SiteColumnService.class);
+
+	@Autowired
+    private ${className}Mapper<T> mapper;
+
+		
+	public ${className}Mapper<T> getMapper() {
+		return mapper;
+	}
+	
+	public void insertbatch(List<${className}> ${lowerName}list) {
+		mapper.insertbatch(${lowerName}list);
+	}
+
+	public void deleteDouble() {
+		mapper.deleteDouble();
+	}
+}

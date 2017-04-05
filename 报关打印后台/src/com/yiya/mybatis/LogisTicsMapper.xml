@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yiya.mapper.LogisTicsMapper" > 
+	<!-- Result Map-->
+	<resultMap id="BaseResultMap" type="com.yiya.bean.LogisTics" >
+			    	<result column="pkid" property="id"/>
+			    	<result column="declarenum" property="declarenum"/>
+			    	<result column="serialnum" property="serialnum"/>
+			    	<result column="expressnum" property="expressnum"/>
+			    	<result column="brand" property="brand"/>
+			    	<result column="cargoname" property="cargoname"/>
+			    	<result column="cargotype" property="cargotype"/>
+			    	<result column="declareweight" property="declareweight"/>
+			    	<result column="declareprice" property="declareprice"/>
+			    	<result column="declarepricesum" property="declarepricesum"/>
+			    	<result column="legalnum" property="legalnum"/>
+			    	<result column="legalunit" property="legalunit"/>
+			    	<result column="netweight" property="netweight"/>
+			    	<result column="cargoid" property="cargoid"/>
+			    	<result column="packagecount" property="packagecount"/>
+			    	<result column="count" property="count"/>
+			    	<result column="consigneename" property="consigneename"/>
+			    	<result column="consigneeaddr" property="consigneeaddr"/>
+			    	<result column="consigneephone" property="consigneephone"/>
+			    	<result column="consignercardid" property="consignercardid"/>
+			    	<result column="consignername" property="consignername"/>
+			    	<result column="consigneraddr" property="consigneraddr"/>
+			    	<result column="consignerphone" property="consignerphone"/>
+			    	<result column="consignercountry" property="consignercountry"/>
+			    	<result column="consigneecountry" property="consigneecountry"/>
+			    	<result column="isprint" property="isprint"/>
+			    	<result column="importnum" property="importnum"/>
+			    	<result column="createtime" property="createtime"/>
+			    	<result column="importuser" property="importuser"/>
+			</resultMap>
+	       
+	<!-- TbcClassify table all fields -->
+	<sql id="Base_Column_List" >
+		pkid,declarenum,serialnum,expressnum,brand,cargoname,cargotype,declareweight,declareprice,declarepricesum,legalnum,legalunit,netweight,cargoid,packagecount,count,consigneename,consigneeaddr,consigneephone,consignercardid,consignername,consigneraddr,consignerphone,consignercountry,consigneecountry,isprint,importnum,createtime,importuser
+	</sql>
+	   
+	   
+	<!-- 查询条件 -->
+	<sql id="Example_Where_Clause">
+	where  1=1
+	<trim  suffixOverrides="," >
+					    	<if test="id != null and id != ''" >
+				    and pkid like CONCAT('%', #{id}, '%')
+				</if>
+					    	<if test="declarenum != null and declarenum != ''" >
+				    and declarenum like CONCAT('%', #{declarenum}, '%')
+				</if>
+					    	<if test="serialnum != null and serialnum != ''" >
+				    and serialnum like CONCAT('%', #{serialnum}, '%')
+				</if>
+					    	<if test="expressnum != null and expressnum != ''" >
+				    and expressnum like CONCAT('%', #{expressnum}, '%')
+				</if>
+					    	<if test="brand != null and brand != ''" >
+				    and brand like CONCAT('%', #{brand}, '%')
+				</if>
+					    	<if test="cargoname != null and cargoname != ''" >
+				    and cargoname like CONCAT('%', #{cargoname}, '%')
+				</if>
+					    	<if test="cargotype != null and cargotype != ''" >
+				    and cargotype like CONCAT('%', #{cargotype}, '%')
+				</if>
+					    	<if test="declareweight != null and declareweight != ''" >
+				    and declareweight like CONCAT('%', #{declareweight}, '%')
+				</if>
+					    	<if test="declareprice != null and declareprice != ''" >
+				    and declareprice like CONCAT('%', #{declareprice}, '%')
+				</if>
+					    	<if test="declarepricesum != null and declarepricesum != ''" >
+				    and declarepricesum like CONCAT('%', #{declarepricesum}, '%')
+				</if>
+					    	<if test="legalnum != null and legalnum != ''" >
+				    and legalnum like CONCAT('%', #{legalnum}, '%')
+				</if>
+					    	<if test="legalunit != null and legalunit != ''" >
+				    and legalunit like CONCAT('%', #{legalunit}, '%')
+				</if>
+					    	<if test="netweight != null and netweight != ''" >
+				    and netweight like CONCAT('%', #{netweight}, '%')
+				</if>
+					    	<if test="cargoid != null and cargoid != ''" >
+				    and cargoid like CONCAT('%', #{cargoid}, '%')
+				</if>
+					    	<if test="packagecount != null and packagecount != ''" >
+				    and packagecount like CONCAT('%', #{packagecount}, '%')
+				</if>
+					    	<if test="count != null and count != ''" >
+				    and count like CONCAT('%', #{count}, '%')
+				</if>
+					    	<if test="consigneename != null and consigneename != ''" >
+				    and consigneename like CONCAT('%', #{consigneename}, '%')
+				</if>
+					    	<if test="consigneeaddr != null and consigneeaddr != ''" >
+				    and consigneeaddr like CONCAT('%', #{consigneeaddr}, '%')
+				</if>
+					    	<if test="consigneephone != null and consigneephone != ''" >
+				    and consigneephone like CONCAT('%', #{consigneephone}, '%')
+				</if>
+					    	<if test="consignercardid != null and consignercardid != ''" >
+				    and consignercardid like CONCAT('%', #{consignercardid}, '%')
+				</if>
+					    	<if test="consignername != null and consignername != ''" >
+				    and consignername like CONCAT('%', #{consignername}, '%')
+				</if>
+					    	<if test="consigneraddr != null and consigneraddr != ''" >
+				    and consigneraddr like CONCAT('%', #{consigneraddr}, '%')
+				</if>
+					    	<if test="consignerphone != null and consignerphone != ''" >
+				    and consignerphone like CONCAT('%', #{consignerphone}, '%')
+				</if>
+					    	<if test="consignercountry != null and consignercountry != ''" >
+				    and consignercountry like CONCAT('%', #{consignercountry}, '%')
+				</if>
+					    	<if test="consigneecountry != null and consigneecountry != ''" >
+				    and consigneecountry like CONCAT('%', #{consigneecountry}, '%')
+				</if>
+					    	<if test="isprint != null and isprint != ''" >
+				    and isprint like CONCAT('%', #{isprint}, '%')
+				</if>
+					    	<if test="importnum != null and importnum != ''" >
+				    and importnum like CONCAT('%', #{importnum}, '%')
+				</if>
+					    	<if test="createtime != null and createtime != ''" >
+				    and createtime like CONCAT('%', #{createtime}, '%')
+				</if>
+					    	<if test="importuser != null and importuser != ''" >
+				    and importuser like CONCAT('%', #{importuser}, '%')
+				</if>
+				</trim>
+	</sql>
+	   
+	
+	<!-- 插入记录 -->
+	<insert id="add" parameterType="Object" >
+		insert into t_zy_logisticslisting(pkid,declarenum,serialnum,expressnum,brand,cargoname,cargotype,declareweight,declareprice,declarepricesum,legalnum,legalunit,netweight,cargoid,packagecount,count,consigneename,consigneeaddr,consigneephone,consignercardid,consignername,consigneraddr,consignerphone,consignercountry,consigneecountry,isprint,importnum,createtime,importuser)
+ values(#{id},#{declarenum},#{serialnum},#{expressnum},#{brand},#{cargoname},#{cargotype},#{declareweight},#{declareprice},#{declarepricesum},#{legalnum},#{legalunit},#{netweight},#{cargoid},#{packagecount},#{count},#{consigneename},#{consigneeaddr},#{consigneephone},#{consignercardid},#{consignername},#{consigneraddr},#{consignerphone},#{consignercountry},#{consigneecountry},#{isprint},#{importnum},#{createtime},#{importuser})
+	</insert>
+	
+	<!-- 修改记录-->  
+	 <update id="update" parameterType="Object" >
+	  	update t_zy_logisticslisting set declarenum=#{declarenum},serialnum=#{serialnum},expressnum=#{expressnum},brand=#{brand},cargoname=#{cargoname},cargotype=#{cargotype},declareweight=#{declareweight},declareprice=#{declareprice},declarepricesum=#{declarepricesum},legalnum=#{legalnum},legalunit=#{legalunit},netweight=#{netweight},cargoid=#{cargoid},packagecount=#{packagecount},count=#{count},consigneename=#{consigneename},consigneeaddr=#{consigneeaddr},consigneephone=#{consigneephone},consignercardid=#{consignercardid},consignername=#{consignername},consigneraddr=#{consigneraddr},consignerphone=#{consignerphone},consignercountry=#{consignercountry},consigneecountry=#{consigneecountry},isprint=#{isprint},importnum=#{importnum},importuser=#{importuser} where pkid=#{id}
+	 </update>
+	 
+	 <!--修改技术，为null 这不修改 -->
+	<update id="updateBySelective" parameterType="Object" >
+		update t_zy_logisticslisting set 
+	<trim  suffixOverrides="," >
+	<if test="declarenum != null  and declarenum != '' ">
+		declarenum=#{declarenum},
+	</if>
+	<if test="serialnum != null  and serialnum != '' ">
+		serialnum=#{serialnum},
+	</if>
+	<if test="expressnum != null  and expressnum != '' ">
+		expressnum=#{expressnum},
+	</if>
+	<if test="brand != null  and brand != '' ">
+		brand=#{brand},
+	</if>
+	<if test="cargoname != null  and cargoname != '' ">
+		cargoname=#{cargoname},
+	</if>
+	<if test="cargotype != null  and cargotype != '' ">
+		cargotype=#{cargotype},
+	</if>
+	<if test="declareweight != null  and declareweight != '' ">
+		declareweight=#{declareweight},
+	</if>
+	<if test="declareprice != null  and declareprice != '' ">
+		declareprice=#{declareprice},
+	</if>
+	<if test="declarepricesum != null  and declarepricesum != '' ">
+		declarepricesum=#{declarepricesum},
+	</if>
+	<if test="legalnum != null  and legalnum != '' ">
+		legalnum=#{legalnum},
+	</if>
+	<if test="legalunit != null  and legalunit != '' ">
+		legalunit=#{legalunit},
+	</if>
+	<if test="netweight != null  and netweight != '' ">
+		netweight=#{netweight},
+	</if>
+	<if test="cargoid != null  and cargoid != '' ">
+		cargoid=#{cargoid},
+	</if>
+	<if test="packagecount != null  and packagecount != '' ">
+		packagecount=#{packagecount},
+	</if>
+	<if test="count != null  and count != '' ">
+		count=#{count},
+	</if>
+	<if test="consigneename != null  and consigneename != '' ">
+		consigneename=#{consigneename},
+	</if>
+	<if test="consigneeaddr != null  and consigneeaddr != '' ">
+		consigneeaddr=#{consigneeaddr},
+	</if>
+	<if test="consigneephone != null  and consigneephone != '' ">
+		consigneephone=#{consigneephone},
+	</if>
+	<if test="consignercardid != null  and consignercardid != '' ">
+		consignercardid=#{consignercardid},
+	</if>
+	<if test="consignername != null  and consignername != '' ">
+		consignername=#{consignername},
+	</if>
+	<if test="consigneraddr != null  and consigneraddr != '' ">
+		consigneraddr=#{consigneraddr},
+	</if>
+	<if test="consignerphone != null  and consignerphone != '' ">
+		consignerphone=#{consignerphone},
+	</if>
+	<if test="consignercountry != null  and consignercountry != '' ">
+		consignercountry=#{consignercountry},
+	</if>
+	<if test="consigneecountry != null  and consigneecountry != '' ">
+		consigneecountry=#{consigneecountry},
+	</if>
+	<if test="isprint != null  and isprint != '' ">
+		isprint=#{isprint},
+	</if>
+	<if test="importnum != null  and importnum != '' ">
+		importnum=#{importnum},
+	</if>
+	<if test="createtime != null  ">
+		createtime=#{createtime},
+	</if>
+	<if test="importuser != null  and importuser != '' ">
+		importuser=#{importuser},
+	</if>
+	</trim> where pkid=#{id}
+	</update>
+	
+	<!-- 批量更新包裹状态 -->
+	<update id="updatebatchforBGStatu" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="" close="" separator=";">
+			update t_zy_logisticslisting 
+				set consigneecountry=#{item.consigneecountry}
+			where declarenum = #{item.declarenum}
+		</foreach>
+	</update>
+	
+	<!-- 删除 -->
+	<update id="delete" parameterType="Object">
+		delete 	 from t_zy_logisticslisting where pkid = #{id}
+	</update>
+	 
+	<!-- 分类列表 -->
+	<select id="queryById"  resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select <include refid="Base_Column_List" /> 
+	 from t_zy_logisticslisting where pkid = #{id}
+	</select>
+	  	
+	<!-- 分类 列表总数-->
+	<select id="queryByCount" resultType="java.lang.Integer"  parameterType="Object">
+		select count(1) from t_zy_logisticslisting 
+		<include refid="Example_Where_Clause"/>
+	</select>
+	  	
+	<!-- 根据id查询分类 -->
+	<select id="queryByList" resultMap="BaseResultMap"  parameterType="Object">
+		select 
+		<include refid="Base_Column_List"/>
+		from t_zy_logisticslisting 
+		<include refid="Example_Where_Clause"/>
+		order by importnum,CONVERT(serialnum,SIGNED)
+		<if test="pager.orderCondition != null and pager.orderCondition != ''" >
+	      ${pager.orderCondition}
+	    </if>
+	    ${pager.mysqlQueryCondition}
+	</select>
+	
+	<!-- 根据条件查询 -->
+	<select id="queryListByParam" resultMap="BaseResultMap"  parameterType="Object">
+		select 
+		<include refid="Base_Column_List"/>
+		from t_zy_logisticslisting 
+		<include refid="Example_Where_Clause"/>
+		order by importnum,CONVERT(serialnum,SIGNED)
+	</select>
+</mapper>   
