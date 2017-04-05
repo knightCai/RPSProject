@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yiya.mapper.OddnumerDiyMapper">
+	<!-- Result Map -->
+	<resultMap id="BaseResultMap" type="com.yiya.bean.OddnumerDiy">
+		<result column="id" property="id" />
+		<result column="num" property="num" />
+		<result column="type" property="type" />
+		<result column="status" property="status" />
+		<result column="useuserid" property="useuserid" />
+	</resultMap>
+
+	<!-- TbcClassify table all fields -->
+	<sql id="Base_Column_List">
+		id,num,type,status,useuserid
+	</sql>
+
+
+	<!-- 查询条件 -->
+	<sql id="Example_Where_Clause">
+		where 1=1
+		<trim suffixOverrides=",">
+			<if test="id != null and id != ''">
+				and id like CONCAT('%', #{id}, '%')
+			</if>
+			<if test="num != null and num != ''">
+				and num like CONCAT('%', #{num}, '%')
+			</if>
+			<if test="type != null">
+				and type like CONCAT('%', #{type}, '%')
+			</if>
+			<if test="status != null">
+				and status like CONCAT('%', #{status}, '%')
+			</if>
+			<if test="useuserid != null and useuserid != ''">
+				and useuserid like CONCAT('%', #{useuserid}, '%')
+			</if>
+		</trim>
+	</sql>
+
+
+	<!-- 插入记录 -->
+	<insert id="add" parameterType="Object">
+		insert into
+		t_zy_oddnumerdiy(id,num,type,status,useuserid)
+		values(#{num},#{type},#{status},#{useuserid})
+	</insert>
+	<!-- 批量插入 -->
+	<insert id="insertbatch" parameterType="java.util.List">
+		insert into t_zy_oddnumerdiy(num,type,status,useuserid) values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{item.num},#{item.type},#{item.status},#{item.useuserid})
+		</foreach>
+	</insert>
+	<!-- 修改记录 -->
+	<update id="update" parameterType="Object">
+		update t_zy_oddnumerdiy set
+		num=#{num},type=#{type},status=#{status},useuserid=#{useuserid} where
+		id=#{id}
+	</update>
+
+	<!--修改技术，为null 这不修改 -->
+	<update id="updateBySelective" parameterType="Object">
+		update t_zy_oddnumerdiy set
+		<trim suffixOverrides=",">
+			<if test="num != null  and num != '' ">
+				num=#{num},
+			</if>
+			<if test="type != null  ">
+				type=#{type},
+			</if>
+			<if test="status != null  ">
+				status=#{status},
+			</if>
+			<if test="useuserid != null  and useuserid != '' ">
+				useuserid=#{useuserid},
+			</if>
+		</trim>
+		where id=#{id}
+	</update>
+
+	<!-- 删除 -->
+	<update id="delete" parameterType="Object">
+		delete from t_zy_oddnumerdiy
+		where id = #{id}
+	</update>
+
+	<!-- 分类列表 -->
+	<select id="queryById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from t_zy_oddnumerdiy where id = #{id}
+	</select>
+
+	<!-- 分类 列表总数 -->
+	<select id="queryByCount" resultType="java.lang.Integer"
+		parameterType="Object">
+		select count(1) from t_zy_oddnumerdiy
+		<include refid="Example_Where_Clause" />
+	</select>
+
+	<!-- 根据id查询分类 -->
+	<select id="queryByList" resultMap="BaseResultMap"
+		parameterType="Object">
+		select
+		<include refid="Base_Column_List" />
+		from t_zy_oddnumerdiy
+		<include refid="Example_Where_Clause" />
+		<if test="pager.orderCondition != null and pager.orderCondition != ''">
+			${pager.orderCondition}
+		</if>
+		${pager.mysqlQueryCondition}
+	</select>
+</mapper>   

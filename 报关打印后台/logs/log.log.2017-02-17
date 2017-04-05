@@ -1,0 +1,20 @@
+2017-02-17 09:17:27,722 ERROR [org.apache.velocity] - <ResourceManager : unable to find resource 'TempBean.java' in any resource loader.>
+2017-02-17 09:17:27,723 ERROR [com.yiya.utils.CommonPageParser] - <org.apache.velocity.exception.ResourceNotFoundException: Unable to find resource 'TempBean.java'>
+2017-02-17 09:17:27,723 ERROR [org.apache.velocity] - <ResourceManager : unable to find resource 'TempModel.java' in any resource loader.>
+2017-02-17 09:17:27,724 ERROR [com.yiya.utils.CommonPageParser] - <org.apache.velocity.exception.ResourceNotFoundException: Unable to find resource 'TempModel.java'>
+2017-02-17 09:17:27,724 ERROR [org.apache.velocity] - <ResourceManager : unable to find resource 'TempMapper.java' in any resource loader.>
+2017-02-17 09:17:27,726 ERROR [com.yiya.utils.CommonPageParser] - <org.apache.velocity.exception.ResourceNotFoundException: Unable to find resource 'TempMapper.java'>
+2017-02-17 09:17:27,726 ERROR [org.apache.velocity] - <ResourceManager : unable to find resource 'TempService.java' in any resource loader.>
+2017-02-17 09:17:27,727 ERROR [com.yiya.utils.CommonPageParser] - <org.apache.velocity.exception.ResourceNotFoundException: Unable to find resource 'TempService.java'>
+2017-02-17 09:17:27,747 ERROR [org.apache.velocity] - <ResourceManager : unable to find resource 'TempMapper.xml' in any resource loader.>
+2017-02-17 09:17:27,748 ERROR [com.yiya.utils.CommonPageParser] - <org.apache.velocity.exception.ResourceNotFoundException: Unable to find resource 'TempMapper.xml'>
+2017-02-17 09:29:47,006 ERROR [org.apache.velocity] - <ResourceManager : unable to find resource 'TempBean.java' in any resource loader.>
+2017-02-17 09:29:47,007 ERROR [com.yiya.utils.CommonPageParser] - <org.apache.velocity.exception.ResourceNotFoundException: Unable to find resource 'TempBean.java'>
+2017-02-17 09:29:47,007 ERROR [org.apache.velocity] - <ResourceManager : unable to find resource 'TempModel.java' in any resource loader.>
+2017-02-17 09:29:47,007 ERROR [com.yiya.utils.CommonPageParser] - <org.apache.velocity.exception.ResourceNotFoundException: Unable to find resource 'TempModel.java'>
+2017-02-17 09:29:47,008 ERROR [org.apache.velocity] - <ResourceManager : unable to find resource 'TempMapper.java' in any resource loader.>
+2017-02-17 09:29:47,008 ERROR [com.yiya.utils.CommonPageParser] - <org.apache.velocity.exception.ResourceNotFoundException: Unable to find resource 'TempMapper.java'>
+2017-02-17 09:29:47,009 ERROR [org.apache.velocity] - <ResourceManager : unable to find resource 'TempService.java' in any resource loader.>
+2017-02-17 09:29:47,010 ERROR [com.yiya.utils.CommonPageParser] - <org.apache.velocity.exception.ResourceNotFoundException: Unable to find resource 'TempService.java'>
+2017-02-17 09:29:47,011 ERROR [org.apache.velocity] - <ResourceManager : unable to find resource 'TempMapper.xml' in any resource loader.>
+2017-02-17 09:29:47,012 ERROR [com.yiya.utils.CommonPageParser] - <org.apache.velocity.exception.ResourceNotFoundException: Unable to find resource 'TempMapper.xml'>

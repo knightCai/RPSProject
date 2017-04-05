@@ -1,0 +1,121 @@
+2017-03-05 10:14:01,710 INFO [com.yiya.utils.CommonPageParser] - <替换文件F:\WORK\JAVA\YIYA_MS\src\com\yiya\bean\LogisTics.java>
+2017-03-05 10:14:01,804 INFO [com.yiya.utils.CommonPageParser] - <替换文件F:\WORK\JAVA\YIYA_MS\src\com\yiya\model\LogisTicsModel.java>
+2017-03-05 10:14:01,804 INFO [com.yiya.utils.CommonPageParser] - <替换文件F:\WORK\JAVA\YIYA_MS\src\com\yiya\mapper\LogisTicsMapper.java>
+2017-03-05 10:14:01,820 INFO [com.yiya.utils.CommonPageParser] - <替换文件F:\WORK\JAVA\YIYA_MS\src\com\yiya\service\LogisTicsService.java>
+2017-03-05 10:14:01,835 INFO [com.yiya.utils.CommonPageParser] - <替换文件F:\WORK\JAVA\YIYA_MS\src\com\yiya\mybatis\LogisTicsMapper.xml>
+2017-03-05 10:14:01,851 ERROR [org.apache.velocity] - <Parser Exception: TempleJs.vm>
+org.apache.velocity.runtime.parser.ParseException: Encountered ":" at line 10, column 49.
+Was expecting:
+    <RPAREN> ...
+    
+	at org.apache.velocity.runtime.parser.Parser.generateParseException(Parser.java:3679)
+	at org.apache.velocity.runtime.parser.Parser.jj_consume_token(Parser.java:3558)
+	at org.apache.velocity.runtime.parser.Parser.Directive(Parser.java:862)
+	at org.apache.velocity.runtime.parser.Parser.Statement(Parser.java:379)
+	at org.apache.velocity.runtime.parser.Parser.process(Parser.java:317)
+	at org.apache.velocity.runtime.parser.Parser.parse(Parser.java:117)
+	at org.apache.velocity.runtime.RuntimeInstance.parse(RuntimeInstance.java:1226)
+	at org.apache.velocity.runtime.RuntimeInstance.parse(RuntimeInstance.java:1181)
+	at org.apache.velocity.Template.process(Template.java:134)
+	at org.apache.velocity.runtime.resource.ResourceManagerImpl.loadResource(ResourceManagerImpl.java:437)
+	at org.apache.velocity.runtime.resource.ResourceManagerImpl.getResource(ResourceManagerImpl.java:352)
+	at org.apache.velocity.runtime.RuntimeInstance.getTemplate(RuntimeInstance.java:1533)
+	at org.apache.velocity.app.VelocityEngine.getTemplate(VelocityEngine.java:392)
+	at com.yiya.utils.CommonPageParser.WriterPage(CommonPageParser.java:87)
+	at com.yiya.utils.CreateJava.main(CreateJava.java:91)
+2017-03-05 10:14:01,882 ERROR [org.apache.velocity] - <ResourceManager.getResource() parse exception>
+org.apache.velocity.exception.ParseErrorException: Encountered ":" at TempleJs.vm[line 10, column 49]
+Was expecting:
+    <RPAREN> ...
+    
+	at org.apache.velocity.Template.process(Template.java:151)
+	at org.apache.velocity.runtime.resource.ResourceManagerImpl.loadResource(ResourceManagerImpl.java:437)
+	at org.apache.velocity.runtime.resource.ResourceManagerImpl.getResource(ResourceManagerImpl.java:352)
+	at org.apache.velocity.runtime.RuntimeInstance.getTemplate(RuntimeInstance.java:1533)
+	at org.apache.velocity.app.VelocityEngine.getTemplate(VelocityEngine.java:392)
+	at com.yiya.utils.CommonPageParser.WriterPage(CommonPageParser.java:87)
+	at com.yiya.utils.CreateJava.main(CreateJava.java:91)
+2017-03-05 10:14:01,882 ERROR [com.yiya.utils.CommonPageParser] - <org.apache.velocity.exception.ParseErrorException: Encountered ":" at TempleJs.vm[line 10, column 49]
+Was expecting:
+    <RPAREN> ...
+    >
+2017-03-05 10:14:01,913 INFO [com.yiya.utils.CommonPageParser] - <替换文件F:\WORK\JAVA\YIYA_MS\src\com\yiya\action\LogisTicsAction.java>
+2017-03-05 10:14:01,913 ERROR [org.apache.velocity] - <ResourceManager : unable to find resource 'TempList.jsp' in any resource loader.>
+2017-03-05 10:14:01,913 ERROR [com.yiya.utils.CommonPageParser] - <org.apache.velocity.exception.ResourceNotFoundException: Unable to find resource 'TempList.jsp'>
+2017-03-05 10:15:55,822 INFO [com.yiya.utils.CommonPageParser] - <替换文件F:\WORK\JAVA\YIYA_MS\src\com\yiya\bean\LogisTics.java>
+2017-03-05 10:15:55,838 INFO [com.yiya.utils.CommonPageParser] - <替换文件F:\WORK\JAVA\YIYA_MS\src\com\yiya\model\LogisTicsModel.java>
+2017-03-05 10:15:55,838 INFO [com.yiya.utils.CommonPageParser] - <替换文件F:\WORK\JAVA\YIYA_MS\src\com\yiya\mapper\LogisTicsMapper.java>
+2017-03-05 10:15:55,838 INFO [com.yiya.utils.CommonPageParser] - <替换文件F:\WORK\JAVA\YIYA_MS\src\com\yiya\service\LogisTicsService.java>
+2017-03-05 10:15:55,838 INFO [com.yiya.utils.CommonPageParser] - <替换文件F:\WORK\JAVA\YIYA_MS\src\com\yiya\mybatis\LogisTicsMapper.xml>
+2017-03-05 10:15:55,854 ERROR [org.apache.velocity] - <Parser Exception: TempleJs.vm>
+org.apache.velocity.runtime.parser.ParseException: Encountered ":" at line 10, column 48.
+Was expecting one of:
+    "[" ...
+    <RPAREN> ...
+    <WHITESPACE> ...
+    "[" ...
+    <WHITESPACE> ...
+    
+	at org.apache.velocity.runtime.parser.Parser.generateParseException(Parser.java:3679)
+	at org.apache.velocity.runtime.parser.Parser.jj_consume_token(Parser.java:3558)
+	at org.apache.velocity.runtime.parser.Parser.Directive(Parser.java:862)
+	at org.apache.velocity.runtime.parser.Parser.Statement(Parser.java:379)
+	at org.apache.velocity.runtime.parser.Parser.process(Parser.java:317)
+	at org.apache.velocity.runtime.parser.Parser.parse(Parser.java:117)
+	at org.apache.velocity.runtime.RuntimeInstance.parse(RuntimeInstance.java:1226)
+	at org.apache.velocity.runtime.RuntimeInstance.parse(RuntimeInstance.java:1181)
+	at org.apache.velocity.Template.process(Template.java:134)
+	at org.apache.velocity.runtime.resource.ResourceManagerImpl.loadResource(ResourceManagerImpl.java:437)
+	at org.apache.velocity.runtime.resource.ResourceManagerImpl.getResource(ResourceManagerImpl.java:352)
+	at org.apache.velocity.runtime.RuntimeInstance.getTemplate(RuntimeInstance.java:1533)
+	at org.apache.velocity.app.VelocityEngine.getTemplate(VelocityEngine.java:392)
+	at com.yiya.utils.CommonPageParser.WriterPage(CommonPageParser.java:87)
+	at com.yiya.utils.CreateJava.main(CreateJava.java:91)
+2017-03-05 10:15:55,854 ERROR [org.apache.velocity] - <ResourceManager.getResource() parse exception>
+org.apache.velocity.exception.ParseErrorException: Encountered ":" at TempleJs.vm[line 10, column 48]
+Was expecting one of:
+    "[" ...
+    <RPAREN> ...
+    <WHITESPACE> ...
+    "[" ...
+    <WHITESPACE> ...
+    
+	at org.apache.velocity.Template.process(Template.java:151)
+	at org.apache.velocity.runtime.resource.ResourceManagerImpl.loadResource(ResourceManagerImpl.java:437)
+	at org.apache.velocity.runtime.resource.ResourceManagerImpl.getResource(ResourceManagerImpl.java:352)
+	at org.apache.velocity.runtime.RuntimeInstance.getTemplate(RuntimeInstance.java:1533)
+	at org.apache.velocity.app.VelocityEngine.getTemplate(VelocityEngine.java:392)
+	at com.yiya.utils.CommonPageParser.WriterPage(CommonPageParser.java:87)
+	at com.yiya.utils.CreateJava.main(CreateJava.java:91)
+2017-03-05 10:15:55,854 ERROR [com.yiya.utils.CommonPageParser] - <org.apache.velocity.exception.ParseErrorException: Encountered ":" at TempleJs.vm[line 10, column 48]
+Was expecting one of:
+    "[" ...
+    <RPAREN> ...
+    <WHITESPACE> ...
+    "[" ...
+    <WHITESPACE> ...
+    >
+2017-03-05 10:15:55,854 INFO [com.yiya.utils.CommonPageParser] - <替换文件F:\WORK\JAVA\YIYA_MS\src\com\yiya\action\LogisTicsAction.java>
+2017-03-05 10:15:55,854 ERROR [org.apache.velocity] - <ResourceManager : unable to find resource 'TempleJsp.jsp' in any resource loader.>
+2017-03-05 10:15:55,854 ERROR [com.yiya.utils.CommonPageParser] - <org.apache.velocity.exception.ResourceNotFoundException: Unable to find resource 'TempleJsp.jsp'>
+2017-03-05 10:17:31,603 INFO [com.yiya.utils.CommonPageParser] - <替换文件F:\WORK\JAVA\YIYA_MS\src\com\yiya\bean\LogisTics.java>
+2017-03-05 10:17:31,619 INFO [com.yiya.utils.CommonPageParser] - <替换文件F:\WORK\JAVA\YIYA_MS\src\com\yiya\model\LogisTicsModel.java>
+2017-03-05 10:17:31,619 INFO [com.yiya.utils.CommonPageParser] - <替换文件F:\WORK\JAVA\YIYA_MS\src\com\yiya\mapper\LogisTicsMapper.java>
+2017-03-05 10:17:31,619 INFO [com.yiya.utils.CommonPageParser] - <替换文件F:\WORK\JAVA\YIYA_MS\src\com\yiya\service\LogisTicsService.java>
+2017-03-05 10:17:31,619 INFO [com.yiya.utils.CommonPageParser] - <替换文件F:\WORK\JAVA\YIYA_MS\src\com\yiya\mybatis\LogisTicsMapper.xml>
+2017-03-05 10:17:31,634 ERROR [com.yiya.utils.CommonPageParser] - <java.io.FileNotFoundException: LogisTics.jsF:\WORK\JAVA\YIYA_MS\WebRoot\js\ux\kh (文件名、目录名或卷标语法不正确。)>
+2017-03-05 10:17:31,634 INFO [com.yiya.utils.CommonPageParser] - <替换文件F:\WORK\JAVA\YIYA_MS\src\com\yiya\action\LogisTicsAction.java>
+2017-03-05 10:17:31,634 ERROR [com.yiya.utils.CommonPageParser] - <java.io.FileNotFoundException: logisTics.jspF:\WORK\JAVA\YIYA_MS\WebRoot\view\kh (文件名、目录名或卷标语法不正确。)>
+2017-03-05 10:18:42,025 INFO [com.yiya.utils.CommonPageParser] - <替换文件F:\WORK\JAVA\YIYA_MS\src\com\yiya\bean\LogisTics.java>
+2017-03-05 10:18:42,025 INFO [com.yiya.utils.CommonPageParser] - <替换文件F:\WORK\JAVA\YIYA_MS\src\com\yiya\model\LogisTicsModel.java>
+2017-03-05 10:18:42,025 INFO [com.yiya.utils.CommonPageParser] - <替换文件F:\WORK\JAVA\YIYA_MS\src\com\yiya\mapper\LogisTicsMapper.java>
+2017-03-05 10:18:42,025 INFO [com.yiya.utils.CommonPageParser] - <替换文件F:\WORK\JAVA\YIYA_MS\src\com\yiya\service\LogisTicsService.java>
+2017-03-05 10:18:42,025 INFO [com.yiya.utils.CommonPageParser] - <替换文件F:\WORK\JAVA\YIYA_MS\src\com\yiya\mybatis\LogisTicsMapper.xml>
+2017-03-05 10:18:42,072 INFO [com.yiya.utils.CommonPageParser] - <替换文件F:\WORK\JAVA\YIYA_MS\src\com\yiya\action\LogisTicsAction.java>
+2017-03-05 10:31:22,792 INFO [com.yiya.utils.CommonPageParser] - <替换文件F:\WORK\JAVA\YIYA_MS\src\com\yiya\bean\LogisTics.java>
+2017-03-05 10:31:22,807 INFO [com.yiya.utils.CommonPageParser] - <替换文件F:\WORK\JAVA\YIYA_MS\src\com\yiya\model\LogisTicsModel.java>
+2017-03-05 10:31:22,807 INFO [com.yiya.utils.CommonPageParser] - <替换文件F:\WORK\JAVA\YIYA_MS\src\com\yiya\mapper\LogisTicsMapper.java>
+2017-03-05 10:31:22,807 INFO [com.yiya.utils.CommonPageParser] - <替换文件F:\WORK\JAVA\YIYA_MS\src\com\yiya\service\LogisTicsService.java>
+2017-03-05 10:31:22,807 INFO [com.yiya.utils.CommonPageParser] - <替换文件F:\WORK\JAVA\YIYA_MS\src\com\yiya\mybatis\LogisTicsMapper.xml>
+2017-03-05 10:31:22,823 INFO [com.yiya.utils.CommonPageParser] - <替换文件F:\WORK\JAVA\YIYA_MS\src\com\yiya\action\LogisTicsAction.java>
+2017-03-05 10:31:22,823 INFO [com.yiya.utils.CommonPageParser] - <替换文件F:\WORK\JAVA\YIYA_MS\WebRoot\view\kh\logisTics.jsp>

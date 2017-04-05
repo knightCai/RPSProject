@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yiya.mapper.XysbhParamMapper">
+	<!-- Result Map -->
+	<resultMap id="BaseResultMap" type="com.yiya.bean.XysbhParam">
+		<result column="id" property="id" />
+		<result column="paramname" property="paramname" />
+		<result column="paramnum" property="paramnum" />
+		<result column="unit" property="unit" />
+	</resultMap>
+
+	<!-- TbcClassify table all fields -->
+	<sql id="Base_Column_List">
+		id,paramname,paramnum,unit
+	</sql>
+
+
+	<!-- 查询条件 -->
+	<sql id="Example_Where_Clause">
+		where 1=1
+		<trim suffixOverrides=",">
+			<if test="id != null and id != ''">
+				and id like CONCAT('%', #{id}, '%')
+			</if>
+			<if test="paramname != null and paramname != ''">
+				and paramname like CONCAT('%', #{paramname}, '%')
+			</if>
+			<if test="paramnum != null and paramnum != ''">
+				and paramnum like CONCAT('%', #{paramnum}, '%')
+			</if>
+			<if test="unit != null and unit != ''">
+				and unit like CONCAT('%', #{unit}, '%')
+			</if>
+		</trim>
+	</sql>
+
+	<!-- 插入记录 -->
+	<insert id="add" parameterType="Object">
+		<selectKey resultType="java.lang.Integer" order="AFTER"
+			keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into t_zy_xysbhparam(id,paramname,paramnum,unit)
+		values(#{id},#{paramname},#{paramnum},#{unit})
+	</insert>
+
+	<!-- 批量插入 -->
+	<insert id="insertbatch" parameterType="java.util.List">
+		insert into t_zy_xysbhparam(paramname,paramnum,unit) values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{item.paramname},#{item.paramnum},#{item.unit})
+		</foreach>
+	</insert>
+
+	<!-- 修改记录 -->
+	<update id="update" parameterType="Object">
+		update t_zy_xysbhparam set
+		paramname=#{paramname},paramnum=#{paramnum},unit=#{unit} where
+		id=#{id}
+	</update>
+
+	<!--修改技术，为null 这不修改 -->
+	<update id="updateBySelective" parameterType="Object">
+		update t_zy_xysbhparam set
+		<trim suffixOverrides=",">
+			<if test="paramname != null  and paramname != '' ">
+				paramname=#{paramname},
+			</if>
+			<if test="paramnum != null  and paramnum != '' ">
+				paramnum=#{paramnum},
+			</if>
+			<if test="unit != null  and unit != '' ">
+				unit=#{unit},
+			</if>
+		</trim>
+		where id=#{id}
+	</update>
+
+	<!-- 删除 -->
+	<update id="delete" parameterType="Object">
+		delete from t_zy_xysbhparam
+		where id = #{id}
+	</update>
+
+	<!-- 删除品名重复的内容 -->
+	<update id="deleteDouble" parameterType="Object">
+		delete a.* from
+		t_zy_xysbhparam as a,(SELECT min(t.id) id,t.paramname FROM
+		t_zy_xysbhparam as t GROUP BY t.paramname having count(1) >1) as b
+		where a.paramname=b.paramname and a.id != b.id
+	</update>
+	<!-- 分类列表 -->
+	<select id="queryById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from t_zy_xysbhparam where id = #{id}
+	</select>
+
+	<!-- 分类 列表总数 -->
+	<select id="queryByCount" resultType="java.lang.Integer"
+		parameterType="Object">
+		select count(1) from t_zy_xysbhparam
+		<include refid="Example_Where_Clause" />
+	</select>
+
+	<select id="queryByName" resultMap="BaseResultMap"
+		parameterType="Object">
+		select
+		<include refid="Base_Column_List" />
+		from t_zy_xysbhparam where paramname = #{paramname}
+	</select>
+
+	<!-- 根据id查询分类 -->
+	<select id="queryByList" resultMap="BaseResultMap"
+		parameterType="Object">
+		select
+		<include refid="Base_Column_List" />
+		from t_zy_xysbhparam
+		<include refid="Example_Where_Clause" />
+		<if test="pager.orderCondition != null and pager.orderCondition != ''">
+			${pager.orderCondition}
+		</if>
+		${pager.mysqlQueryCondition}
+	</select>
+</mapper>   
