@@ -123,4 +123,15 @@ public interface LogisticslistingServiceDelegate {
 	@ResponseWrapper(localName = "deleteBatchResponse", targetNamespace = "http://service.service.com/", className = "com.service.service.DeleteBatchResponse")
 	public String deleteBatch(@WebParam(name = "pkids", targetNamespace = "") List<String> pkids);
 
+	/**
+	 * 
+	 * @param param
+	 * @return returns java.lang.String
+	 */
+	@WebMethod
+	@WebResult(targetNamespace = "")
+	@RequestWrapper(localName = "getYTOOddUpdateLog", targetNamespace = "http://service.service.com/", className = "com.service.service.GetYTOOddUpdateLog")
+	@ResponseWrapper(localName = "getYTOOddUpdateLogResponse", targetNamespace = "http://service.service.com/", className = "com.service.service.GetYTOOddUpdateLogResponse")
+	public String getYTOOddUpdateLog(@WebParam(name = "param", targetNamespace = "") List<String> param);
+
 }

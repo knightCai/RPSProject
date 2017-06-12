@@ -18,6 +18,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.DirectoryDialog;
@@ -80,6 +81,8 @@ public class UpdateLogisticsDialog extends Dialog {
 	 */
 	private void createContents() {
 		shell = new Shell(getParent(), getStyle());
+		shell.setBackgroundImage(new  Image(shell.getDisplay(), this.getClass().getResourceAsStream(GlobalParam.SOURCE_CS1)));
+		shell.setBackgroundMode(SWT.INHERIT_DEFAULT);
 		shell.setSize(483, 320);
 		shell.setText("导入数据...");
 		

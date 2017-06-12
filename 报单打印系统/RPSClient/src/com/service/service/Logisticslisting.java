@@ -20,6 +20,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
+ *         &lt;element name="bigpen" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="brand" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="cargoid" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="cargoname" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
@@ -45,6 +46,8 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *         &lt;element name="isprint" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="legalnum" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="legalunit" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="mmo1" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="mmo2" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="netweight" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="packagecount" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="pkid" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
@@ -58,13 +61,14 @@ import javax.xml.datatype.XMLGregorianCalendar;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "logisticslisting", propOrder = { "brand", "cargoid", "cargoname", "cargotype", "consigneeaddr",
-		"consigneecountry", "consigneename", "consigneephone", "consigneraddr", "consignercardid", "consignercountry",
-		"consignername", "consignerphone", "count", "createtime", "declarenum", "declareprice", "declarepricesum",
-		"declareweight", "expressnum", "importnum", "importuser", "isprint", "legalnum", "legalunit", "netweight",
-		"packagecount", "pkid", "serialnum" })
+@XmlType(name = "logisticslisting", propOrder = { "bigpen", "brand", "cargoid", "cargoname", "cargotype",
+		"consigneeaddr", "consigneecountry", "consigneename", "consigneephone", "consigneraddr", "consignercardid",
+		"consignercountry", "consignername", "consignerphone", "count", "createtime", "declarenum", "declareprice",
+		"declarepricesum", "declareweight", "expressnum", "importnum", "importuser", "isprint", "legalnum", "legalunit",
+		"mmo1", "mmo2", "netweight", "packagecount", "pkid", "serialnum" })
 public class Logisticslisting {
 
+	protected String bigpen;
 	protected String brand;
 	protected String cargoid;
 	protected String cargoname;
@@ -91,10 +95,33 @@ public class Logisticslisting {
 	protected String isprint;
 	protected String legalnum;
 	protected String legalunit;
+	protected String mmo1;
+	protected String mmo2;
 	protected String netweight;
 	protected String packagecount;
 	protected String pkid;
 	protected String serialnum;
+
+	/**
+	 * Gets the value of the bigpen property.
+	 * 
+	 * @return possible object is {@link String }
+	 * 
+	 */
+	public String getBigpen() {
+		return bigpen;
+	}
+
+	/**
+	 * Sets the value of the bigpen property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 * 
+	 */
+	public void setBigpen(String value) {
+		this.bigpen = value;
+	}
 
 	/**
 	 * Gets the value of the brand property.
@@ -619,6 +646,48 @@ public class Logisticslisting {
 	 */
 	public void setLegalunit(String value) {
 		this.legalunit = value;
+	}
+
+	/**
+	 * Gets the value of the mmo1 property.
+	 * 
+	 * @return possible object is {@link String }
+	 * 
+	 */
+	public String getMmo1() {
+		return mmo1;
+	}
+
+	/**
+	 * Sets the value of the mmo1 property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 * 
+	 */
+	public void setMmo1(String value) {
+		this.mmo1 = value;
+	}
+
+	/**
+	 * Gets the value of the mmo2 property.
+	 * 
+	 * @return possible object is {@link String }
+	 * 
+	 */
+	public String getMmo2() {
+		return mmo2;
+	}
+
+	/**
+	 * Sets the value of the mmo2 property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 * 
+	 */
+	public void setMmo2(String value) {
+		this.mmo2 = value;
 	}
 
 	/**

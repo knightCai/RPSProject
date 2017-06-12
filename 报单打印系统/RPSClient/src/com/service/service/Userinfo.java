@@ -21,6 +21,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="password" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="pkid" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="state" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="type" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;element name="userid" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="username" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *       &lt;/sequence>
@@ -32,12 +33,13 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "userinfo", propOrder = { "password", "pkid", "state", "userid", "username" })
+@XmlType(name = "userinfo", propOrder = { "password", "pkid", "state", "type", "userid", "username" })
 public class Userinfo {
 
 	protected String password;
 	protected String pkid;
 	protected String state;
+	protected int type;
 	protected String userid;
 	protected String username;
 
@@ -102,6 +104,22 @@ public class Userinfo {
 	 */
 	public void setState(String value) {
 		this.state = value;
+	}
+
+	/**
+	 * Gets the value of the type property.
+	 * 
+	 */
+	public int getType() {
+		return type;
+	}
+
+	/**
+	 * Sets the value of the type property.
+	 * 
+	 */
+	public void setType(int value) {
+		this.type = value;
 	}
 
 	/**

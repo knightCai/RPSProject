@@ -18,6 +18,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.DirectoryDialog;
@@ -34,8 +35,11 @@ import com.client.common.FrameUtil;
 import com.client.common.GlobalParam;
 import com.client.model.contrllo.LogisticsListContrllo;
 import com.client.model.contrllo.OddnumberContrllo;
+import com.client.model.contrllo.OddnumerDiyContrllo;
 import com.service.service.Logisticslisting;
 import com.service.service.Oddnumber;
+import com.service.service.OddnumerDiy;
+
 import org.eclipse.wb.swt.SWTResourceManager;
 
 public class OddnumberDialog extends Dialog {
@@ -47,6 +51,7 @@ public class OddnumberDialog extends Dialog {
 	private String msg;
 	private LogisticsListContrllo logiscor;	//运单接口处理类
 	private OddnumberContrllo oddnumcor;	//报关单号接口处理类
+	private OddnumerDiyContrllo oddnumDiycor;	//报关单号接口处理类
 	/**
 	 * Create the dialog.
 	 * @param parent
@@ -56,6 +61,7 @@ public class OddnumberDialog extends Dialog {
 		super(parent, style);
 		logiscor = new LogisticsListContrllo();
 		oddnumcor = new OddnumberContrllo();
+		oddnumDiycor = new OddnumerDiyContrllo();
 	}
 
 	/**
@@ -81,6 +87,8 @@ public class OddnumberDialog extends Dialog {
 	private void createContents() {
 		shell = new Shell(getParent(), getStyle());
 		shell.setSize(483, 320);
+		shell.setBackgroundImage(new  Image(shell.getDisplay(), this.getClass().getResourceAsStream(GlobalParam.SOURCE_CS1)));
+		shell.setBackgroundMode(SWT.INHERIT_DEFAULT);
 		shell.setText("导入数据...");
 		
 		FrameUtil.center(shell);
@@ -135,8 +143,9 @@ public class OddnumberDialog extends Dialog {
 					dd.setMessage("setMessage");  
 					dd.setText("setText");  
 					dd.setFilterPath("C://");  
-					String saveFile=dd.open();  
-					boolean flg= FileUtil.downloadLocal("报关单导入模板.xls",saveFile,GlobalParam.SOURCE_IMPORTTEMPLE);
+					String saveFile=dd.open();
+					String sourcepath = GlobalParam.SYSTEM_USER.getType() == 3 ? GlobalParam.SOURCE_IMPORTTEMPLEYTO : GlobalParam.SOURCE_IMPORTTEMPLE;
+					boolean flg= FileUtil.downloadLocal("报关单导入模板.xls",saveFile,sourcepath);
 					if(flg){
 						MessageDialog.openInformation(shell, "系统提示", "模板下载成功!保存路径为："+saveFile+"/报关单导入模板.xls");
 					}else{
@@ -173,23 +182,38 @@ public class OddnumberDialog extends Dialog {
 					if(logiscor.findLlistByParams(param).size()>0){
 						throw new Exception("总运单号：【"+llist.get(0).getImportnum()+"】系统中已导入，请修改总运单号！");
 					}
-					List<Oddnumber> oddnums = oddnumcor.findAllOddnum(GlobalParam.SYSTEM_LOGINUSER);
-					int oddcount = 0;
-					for(Oddnumber oddnum:oddnums){
-						if(oddnum.getState().equals("0")){
-							oddcount = oddcount+oddnum.getSuplusnum();
+					if(GlobalParam.SYSTEM_USER.getType() != 3){
+						int oddcount = 0;
+						//根据用户类型查询单号 1-系统 2-自定义
+						if(GlobalParam.SYSTEM_USER.getType() == 1){
+							List<Oddnumber> oddnums = oddnumcor.findAllOddnum(GlobalParam.SYSTEM_LOGINUSER);
+							for(Oddnumber oddnum:oddnums){
+								if(oddnum.getState().equals("0")){
+									oddcount = oddcount+oddnum.getSuplusnum();
+								}
+							}
+						}else{
+							List<OddnumerDiy> oddnums = oddnumDiycor.findAllOddnumDiy(GlobalParam.SYSTEM_LOGINUSER);
+							int type0,type1 = type0= 0;
+							for(OddnumerDiy odddiy:oddnums){
+								if(odddiy.getType()==0)
+									type0++;
+								else
+									type1++;
+							}
+							oddcount = type0 >= type1 ?type0:type1;
 						}
-					}
-					Map<String, String> numMap = new HashMap<String, String>();
-					//通过报关单号及序号筛选同一物流包裹
-					//key：序号+运单号 value：后续存放 报关单号
-			    	for (Logisticslisting logis : llist) {
-						numMap.put(logis.getSerialnum()+logis.getExpressnum(),null );
-					}
-					if(oddcount<numMap.size()){
-						MessageDialog.openError(shell,"系统提示","系统库存报关单号数量少于货物导入数量！请先添加报关单号再进行导入操作！");
-						shell.dispose();
-						return;
+						Map<String, String> numMap = new HashMap<String, String>();
+						//通过报关单号及序号筛选同一物流包裹
+						//key：序号+运单号 value：后续存放 报关单号
+						for (Logisticslisting logis : llist) {
+							numMap.put(logis.getSerialnum()+logis.getExpressnum(),null );
+						}
+						if(oddcount<numMap.size()){
+							MessageDialog.openError(shell,"系统提示","系统库存报关单号数量少于货物导入数量！请先添加报关单号再进行导入操作！");
+							shell.dispose();
+							return;
+						}
 					}
 					String result = logiscor.saveBatch(llist);
 					resultStr = result.split(",");
@@ -225,52 +249,78 @@ public class OddnumberDialog extends Dialog {
 	public List<Logisticslisting> packgeLogistics(List<ArrayList<String>> list) throws Exception{
 		List<Logisticslisting> llist = new ArrayList<Logisticslisting>();
 		Logisticslisting logis;
+		Logisticslisting logistemp = new Logisticslisting();
 		int i = 1;
-		for(List temp:list){
-			if(temp.get(2).toString().equals("")){
-	   			continue;
-	   		}
-			logis = new  Logisticslisting();
-			logis.setPkid(FrameUtil.getUUID());
-			logis.setDeclarenum(temp.get(2).toString());
-			logis.setSerialnum(temp.get(0).toString());
-			logis.setExpressnum(temp.get(2).toString());
-			logis.setBrand(temp.get(3).toString());
-			logis.setCargoname(temp.get(4).toString());
-			logis.setCargotype(temp.get(5).toString());
-			logis.setDeclareweight(temp.get(6).toString());
-			logis.setDeclareprice(temp.get(7).toString());
-			logis.setDeclarepricesum(temp.get(8).toString());
-			logis.setLegalnum(temp.get(9).toString());
-			//logis.setLegalunit(temp.get(10).toString());
-			logis.setNetweight(temp.get(10).toString());
-			//logis.setCargoid(temp.get(12).toString());
-			logis.setPackagecount(temp.get(11).toString());
-			logis.setCount(temp.get(12).toString());
-			logis.setConsigneename(temp.get(13).toString());
-			//地址内容：收货人省份+收货人城市+收货人详细地址
-			logis.setConsigneeaddr(temp.get(14).toString()+"|"+ temp.get(15).toString() +"|"+temp.get(16).toString());
-			logis.setConsigneephone(temp.get(17).toString());
-			logis.setConsignercardid(temp.get(18).toString());
-			logis.setConsignername(temp.get(19).toString());
-			logis.setConsigneraddr(temp.get(20).toString());
-			logis.setConsignerphone(temp.get(21).toString());
-			logis.setConsignercountry(temp.get(22).toString());
-			//logis.setConsigneecountry(temp.get(24).toString());
-			logis.setIsprint("0");
-			logis.setImportnum(temp.get(1).toString());
-			logis.setImportuser(GlobalParam.SYSTEM_LOGINUSER);
-			logis.setCreatetime(FrameUtil.convertToXMLGregorianCalendar(new Date()));
-	   		llist.add(logis);
-	   		i++;
-	   		if(Double.parseDouble(logis.getNetweight()) > Double.parseDouble(logis.getDeclareweight())){
-	   			throw new Exception("第【"+ i+"】行数据有误,净重不能大于毛重!");
-	   		}else if(!(Double.parseDouble(logis.getNetweight())>0)){
-	   			throw new Exception("第【"+ i+"】行数据有误,净重不能为0或小于0!");
-	   		}
-	   		if(!Pattern.compile("^\\d{15}|\\d{17}[0-9A-Z]$").matcher(logis.getConsignercardid()).matches()){
-				throw new Exception("第【"+ i+"】行数据有误,身份证格式不正确!");
+		try{
+			for(List temp:list){
+				int j = 0;
+				if(temp.get(0).toString().equals("")&&temp.get(1).toString().equals("")&&temp.get(2).toString().equals("")){
+		   			continue;
+		   		}
+				logis = new  Logisticslisting();
+				logis.setPkid(FrameUtil.getUUID());
+				
+				logis.setSerialnum(temp.get(j++).toString());
+				logis.setImportnum(temp.get(j++).toString());
+				logis.setDeclarenum("");
+				logis.setExpressnum(temp.get(j++).toString());
+				logis.setBrand(temp.get(j++).toString());
+				logis.setCargoname(temp.get(j++).toString());
+				logis.setCargotype(temp.get(j++).toString());
+				logis.setDeclareweight(temp.get(j++).toString());
+				logis.setDeclareprice(temp.get(j++).toString());
+				logis.setDeclarepricesum(temp.get(j++).toString());
+				if(GlobalParam.SYSTEM_USER.getType() == 3){//圆通导入模板
+					logis.setPackagecount(temp.get(j++).toString());
+					logis.setNetweight(temp.get(j++).toString());
+				}else{//系统用户导入模板
+					logis.setLegalnum(temp.get(j++).toString());
+					logis.setNetweight(temp.get(j++).toString());
+					logis.setPackagecount(temp.get(j++).toString());
+					logis.setCount(temp.get(j++).toString());
+				}
+				logis.setConsigneename(temp.get(j++).toString());
+				//地址内容：收货人省份+收货人城市+收货人详细地址
+				logis.setConsigneeaddr(temp.get(j++).toString()+"|"+ temp.get(j++).toString() +"|"+temp.get(j++).toString());
+				logis.setConsigneephone(temp.get(j++).toString());
+				logis.setConsignercardid(temp.get(j++).toString());
+				logis.setConsignername(temp.get(j++).toString());
+				logis.setConsigneraddr(temp.get(j++).toString());
+				logis.setConsignerphone(temp.get(j++).toString());
+				logis.setConsignercountry(temp.get(j++).toString());
+				logis.setIsprint("0");
+				logis.setImportuser(GlobalParam.SYSTEM_LOGINUSER);
+				logis.setCreatetime(FrameUtil.convertToXMLGregorianCalendar(new Date()));
+				
+				//用户类型为3的模板相同订单只在第一条数据有值
+				if(logis.getSerialnum().equals("")){
+					logis.setSerialnum(logistemp.getSerialnum());
+					logis.setExpressnum(logistemp.getExpressnum());
+					logis.setConsigneename(logistemp.getConsigneename());
+					logis.setConsigneeaddr(logistemp.getConsigneeaddr());
+					logis.setConsigneephone(logistemp.getConsigneephone());
+					logis.setConsignercardid(logistemp.getConsignercardid());
+				}
+				
+		   		llist.add(logis);
+		   		i++;
+		   		//类型为3的（圆通）用户不判断毛重
+		   		if(GlobalParam.SYSTEM_USER.getType() != 3){
+			   		if(Double.parseDouble(logis.getNetweight()) > Double.parseDouble(logis.getDeclareweight())){
+			   			throw new Exception("净重不能大于毛重!");
+			   		}else if(!(Double.parseDouble(logis.getNetweight())>0)){
+			   			throw new Exception("净重不能为0或小于0!");
+			   		}
+		   		}
+		   		if(!Pattern.compile("^\\d{15}|\\d{17}[0-9A-Z]$").matcher(logis.getConsignercardid()).matches()){
+					throw new Exception("身份证格式不正确!");
+				}
+		   		logistemp = logis;
 			}
+		}catch (NumberFormatException e) {
+			throw new Exception("第【"+ i+"】行数据格式有误，请检查："+e.getMessage());
+		}catch (Exception e) {
+			throw new Exception("第【"+ i+"】行数据有误："+e.getMessage());
 		}
 		if(llist.size()==0){
 			throw new Exception("没有找到需要导入的数据！");

@@ -63,7 +63,9 @@ public class mainFrame {
 		InputStream in = this.getClass().getResourceAsStream(GlobalParam.SOURCE_LOGONAME);
 		shell.setImage(new  Image(shell.getDisplay(), in));
 		FrameUtil.center(shell);
-		showCTabFolder(shell);
+		shell.setLayout(new FillLayout(SWT.HORIZONTAL));
+		Composite composite = new printComp(shell, SWT.NONE);  
+		//showCTabFolder(shell);
 	}
 
 	public static void showCTabFolder(Shell shell)
@@ -77,9 +79,9 @@ public class mainFrame {
        final TabItem comaTabItem = new TabItem(tabFolder, SWT.NONE);  
        comaTabItem.setText("打印管理");  
        //实例化一个我们定制的composite  
-       final Composite composite = new printComp(tabFolder, SWT.NONE);  
+       final Composite composite = new printComp(shell, SWT.NONE);  
        //将我们定制的composite附加到tabItem上。  
-       comaTabItem.setControl(composite);  
+       //comaTabItem.setControl(composite);  
        
        //屏蔽前台的数据管理功能，报关单号由后台分配
        /*final TabItem comcTabItem = new TabItem(tabFolder, SWT.NONE);  
@@ -87,9 +89,9 @@ public class mainFrame {
        final Composite composite_2 = new DataComp(tabFolder, SWT.NONE);  
        comcTabItem.setControl(composite_2);*/  
 
-       final TabItem combTabItem = new TabItem(tabFolder, SWT.NONE);  
+       /*final TabItem combTabItem = new TabItem(tabFolder, SWT.NONE);  
        combTabItem.setText("系统管理");  
        final Composite composite_1 = new systemComp(tabFolder, SWT.NONE);  
-       combTabItem.setControl(composite_1);  
+       combTabItem.setControl(composite_1);*/  
 	 }
 }

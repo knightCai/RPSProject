@@ -19,6 +19,17 @@ public interface UserinfoServiceDelegate {
 
 	/**
 	 * 
+	 * @param userid
+	 * @return returns com.service.service.Userinfo
+	 */
+	@WebMethod
+	@WebResult(targetNamespace = "")
+	@RequestWrapper(localName = "findUserByUserId", targetNamespace = "http://service.service.com/", className = "com.service.service.FindUserByUserId")
+	@ResponseWrapper(localName = "findUserByUserIdResponse", targetNamespace = "http://service.service.com/", className = "com.service.service.FindUserByUserIdResponse")
+	public Userinfo findUserByUserId(@WebParam(name = "userid", targetNamespace = "") String userid);
+
+	/**
+	 * 
 	 * @param user
 	 * @return returns java.lang.String
 	 */
@@ -51,17 +62,6 @@ public interface UserinfoServiceDelegate {
 
 	/**
 	 * 
-	 * @param userid
-	 * @return returns com.service.service.Userinfo
-	 */
-	@WebMethod
-	@WebResult(targetNamespace = "")
-	@RequestWrapper(localName = "findUserByUserId", targetNamespace = "http://service.service.com/", className = "com.service.service.FindUserByUserId")
-	@ResponseWrapper(localName = "findUserByUserIdResponse", targetNamespace = "http://service.service.com/", className = "com.service.service.FindUserByUserIdResponse")
-	public Userinfo findUserByUserId(@WebParam(name = "userid", targetNamespace = "") String userid);
-
-	/**
-	 * 
 	 * @param user
 	 */
 	@WebMethod
@@ -72,12 +72,12 @@ public interface UserinfoServiceDelegate {
 	/**
 	 * 
 	 * @param user
-	 * @return returns boolean
+	 * @return returns com.service.service.Userinfo
 	 */
 	@WebMethod
 	@WebResult(targetNamespace = "")
 	@RequestWrapper(localName = "userLogin", targetNamespace = "http://service.service.com/", className = "com.service.service.UserLogin")
 	@ResponseWrapper(localName = "userLoginResponse", targetNamespace = "http://service.service.com/", className = "com.service.service.UserLoginResponse")
-	public boolean userLogin(@WebParam(name = "user", targetNamespace = "") Userinfo user);
+	public Userinfo userLogin(@WebParam(name = "user", targetNamespace = "") Userinfo user);
 
 }

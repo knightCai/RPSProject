@@ -59,4 +59,8 @@ public class LogisticsListContrllo {
 	public String deleteBatch(List<String> delpkids) {
 		return Loglistser.deleteBatch(delpkids);
 	}
+	
+	public String getYTOOddUpdateLog(List<String> param){
+		return Loglistser.getYTOOddUpdateLog(param);
+	}
 }
