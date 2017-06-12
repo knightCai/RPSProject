@@ -213,6 +213,7 @@ public class FileUtil {
     		GlobalParam.PRINT_WEIGHT = "0";
 			GlobalParam.PRINT_CARGONAME_CARGOTYPE = "";
 			String lineChg = "\r\n";
+			int i = 0;
     		for (Logisticslisting logis : logislist) {
     			if(key.equals(logis.getDeclarenum())&& numMap.get(key).equals(logis.getExpressnum())){
 					GlobalParam.PRINT_CONSIGNERNAME = logis.getConsignername();
@@ -221,12 +222,21 @@ public class FileUtil {
 					GlobalParam.PRINT_CONSIGNEENAME = logis.getConsigneename();
 					GlobalParam.PRINT_CONSIGNEEADDR = logis.getConsigneeaddr();
 					GlobalParam.PRINT_CONSIGNEEPHONE = logis.getConsigneephone();
-					GlobalParam.PRINT_CARGONAME_CARGOTYPE += logis.getCargoname() + "*"+ logis.getCount()+ "  " + logis.getBrand() + "，"  + logis.getCargotype()+ lineChg;
-					GlobalParam.PRINT_WEIGHT = new BigDecimal(GlobalParam.PRINT_WEIGHT).add(new BigDecimal(logis.getDeclareweight())).toString();
+					int maxlen = GlobalParam.SYSTEM_USER.getType() == 3?50:22;
+					if(i<(GlobalParam.SYSTEM_USER.getType() == 3?GlobalParam.CAGLEN_YTO:GlobalParam.CAGLEN_DEFUALT)){
+						String tmpcargotype = logis.getCargoname() + "*"+ logis.getPackagecount()+ "  " + logis.getBrand() + "，"  + logis.getCargotype()+ lineChg;
+						if(tmpcargotype.length()>maxlen){
+							tmpcargotype = tmpcargotype.substring(0,maxlen) + lineChg + tmpcargotype.substring(maxlen,tmpcargotype.length());
+						}
+						GlobalParam.PRINT_CARGONAME_CARGOTYPE += tmpcargotype;
+					}
+					String delWeight = logis.getDeclareweight().equals("")?"0":logis.getDeclareweight();
+					GlobalParam.PRINT_WEIGHT = new BigDecimal(GlobalParam.PRINT_WEIGHT).add(new BigDecimal(delWeight)).toString();
 					GlobalParam.PRINT_EXPRESSNUM = logis.getExpressnum();
 					GlobalParam.PRINT_DECLARENUM = logis.getDeclarenum();
 					GlobalParam.PRINT_CONSIGNERCOUNTRY = logis.getConsignercountry();
 					GlobalParam.PRINT_IMPORTSER = logis.getImportnum()+"";
+					i++;
     			}
     		}
     		//2、生成图片

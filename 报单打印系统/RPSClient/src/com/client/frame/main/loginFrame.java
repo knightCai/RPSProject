@@ -65,6 +65,9 @@ public class loginFrame {
 			FrameUtil.center(shell);
 			InputStream in = this.getClass().getResourceAsStream(GlobalParam.SOURCE_LOGONAME);
 			shell.setImage(new  Image(shell.getDisplay(), in));
+			in = this.getClass().getResourceAsStream(GlobalParam.SOURCE_BGLOGIN);
+			shell.setBackgroundImage(new  Image(shell.getDisplay(), in));
+			shell.setBackgroundMode(SWT.INHERIT_DEFAULT); 
 			shell.open();
 			shell.layout();
 			while (!shell.isDisposed()) {
@@ -79,10 +82,9 @@ public class loginFrame {
 	 * Create contents of the window.
 	 */
 	protected void createContents() {
-		shell = new Shell();
+		shell = new Shell(SWT.CLOSE | SWT.MIN);
 		shell.setSize(450, 280);
 		shell.setText(GlobalParam.SYSTEM_SYSNAME);
-		
 		textusername = new Text(shell, SWT.BORDER);
 		textusername.setBounds(180, 32, 173, 26);
 		
@@ -116,10 +118,12 @@ public class loginFrame {
 						Userinfo user = new Userinfo();
 						user.setUserid(username);
 						user.setPassword(pwd);
-						if(usercon.userLogin(user)){
+						user = usercon.userLogin(user);
+						if(user!=null){
 							//如果选择了记住密码，保存密码信息
 								if(btnCheckSaveLogin.getSelection()){
 									user.setState("1");
+									user.setPassword(pwd);
 								}else{
 									user.setUserid("");
 									user.setPassword("");
@@ -129,6 +133,7 @@ public class loginFrame {
 								//记住当前登录用户账号
 								shell.dispose();
 								GlobalParam.SYSTEM_LOGINUSER = username;
+								GlobalParam.SYSTEM_USER = user;
 								mainFrame mainwoindow = new mainFrame();
 								mainwoindow.open();
 						}else{
@@ -138,7 +143,7 @@ public class loginFrame {
 						MessageDialog.openQuestion(shell, "系统提示", "请输入您的用户名及密码！");
 					}
 				} catch (Exception e) {
-					MessageDialog.openQuestion(shell, "系统提示", "登录异常，请联系管理员！");
+					MessageDialog.openQuestion(shell, "系统提示", "登录异常，请联系管理员！"+e.getMessage());
 				}
 			}
 		});

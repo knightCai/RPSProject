@@ -1,5 +1,7 @@
 package com.client.frame.print;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.Robot;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -97,17 +99,31 @@ public class printImage {
 		flag = false;
 		createContents();
 //		Rectangle bs = printimg.getBounds();
-		shell.setSize(498, 832);
+		shell.setSize(422, 627);
 		InputStream in = this.getClass().getResourceAsStream(GlobalParam.SOURCE_LOGONAME);
 		shell.setImage(new  Image(shell.getDisplay(), in));
+		shell.setBackgroundImage(new  Image(shell.getDisplay(), this.getClass().getResourceAsStream(GlobalParam.SOURCE_CS1)));
 		FrameUtil.center(shell);
 		Button btnNewButton = new Button(shell, SWT.NONE);
 		btnNewButton.setBounds(30, 10, 98, 30);
 		btnNewButton.setText("打印");
 		
-		initComposite();
-		initPrintParams();
-		
+		//initComposite();
+		//initPrintParams();
+		Label imageLab = new Label(shell, SWT.NONE);
+		imageLab.setBounds(40, 46, 324, 492);
+		imageLab.setText("imageview");
+		//2、生成图片
+		BufferedImage bufferimg = new BufferedImage(350, 480, BufferedImage.TYPE_INT_RGB);
+		//设置背景为白色
+		Graphics2D g2 = (Graphics2D) bufferimg.getGraphics();
+        g2.setBackground(Color.WHITE);
+        g2.clearRect(0, 0, 350, 480);
+        new PrintTest().print(g2, null, 0);
+        //new PrintTest().print_DEFAULT(g2, null, 0);
+        ImageData image=SWTUtils.convertToSWT(bufferimg);
+        imageLab.setImage(new Image(shell.getDisplay(),image));
+        
 		btnNewButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

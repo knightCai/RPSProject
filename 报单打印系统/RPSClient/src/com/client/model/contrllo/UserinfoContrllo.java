@@ -37,7 +37,7 @@ public class UserinfoContrllo {
 		userdele.updateUser(user);
 	}
 	
-	public boolean userLogin(Userinfo user){
+	public Userinfo userLogin(Userinfo user){
 		return userdele.userLogin(user);
 	}
 }

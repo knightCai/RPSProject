@@ -16,6 +16,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.TraverseEvent;
 import org.eclipse.swt.events.TraverseListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -60,15 +61,18 @@ public class printComp extends Composite {
 	private OddnumberContrllo oddnumContrllo;	//报关单号接口处理类
 	private Button btn_isshama;	//是否扫码枪模式
 	private Label lblkg;	//包裹总数
+	private String viewdeclarenum = ""; //打印预览选择的单号
 
 	public printComp(Composite parent, int style) {  
 		super(parent, style);
 		logisContrllo = new LogisticsListContrllo();
 		oddnumContrllo = new OddnumberContrllo();
         composite = this;
+		this.setBackgroundImage(new  Image(this.getDisplay(), this.getClass().getResourceAsStream(GlobalParam.SOURCE_CS1)));
+		this.setBackgroundMode(SWT.INHERIT_DEFAULT); 
         /*InputStream in = this.getClass().getResourceAsStream("/images/system/bg-main.jpg");
         composite.setBackgroundImage(new  Image(this.getShell().getDisplay(), in));*/
-        GridLayout gridLayout = new GridLayout(16, false);
+        GridLayout gridLayout = new GridLayout(17, false);
         gridLayout.verticalSpacing = 10;
         gridLayout.horizontalSpacing = 10;
         gridLayout.marginBottom = 10;
@@ -78,7 +82,7 @@ public class printComp extends Composite {
         setLayout(gridLayout);
         
         Label label = new Label(this, SWT.NONE);
-        label.setText("运单打印：");
+        label.setText("包裹单号：");
         
         text = new Text(this, SWT.BORDER);
         text.setFont(SWTResourceManager.getFont("Microsoft YaHei UI", 12, SWT.NORMAL));
@@ -113,8 +117,15 @@ public class printComp extends Composite {
 							FrameUtil.isError_systemmusic();
 							MessageDialog.openConfirm(getShell(), "系统提示","请选择需要打印的内容");
 						}else{
-							expressnum = items[0].getText(4);
+							expressnum = items[0].getText(GlobalParam.SYSTEM_USER.getType() == 3?5:4);
+							viewdeclarenum = items[0].getText(3);
+							if(viewdeclarenum.equals("")){
+								FrameUtil.isError_systemmusic();
+								MessageDialog.openInformation(getShell(), "系统提示", "请先拉取面单号，再进行打印操作！");
+								return;
+							}
 							printLogistics(0);//预览打印
+							viewdeclarenum = "";
 						}
 					}else{
 						printLogistics(0);
@@ -125,6 +136,7 @@ public class printComp extends Composite {
 				}
 			}
 		});
+        new Label(this, SWT.NONE);
         
         Button button_1 = new Button(this, SWT.NONE);
         button_1.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
@@ -343,14 +355,17 @@ public class printComp extends Composite {
 				}
 			}
 		});
-        List<Oddnumber> oddnums = oddnumContrllo.findAllOddnum(GlobalParam.SYSTEM_LOGINUSER);
-        for(Oddnumber odd:oddnums){
-        	if(odd.getSuplusnum()<odd.getWarnnum()){
-        		FrameUtil.isError_systemmusic();
-				MessageDialog.openInformation(getShell(), "系统提示", "【"+odd.getStartnum()+"】批次的报关单号目前剩余【"+odd.getSuplusnum()+"】," +
-						"已小于预警数【"+odd.getWarnnum()+"】请联系管理员添加单号！");
-				break;
-        	}
+        //非3类型的用户
+        if(GlobalParam.SYSTEM_USER.getType() != 3){
+	        List<Oddnumber> oddnums = oddnumContrllo.findAllOddnum(GlobalParam.SYSTEM_LOGINUSER);
+	        for(Oddnumber odd:oddnums){
+	        	if(odd.getSuplusnum()<odd.getWarnnum()){
+	        		FrameUtil.isError_systemmusic();
+					MessageDialog.openInformation(getShell(), "系统提示", "【"+odd.getStartnum()+"】批次的报关单号目前剩余【"+odd.getSuplusnum()+"】," +
+							"已小于预警数【"+odd.getWarnnum()+"】请联系管理员添加单号！");
+					break;
+	        	}
+	        }
         }
         createTable();
         text.setFocus();
@@ -360,13 +375,43 @@ public class printComp extends Composite {
 	// 创建表格  
     private void createTable()  
     {
-        
-                Label label_2 = new Label(this, SWT.NONE);
-                label_2.setAlignment(SWT.RIGHT);
-                GridData gd_label_2 = new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1);
-                gd_label_2.widthHint = 92;
-                label_2.setLayoutData(gd_label_2);
-                label_2.setText("打印状态：");
+    	//如果当前用户类型是圆通
+    	if(GlobalParam.SYSTEM_USER.getType() == 3){
+    		//拉取圆通面单按钮
+	        Button btn_getDelNo = new Button(this, SWT.NONE);
+	        btn_getDelNo.addSelectionListener(new SelectionAdapter() {
+	        	@Override
+	        	public void widgetSelected(SelectionEvent e) {
+	        		importnum = text_importnum.getText();//获取总运单号
+					//总运单号不为空才进行处理
+					if(!importnum.equals("")){
+						if(MessageDialog.openConfirm(getShell(), "系统提示", "确定要拉取面单号吗？该操作会对总运单号下所有未拉取面单的数据生效！")){
+							putCondition();
+							String[] result = logisContrllo.getYTOOddUpdateLog(condition).split(",");
+							if("000".equals(result[0])){
+								MessageDialog.openInformation(getShell(), "系统提示", "拉取面单号成功！");
+								afterPrint();
+							}else{
+								MessageDialog.openInformation(getShell(), "系统提示", "拉取面单号失败！"+result[1]);
+							}
+						}
+					}else{
+						FrameUtil.isError_systemmusic();
+						MessageDialog.openInformation(getShell(), "系统提示", "总运(航空)单号不能为空！");
+					}
+	        	}
+	        });
+	        GridData gd_btn_getDelNo = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+	        gd_btn_getDelNo.widthHint = 123;
+	        btn_getDelNo.setLayoutData(gd_btn_getDelNo);
+	        btn_getDelNo.setText("拉取面单号");
+    	}
+        Label label_2 = new Label(this, SWT.NONE);
+        label_2.setAlignment(SWT.RIGHT);
+        GridData gd_label_2 = new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1);
+        gd_label_2.widthHint = 92;
+        label_2.setLayoutData(gd_label_2);
+        label_2.setText("打印状态：");
         
         comisprint = new Combo(this, SWT.NONE);
         GridData gd_comisprint = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
@@ -405,22 +450,24 @@ public class printComp extends Composite {
         new Label(this, SWT.NONE);
         new Label(this, SWT.NONE);
         new Label(this, SWT.NONE);
+        new Label(this, SWT.NONE);
     	// 表格布局  
         GridData gridData = new org.eclipse.swt.layout.GridData();  
-        gridData.horizontalSpan = 16;
+        gridData.horizontalSpan = 17;
         gridData.horizontalAlignment = SWT.FILL;  
         gridData.grabExcessHorizontalSpace = true;  
         gridData.grabExcessVerticalSpace = true;  
         gridData.verticalAlignment = SWT.FILL;  
     	// 创建表格，使用SWT.FULL_SELECTION样式，可同时选中一行  
         table = new Table(composite, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION | SWT.MULTI);  
+        table.setHeaderVisible(true);
         table.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 11, 1));
-        table.setHeaderVisible(true);// 设置显示表头  
         table.setLayoutData(gridData);// 设置表格布局  
         table.setLinesVisible(true);
-        
+        table.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND)); 
+        //table.setBackgroundImage(new  Image(this.getDisplay(), this.getClass().getResourceAsStream(GlobalParam.SOURCE_CS1)));
         TableColumn tableColumn = new TableColumn(table, SWT.NONE);  
-        tableColumn.setText("全/反选");  
+        tableColumn.setText("全/反选");
         // 设置表头可移动，默认为false  
         tableColumn.setMoveable(true);  
         //全选反选事件
@@ -433,9 +480,14 @@ public class printComp extends Composite {
         	}
 		});
         // 创建表头的字符串数组  
-        String[] tableHeader = {"  导入序号     ", "   打印状态      ", "        报关单号        ", "        物流单号        ","        收件人姓名        ",
+        String[] tableHeader = {"  导入序号     ", "   打印状态      ", "        报关单号        ", "        包裹单号        ","        收件人姓名        ",
         		"        收件人地址        ","        收件人电话        ","        总运单号        ",
         		"        实际重量        ","        货品名称        ","        规格型号        ","        导入时间        "};  
+        if(GlobalParam.SYSTEM_USER.getType() == 3){//圆通类型有大头笔信息
+        	tableHeader = new String[]{"  导入序号     ", "   打印状态      ", "        报关单号        ", "        大头笔        ", "        包裹单号        ","        收件人姓名        ",
+            		"        收件人地址        ","        收件人电话        ","        总运单号        ",
+            		"        实际重量        ","        货品名称        ","        规格型号        ","        导入时间        "};  
+        }
         for (int i = 0; i < tableHeader.length; i++)  
         {  
         	tableColumn = new TableColumn(table, SWT.NONE);  
@@ -535,51 +587,49 @@ public class printComp extends Composite {
 		for(int i = 0;i < logislist.size(); i++){
 			logis = logislist.get(i);
 			//统计毛重总和
-			weightsum = new BigDecimal(weightsum).add(new BigDecimal(logis.getDeclareweight())).toString();
+			String delWeight = logis.getDeclareweight().equals("")?"0":logis.getDeclareweight();
+			weightsum = new BigDecimal(weightsum).add(new BigDecimal(delWeight)).toString();
 			item = new TableItem(table, SWT.NONE);
 			//地址：省、市 与详细地址”|“分割存放在同一字段
 			String[] str = logis.getConsigneeaddr().split("\\|");
 			// {"导入序号", "打印状态", "报关单号", "物流单号","收件人姓名","收件人地址","收件人电话","总运单号","实际重量","货品名称","规格型号","导入时间"};  
-			item.setText(new String[]{
-				"",
-				logis.getSerialnum(),
-				logis.getIsprint().equals("1")?"已打印":"未打印",
-				logis.getDeclarenum(),
-				logis.getExpressnum(),
-				/*logis.getDeclaretype(),
-				logis.getPaytype(),
-				logis.getDeclarecount(),
-				logis.getDeclareweight(),
-				logis.getDeclarevalue (),
-				logis.getCurrency(),*/
-				logis.getConsigneename(),
-				str.length>1?str[2]:logis.getConsigneeaddr(),
-				logis.getConsigneephone(),
-				/*logis.getConsignercardtype(),
-				logis.getConsignercardid(),
-				logis.getConsignername(),
-				logis.getConsignercity (),
-			   	logis.getConsigneraddr(),
-			   	logis.getConsignerphone (),
-			   	logis.getFromcountry(),
-			   	logis.getConsigneecountry(),
-			   	logis.getConsignercountry(),
-			   	logis.getCargoid(),*/
-				logis.getImportnum(),
-				logis.getDeclareweight(),
-				//logis.getNetweight(),
-			   	logis.getCargoname(),
-			   	logis.getCargotype(),
-			   	logis.getCreatetime().toString().substring(0, 10),
-			   	logis.getPkid()
-			   	/*logis.getCount(),
-			   	logis.getUnit(),
-			   	logis.getTrademode(),
-			   	logis.getPacktype(),
-			   	logis.getNetweight(),
-			   	logis.getLegalnum()*/
-			});
-			calmap.put(logis.getDeclarenum(),logis.getExpressnum());
+			if(GlobalParam.SYSTEM_USER.getType() == 3){
+				item.setText(new String[]{
+						"",
+						logis.getSerialnum(),
+						logis.getIsprint().equals("1")?"已打印":"未打印",
+						logis.getDeclarenum(),
+						logis.getBigpen(),
+						logis.getExpressnum(),
+						logis.getConsigneename(),
+						str.length>1?str[2]:logis.getConsigneeaddr(),
+						logis.getConsigneephone(),
+						logis.getImportnum(),
+						logis.getDeclareweight(),
+					   	logis.getCargoname(),
+					   	logis.getCargotype(),
+					   	logis.getCreatetime().toString().substring(0, 10),
+					   	logis.getPkid()
+					});
+			}else{
+				item.setText(new String[]{
+					"",
+					logis.getSerialnum(),
+					logis.getIsprint().equals("1")?"已打印":"未打印",
+					logis.getDeclarenum(),
+					logis.getExpressnum(),
+					logis.getConsigneename(),
+					str.length>1?str[2]:logis.getConsigneeaddr(),
+					logis.getConsigneephone(),
+					logis.getImportnum(),
+					logis.getDeclareweight(),
+				   	logis.getCargoname(),
+				   	logis.getCargotype(),
+				   	logis.getCreatetime().toString().substring(0, 10),
+				   	logis.getPkid()
+				});
+			}
+			calmap.put(logis.getExpressnum()+logis.getSerialnum(),logis.getExpressnum());
 		}
 		lblkg.setText("包裹总数:"+calmap.size()+"  总重量:"+weightsum+"Kg");
 	} 
@@ -592,51 +642,87 @@ public class printComp extends Composite {
     private void printLogistics(int operType){
     	try {
 	    	condition = new ArrayList();
+	    	if(!viewdeclarenum.equals("")){
+	    		condition.add("declarenum:"+viewdeclarenum);
+	    	}
 			condition.add("expressnum:"+expressnum);
 			condition.add("importnum:"+text_importnum.getText());
 			condition.add("importuser:"+GlobalParam.SYSTEM_LOGINUSER);
 			//通过运单号查询运单信息
 			List<Logisticslisting> logislist = logisContrllo.findLlistByParams(condition);
+			//面单过滤条件集合
+			String isprint="0";
+	    	Map<String, String> numMap = new HashMap<String, String>();
+			//通过报关单号筛选同一打印面单
+	    	for (Logisticslisting logis : logislist) {
+	    		//报关单号不能为空
+	    		if("".equals(logis.getDeclarenum())){
+	    			FrameUtil.isError_systemmusic();
+	    			MessageDialog.openWarning(getShell(),"系统提示","不能打印报关单号为空的记录！请先拉取面单号再进行打印！运单号："+expressnum);
+					return;
+	    		}
+				numMap.put(logis.getDeclarenum(), logis.getExpressnum());
+				if(logis.getIsprint().equals("1"))
+					isprint = "1";
+			}
+	    	//若同一物流单号不同包裹，只能打印一次面单，其余让用户选择打印
+	    	if(isprint.equals("1")&&operType == 1){
+				//已打印运单号重复扫描提示音
+				FrameUtil.istwo_printmusic();
+				MessageDialog.openWarning(getShell(),"系统提示","当前运单已打印，扫码枪打印不支持重复打印！运单号："+GlobalParam.PRINT_EXPRESSNUM);
+				return;
+			}
 			//若无数据不进行操作
 			//遍历查询结果，一个运单号可包含多个货品，面单打印时需要统计为一个面单进行打印
 			//每次打印时需重置累加部分的值。
 			if(logislist.size() > 0){
-				GlobalParam.PRINT_WEIGHT = "0";
-				GlobalParam.PRINT_CARGONAME_CARGOTYPE = "";
-				String isprint="0";
-				String lineChg = "\r\n";
-				for(Logisticslisting logis : logislist){
-					isprint = logis.getIsprint();
-					GlobalParam.PRINT_CONSIGNERNAME = logis.getConsignername();
-					GlobalParam.PRINT_CONSIGNERADDR = logis.getConsigneraddr();
-					GlobalParam.PRINT_CONSIGNERPHONE = logis.getConsignerphone();
-					GlobalParam.PRINT_CONSIGNEENAME = logis.getConsigneename();
-					GlobalParam.PRINT_CONSIGNEEADDR = logis.getConsigneeaddr();
-					GlobalParam.PRINT_CONSIGNEEPHONE = logis.getConsigneephone();
-					GlobalParam.PRINT_CARGONAME_CARGOTYPE += logis.getCargoname() + "*"+ logis.getCount()+ "  " + logis.getBrand() + "，"  + logis.getCargotype()+ lineChg;
-					GlobalParam.PRINT_WEIGHT = new BigDecimal(GlobalParam.PRINT_WEIGHT).add(new BigDecimal(logis.getDeclareweight())).toString();
-					GlobalParam.PRINT_EXPRESSNUM = logis.getExpressnum();
-					GlobalParam.PRINT_DECLARENUM = logis.getDeclarenum();
-					GlobalParam.PRINT_CONSIGNERCOUNTRY = logis.getConsignercountry();
-					GlobalParam.PRINT_IMPORTSER = logis.getImportnum()+"";
-				}
-				if(isprint.equals("1")&&operType == 1){
-					//已打印运单号重复扫描提示音
-					FrameUtil.istwo_printmusic();
-					MessageDialog.openWarning(getShell(),"系统提示","当前运单已打印，扫码枪打印不支持重复打印！运单号："+GlobalParam.PRINT_EXPRESSNUM);
-					return;
-				}
-				if(operType == 1){
-					//调用打印机进行打印
-					//完成打印后提示音
-					FrameUtil.isOk_printmusic();
-					PrintTest.doPrint();
-					afterPrint();
-				}else{
-					printImage pm = new printImage();
-					if(pm.open()){
-						afterPrint();
+				//获取第一个进行打印
+				for(String key: numMap.keySet()){
+					GlobalParam.PRINT_WEIGHT = "0";
+					GlobalParam.PRINT_CARGONAME_CARGOTYPE = "";
+					String lineChg = "\r\n";
+					int i = 0;	//面单只显示三条详细品名信息
+					for(Logisticslisting logis : logislist){
+						if(key.equals(logis.getDeclarenum())){
+							isprint = logis.getIsprint();
+							GlobalParam.PRINT_CONSIGNERNAME = logis.getConsignername();
+							GlobalParam.PRINT_CONSIGNERADDR = logis.getConsigneraddr();
+							GlobalParam.PRINT_CONSIGNERPHONE = logis.getConsignerphone();
+							GlobalParam.PRINT_CONSIGNEENAME = logis.getConsigneename();
+							GlobalParam.PRINT_CONSIGNEEADDR = logis.getConsigneeaddr();
+							GlobalParam.PRINT_CONSIGNEEPHONE = logis.getConsigneephone();
+							int maxlen = GlobalParam.SYSTEM_USER.getType() == 3?50:22;
+							if(i<(GlobalParam.SYSTEM_USER.getType() == 3?GlobalParam.CAGLEN_YTO:GlobalParam.CAGLEN_DEFUALT)){
+								String tmpcargotype = logis.getCargoname() + "*"+ logis.getPackagecount()+ "  " + logis.getBrand() + "，"  + logis.getCargotype()+ lineChg;
+								if(tmpcargotype.length()>(maxlen+1)){
+									tmpcargotype = tmpcargotype.substring(0,maxlen) + lineChg + tmpcargotype.substring(maxlen,tmpcargotype.length());
+								}
+								GlobalParam.PRINT_CARGONAME_CARGOTYPE += tmpcargotype;
+							}
+							String delWeight = logis.getDeclareweight().equals("")?"0":logis.getDeclareweight();
+							GlobalParam.PRINT_WEIGHT = new BigDecimal(GlobalParam.PRINT_WEIGHT).add(new BigDecimal(delWeight)).toString();
+							GlobalParam.PRINT_EXPRESSNUM = logis.getExpressnum();
+							GlobalParam.PRINT_DECLARENUM = logis.getDeclarenum();
+							GlobalParam.PRINT_CONSIGNERCOUNTRY = logis.getConsignercountry();
+							GlobalParam.PRINT_IMPORTSER = logis.getImportnum()+"";
+							GlobalParam.PRINT_BIGPEN = logis.getBigpen();
+							i++;
+						}
 					}
+					if(operType == 1){
+						//调用打印机进行打印
+						//完成打印后提示音
+						FrameUtil.isOk_printmusic();
+						PrintTest.doPrint();
+						afterPrint();
+					}else{
+						printImage pm = new printImage();
+						if(pm.open()){
+							afterPrint();
+						}
+					}
+					//只打第一个面单
+					break;
 				}
 			}else{
 				//运单号查询无数据提示音
@@ -651,7 +737,9 @@ public class printComp extends Composite {
      * 完成打印后更新打印状态，重新加载数据
      */
     private void afterPrint(){
-    	String[] msgcode = logisContrllo.updateLlistBySql(" isprint = '1' where expressnum = '"+GlobalParam.PRINT_EXPRESSNUM+"' and importnum = '"+text_importnum.getText()+"'" ).split(",");
+    	String[] msgcode = logisContrllo.updateLlistBySql(" isprint = '1' where expressnum = '"+GlobalParam.PRINT_EXPRESSNUM 
+    			+"' and declarenum = '"+GlobalParam.PRINT_DECLARENUM
+    			+"' and importnum = '"+text_importnum.getText()+"'" ).split(",");
 		if(msgcode[0].equals("999")){
 			FrameUtil.isError_systemmusic();
 			MessageDialog.openWarning(getShell(), "系统提示", "修改打印状态失败："+msgcode[1]);

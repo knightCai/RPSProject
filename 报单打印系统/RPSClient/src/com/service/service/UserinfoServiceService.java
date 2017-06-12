@@ -18,7 +18,7 @@ import javax.xml.ws.WebServiceClient;
  * <pre>
 * UserinfoServiceService service = new UserinfoServiceService();
 * UserinfoServiceDelegate portType = service.getUserinfoServicePort();
-* portType.saveUser(...);
+* portType.findUserByUserId(...);
  * </pre>
  * </p>
  * 
