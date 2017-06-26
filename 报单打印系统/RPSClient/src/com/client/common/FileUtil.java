@@ -222,13 +222,17 @@ public class FileUtil {
 					GlobalParam.PRINT_CONSIGNEENAME = logis.getConsigneename();
 					GlobalParam.PRINT_CONSIGNEEADDR = logis.getConsigneeaddr();
 					GlobalParam.PRINT_CONSIGNEEPHONE = logis.getConsigneephone();
-					int maxlen = GlobalParam.SYSTEM_USER.getType() == 3?50:22;
-					if(i<(GlobalParam.SYSTEM_USER.getType() == 3?GlobalParam.CAGLEN_YTO:GlobalParam.CAGLEN_DEFUALT)){
-						String tmpcargotype = logis.getCargoname() + "*"+ logis.getPackagecount()+ "  " + logis.getBrand() + "，"  + logis.getCargotype()+ lineChg;
-						if(tmpcargotype.length()>maxlen){
-							tmpcargotype = tmpcargotype.substring(0,maxlen) + lineChg + tmpcargotype.substring(maxlen,tmpcargotype.length());
+					if(GlobalParam.SYSTEM_USER.getType() == 2){
+						GlobalParam.PRINT_CARGONAME_CARGOTYPE = logis.getCargoname();
+					}else{
+						int maxlen = GlobalParam.SYSTEM_USER.getType() == 3?50:22;
+						if(i<(GlobalParam.SYSTEM_USER.getType() == 3?GlobalParam.CAGLEN_YTO:GlobalParam.CAGLEN_DEFUALT)){
+							String tmpcargotype = logis.getCargoname() + "*"+ logis.getPackagecount()+ "  " + logis.getBrand() + "，"  + logis.getCargotype()+ lineChg;
+							if(tmpcargotype.length()>maxlen){
+								tmpcargotype = tmpcargotype.substring(0,maxlen) + lineChg + tmpcargotype.substring(maxlen,tmpcargotype.length());
+							}
+							GlobalParam.PRINT_CARGONAME_CARGOTYPE += tmpcargotype;
 						}
-						GlobalParam.PRINT_CARGONAME_CARGOTYPE += tmpcargotype;
 					}
 					String delWeight = logis.getDeclareweight().equals("")?"0":logis.getDeclareweight();
 					GlobalParam.PRINT_WEIGHT = new BigDecimal(GlobalParam.PRINT_WEIGHT).add(new BigDecimal(delWeight)).toString();

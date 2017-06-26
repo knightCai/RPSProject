@@ -144,7 +144,10 @@ public class OddnumberDialog extends Dialog {
 					dd.setText("setText");  
 					dd.setFilterPath("C://");  
 					String saveFile=dd.open();
-					String sourcepath = GlobalParam.SYSTEM_USER.getType() == 3 ? GlobalParam.SOURCE_IMPORTTEMPLEYTO : GlobalParam.SOURCE_IMPORTTEMPLE;
+					String sourcepath = GlobalParam.SYSTEM_USER.getType() == 3 ? 
+							GlobalParam.SOURCE_IMPORTTEMPLEYTO : 
+							GlobalParam.SYSTEM_USER.getType() == 2?
+							GlobalParam.SOURCE_IMPORTTEMPLEDIY:GlobalParam.SOURCE_IMPORTTEMPLE;
 					boolean flg= FileUtil.downloadLocal("报关单导入模板.xls",saveFile,sourcepath);
 					if(flg){
 						MessageDialog.openInformation(shell, "系统提示", "模板下载成功!保存路径为："+saveFile+"/报关单导入模板.xls");
@@ -193,7 +196,7 @@ public class OddnumberDialog extends Dialog {
 								}
 							}
 						}else{
-							List<OddnumerDiy> oddnums = oddnumDiycor.findAllOddnumDiy(GlobalParam.SYSTEM_LOGINUSER);
+							List<OddnumerDiy> oddnums = oddnumDiycor.findAllOddnumDiy("");
 							int type0,type1 = type0= 0;
 							for(OddnumerDiy odddiy:oddnums){
 								if(odddiy.getType()==0)
@@ -259,63 +262,84 @@ public class OddnumberDialog extends Dialog {
 		   		}
 				logis = new  Logisticslisting();
 				logis.setPkid(FrameUtil.getUUID());
-				
-				logis.setSerialnum(temp.get(j++).toString());
-				logis.setImportnum(temp.get(j++).toString());
 				logis.setDeclarenum("");
-				logis.setExpressnum(temp.get(j++).toString());
-				logis.setBrand(temp.get(j++).toString());
-				logis.setCargoname(temp.get(j++).toString());
-				logis.setCargotype(temp.get(j++).toString());
-				logis.setDeclareweight(temp.get(j++).toString());
-				logis.setDeclareprice(temp.get(j++).toString());
-				logis.setDeclarepricesum(temp.get(j++).toString());
-				if(GlobalParam.SYSTEM_USER.getType() == 3){//圆通导入模板
-					logis.setPackagecount(temp.get(j++).toString());
-					logis.setNetweight(temp.get(j++).toString());
-				}else{//系统用户导入模板
-					logis.setLegalnum(temp.get(j++).toString());
-					logis.setNetweight(temp.get(j++).toString());
-					logis.setPackagecount(temp.get(j++).toString());
-					logis.setCount(temp.get(j++).toString());
-				}
-				logis.setConsigneename(temp.get(j++).toString());
-				//地址内容：收货人省份+收货人城市+收货人详细地址
-				logis.setConsigneeaddr(temp.get(j++).toString()+"|"+ temp.get(j++).toString() +"|"+temp.get(j++).toString());
-				logis.setConsigneephone(temp.get(j++).toString());
-				logis.setConsignercardid(temp.get(j++).toString());
-				logis.setConsignername(temp.get(j++).toString());
-				logis.setConsigneraddr(temp.get(j++).toString());
-				logis.setConsignerphone(temp.get(j++).toString());
-				logis.setConsignercountry(temp.get(j++).toString());
 				logis.setIsprint("0");
 				logis.setImportuser(GlobalParam.SYSTEM_LOGINUSER);
 				logis.setCreatetime(FrameUtil.convertToXMLGregorianCalendar(new Date()));
-				
-				//用户类型为3的模板相同订单只在第一条数据有值
-				if(logis.getSerialnum().equals("")){
-					logis.setSerialnum(logistemp.getSerialnum());
-					logis.setExpressnum(logistemp.getExpressnum());
-					logis.setConsigneename(logistemp.getConsigneename());
-					logis.setConsigneeaddr(logistemp.getConsigneeaddr());
-					logis.setConsigneephone(logistemp.getConsigneephone());
-					logis.setConsignercardid(logistemp.getConsignercardid());
-				}
-				
-		   		llist.add(logis);
-		   		i++;
-		   		//类型为3的（圆通）用户不判断毛重
-		   		if(GlobalParam.SYSTEM_USER.getType() != 3){
-			   		if(Double.parseDouble(logis.getNetweight()) > Double.parseDouble(logis.getDeclareweight())){
-			   			throw new Exception("净重不能大于毛重!");
-			   		}else if(!(Double.parseDouble(logis.getNetweight())>0)){
-			   			throw new Exception("净重不能为0或小于0!");
+				if(GlobalParam.SYSTEM_USER.getType() == 2){//自定义用户导入
+					logis.setSerialnum(temp.get(j++).toString());
+					logis.setImportnum(temp.get(j++).toString());
+					logis.setExpressnum(temp.get(j++).toString());
+					logis.setCargoname(temp.get(j++).toString());
+					logis.setBrand(temp.get(j++).toString());
+					logis.setDeclareweight(temp.get(j++).toString());
+					logis.setConsigneename(temp.get(j++).toString());
+					logis.setConsigneephone(temp.get(j++).toString());
+					//地址内容：收货人省份+收货人城市+收货人详细地址
+					logis.setConsigneeaddr(temp.get(j++).toString()+"|"+ temp.get(j++).toString() +"|"+temp.get(j++).toString());
+					logis.setConsignercardid(temp.get(j++).toString());
+					//验证净重数据格式是否正确
+					String flagNetWeight = logis.getDeclareweight();
+					if(ExcelUtil.isZM(flagNetWeight)){
+						throw new Exception("重量数据，请检查是否引用格式!");
+					}
+				}else{
+					logis.setSerialnum(temp.get(j++).toString());
+					logis.setImportnum(temp.get(j++).toString());
+					logis.setExpressnum(temp.get(j++).toString());
+					logis.setBrand(temp.get(j++).toString());
+					logis.setCargoname(temp.get(j++).toString());
+					logis.setCargotype(temp.get(j++).toString());
+					logis.setDeclareweight(temp.get(j++).toString());
+					logis.setDeclareprice(temp.get(j++).toString());
+					logis.setDeclarepricesum(temp.get(j++).toString());
+					if(GlobalParam.SYSTEM_USER.getType() == 3){//圆通导入模板
+						logis.setPackagecount(temp.get(j++).toString());
+						logis.setNetweight(temp.get(j++).toString());
+					}else{//系统用户导入模板
+						logis.setLegalnum(temp.get(j++).toString());
+						logis.setNetweight(temp.get(j++).toString());
+						logis.setPackagecount(temp.get(j++).toString());
+						logis.setCount(temp.get(j++).toString());
+					}
+					logis.setConsigneename(temp.get(j++).toString());
+					//地址内容：收货人省份+收货人城市+收货人详细地址
+					logis.setConsigneeaddr(temp.get(j++).toString()+"|"+ temp.get(j++).toString() +"|"+temp.get(j++).toString());
+					logis.setConsigneephone(temp.get(j++).toString());
+					logis.setConsignercardid(temp.get(j++).toString());
+					logis.setConsignername(temp.get(j++).toString());
+					logis.setConsigneraddr(temp.get(j++).toString());
+					logis.setConsignerphone(temp.get(j++).toString());
+					logis.setConsignercountry(temp.get(j++).toString());
+					//用户类型为3的模板相同订单只在第一条数据有值
+					if(logis.getSerialnum().equals("")){
+						logis.setSerialnum(logistemp.getSerialnum());
+						logis.setExpressnum(logistemp.getExpressnum());
+						logis.setConsigneename(logistemp.getConsigneename());
+						logis.setConsigneeaddr(logistemp.getConsigneeaddr());
+						logis.setConsigneephone(logistemp.getConsigneephone());
+						logis.setConsignercardid(logistemp.getConsignercardid());
+					}
+					//验证净重数据格式是否正确
+					String flagNetWeight = logis.getNetweight();
+					if(ExcelUtil.isZM(flagNetWeight)){
+						throw new Exception("净重数据，请检查是否引用格式!");
+					}
+			   		//类型为3的（圆通）用户不判断毛重
+			   		if(GlobalParam.SYSTEM_USER.getType() != 3){
+				   		if(Double.parseDouble(logis.getNetweight()) > Double.parseDouble(logis.getDeclareweight())){
+				   			throw new Exception("净重不能大于毛重!");
+				   		}else if(!(Double.parseDouble(logis.getNetweight())>0)){
+				   			throw new Exception("净重不能为0或小于0!");
+				   		}
 			   		}
-		   		}
+				}
 		   		if(!Pattern.compile("^\\d{15}|\\d{17}[0-9A-Z]$").matcher(logis.getConsignercardid()).matches()){
 					throw new Exception("身份证格式不正确!");
 				}
 		   		logistemp = logis;
+		   		llist.add(logis);
+		   		i++;
 			}
 		}catch (NumberFormatException e) {
 			throw new Exception("第【"+ i+"】行数据格式有误，请检查："+e.getMessage());

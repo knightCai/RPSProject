@@ -10,6 +10,8 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
@@ -17,6 +19,7 @@ import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -259,6 +262,8 @@ public class ExcelUtil {
         //根据用户类型构造excel文件 
         if(GlobalParam.SYSTEM_USER.getType() == 3){
         	createExcelForTYPE3(wb, list);
+        }else if(GlobalParam.SYSTEM_USER.getType() == 2){
+        	createExcelForTYPE2(wb, list);
         }else{
         	createExcelDEFUALT(wb, list);
         }
@@ -634,6 +639,121 @@ public class ExcelUtil {
     }
     
     /**
+     * 类型2 自定义单号用户导出模板
+     * @param wb
+     * @param list
+     */
+    public static void createExcelForTYPE2(HSSFWorkbook wb,List<Logisticslisting> list){
+    	Logisticslisting llist = null;
+    	int rowcnt = 0;
+    	// 第二步，在webbook中添加一个sheet,对应Excel文件中的sheet  
+        HSSFSheet sheet = wb.createSheet("报关清单");  
+        // 第三步，在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制short  
+        HSSFRow row = sheet.createRow(rowcnt++);  
+        // 第四步，创建单元格，并设置值表头 设置表头居中  
+        HSSFCellStyle style = wb.createCellStyle();  
+        style.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式  
+        HSSFCellStyle styleLeft = wb.createCellStyle();  
+        styleLeft.setAlignment(HSSFCellStyle.ALIGN_LEFT); // 创建一个左对齐格式
+        HSSFCellStyle styleRight = wb.createCellStyle();  
+        styleRight.setAlignment(HSSFCellStyle.ALIGN_RIGHT); // 创建一个右对齐格式
+        
+        //设置样式-颜色  
+        HSSFCellStyle  styleCNTIPS = wb.createCellStyle();    
+        styleCNTIPS.setFillForegroundColor((short) HSSFColor.YELLOW.index);// 设置背景色
+        styleCNTIPS.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+        int k = 0;
+        HSSFCell cell = row.createCell((short) k++);  
+        cell.setCellValue("序号");  									
+        cell.setCellStyle(style);  
+        cell = row.createCell((short) k++);  
+        cell.setCellValue("运单号");  									
+        cell.setCellStyle(style);  
+        cell = row.createCell((short) k++);  
+        cell.setCellValue("客户单号");  
+        cell.setCellStyle(style);  
+        cell = row.createCell((short) k++);  
+        cell.setCellValue("国内快递单号");  
+        cell.setCellStyle(style);  
+        cell = row.createCell((short) k++);  
+        cell.setCellValue("中文品名");  
+        cell.setCellStyle(style);
+        cell = row.createCell((short) k++);  
+        cell.setCellValue("英文品牌");  
+        cell.setCellStyle(style);  
+        cell = row.createCell((short) k++);
+        cell.setCellValue("重量");
+        cell.setCellStyle(style);
+        cell = row.createCell((short) k++); 
+        cell.setCellValue("收件人姓名");
+        cell.setCellStyle(style);
+        cell = row.createCell((short) k++);
+        cell.setCellValue("收件人电话");
+        cell.setCellStyle(style);
+        cell = row.createCell((short) k++);  
+        cell.setCellValue("省");  
+        cell.setCellStyle(style);
+        cell = row.createCell((short) k++);
+        cell.setCellValue("市");  
+        cell.setCellStyle(style);
+        cell = row.createCell((short) k++);
+        cell.setCellValue("收件人地址");  
+        cell.setCellStyle(style);  
+        cell = row.createCell((short) k++);  
+        cell.setCellValue("身份证号码");  
+        cell.setCellStyle(style); 
+        
+        // 第五步，写入实体数据   
+        for (int i = 0; i < list.size(); i++)  
+        {  
+        	k = 0;
+        	llist = list.get(i);
+            row = sheet.createRow(rowcnt++);  
+            // 第四步，创建单元格，并设置值 
+            cell = row.createCell((short) k++);
+            cell.setCellValue(llist.getSerialnum());
+            cell.setCellStyle(styleLeft);
+            cell = row.createCell((short) k++);
+            cell.setCellValue(llist.getImportnum());
+            cell.setCellStyle(styleLeft);
+            cell = row.createCell((short) k++);
+            cell.setCellValue(llist.getExpressnum()); 
+            cell.setCellStyle(styleLeft);
+            cell = row.createCell((short) k++);
+            cell.setCellValue(llist.getDeclarenum()); 
+            cell.setCellStyle(styleLeft);
+            cell = row.createCell((short) k++);
+            cell.setCellValue(llist.getConsigneename()); 
+            cell.setCellStyle(styleLeft);
+            cell = row.createCell((short) k++);
+            cell.setCellValue(llist.getBrand()); 
+            cell.setCellStyle(styleLeft);
+            cell = row.createCell((short) k++);
+            cell.setCellValue(llist.getDeclareweight());  
+            cell.setCellStyle(styleLeft);
+            cell = row.createCell((short) k++);
+            cell.setCellValue(llist.getConsigneename());  
+            cell.setCellStyle(styleLeft);
+            cell = row.createCell((short) k++);
+            cell.setCellValue(llist.getConsigneephone());  
+            cell.setCellStyle(styleLeft);
+            cell = row.createCell((short) k++);
+            String[] splitAddr = llist.getConsigneeaddr().split("\\|");
+            cell.setCellValue(splitAddr.length>0?splitAddr[0]:llist.getConsigneeaddr());
+            cell.setCellStyle(styleLeft);
+            cell = row.createCell((short) k++);
+            cell.setCellValue(splitAddr.length>1?splitAddr[1]:llist.getConsigneeaddr());
+            cell.setCellStyle(styleLeft);
+            cell = row.createCell((short) k++);
+            cell.setCellValue(splitAddr.length>2?splitAddr[2]:llist.getConsigneeaddr());
+            cell.setCellStyle(styleLeft);
+            cell = row.createCell((short) k++);
+            cell.setCellValue(llist.getConsignercardid());
+            cell.setCellStyle(styleLeft);
+        }  
+    }
+    
+    /**
      * 类型3用户导出模板
      * @param wb
      * @param list
@@ -652,6 +772,11 @@ public class ExcelUtil {
         styleLeft.setAlignment(HSSFCellStyle.ALIGN_LEFT); // 创建一个左对齐格式
         HSSFCellStyle styleRight = wb.createCellStyle();  
         styleRight.setAlignment(HSSFCellStyle.ALIGN_RIGHT); // 创建一个右对齐格式
+        
+        //设置样式-颜色  
+        HSSFCellStyle  styleCNTIPS = wb.createCellStyle();    
+        styleCNTIPS.setFillForegroundColor((short) HSSFColor.YELLOW.index);// 设置背景色
+        styleCNTIPS.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
         int k = 0;
         HSSFCell cell = row.createCell((short) k++);  
         cell.setCellValue("sn");  									
@@ -720,67 +845,67 @@ public class ExcelUtil {
         row = sheet.createRow(rowcnt++); 
         cell = row.createCell((short) k++);  
         cell.setCellValue("序号");  									
-        cell.setCellStyle(style);  
+        cell.setCellStyle(styleCNTIPS);  
         cell = row.createCell((short) k++);  
         cell.setCellValue("订单号");  
-        cell.setCellStyle(style);  
+        cell.setCellStyle(styleCNTIPS);  
         cell = row.createCell((short) k++);  
         cell.setCellValue("分运单号");  
-        cell.setCellStyle(style);  
+        cell.setCellStyle(styleCNTIPS);  
         cell = row.createCell((short) k++);
         cell.setCellValue("收件人");
-        cell.setCellStyle(styleLeft);
+        cell.setCellStyle(styleCNTIPS);
         cell = row.createCell((short) k++);
         cell.setCellValue("收件人身份证号");
-        cell.setCellStyle(styleLeft);
+        cell.setCellStyle(styleCNTIPS);
         cell = row.createCell((short) k++);  
         cell.setCellValue("商品名称");  
-        cell.setCellStyle(style);
+        cell.setCellStyle(styleCNTIPS);
         cell = row.createCell((short) k++);  
         cell.setCellValue("品牌");  
-        cell.setCellStyle(style);  
+        cell.setCellStyle(styleCNTIPS);  
         cell = row.createCell((short) k++);  
         cell.setCellValue("品名");  
-        cell.setCellStyle(style);
+        cell.setCellStyle(styleCNTIPS);
         cell = row.createCell((short) k++);
         cell.setCellValue("商品数量");  
-        cell.setCellStyle(style);
+        cell.setCellStyle(styleCNTIPS);
         cell = row.createCell((short) k++);
         cell.setCellValue("规格型号");  
-        cell.setCellStyle(style);  
+        cell.setCellStyle(styleCNTIPS);  
         cell = row.createCell((short) k++);  
         cell.setCellValue("净重");  
-        cell.setCellStyle(style); 
+        cell.setCellStyle(styleCNTIPS); 
         cell = row.createCell((short) k++);
         cell.setCellValue("税号");  
-        cell.setCellStyle(style);
+        cell.setCellStyle(styleCNTIPS);
         cell = row.createCell((short) k++);
         cell.setCellValue("税率");  
-        cell.setCellStyle(style);
+        cell.setCellStyle(styleCNTIPS);
         cell = row.createCell((short) k++);
         cell.setCellValue("件数");  
-        cell.setCellStyle(style);
+        cell.setCellStyle(styleCNTIPS);
         cell = row.createCell((short) k++);
         cell.setCellValue("毛重");
-        cell.setCellStyle(styleLeft);
+        cell.setCellStyle(styleCNTIPS);
         cell = row.createCell((short) k++);
         cell.setCellValue("申报单价");
-        cell.setCellStyle(styleLeft);
+        cell.setCellStyle(styleCNTIPS);
         cell = row.createCell((short) k++);
         cell.setCellValue("税额");
-        cell.setCellStyle(styleLeft);
+        cell.setCellStyle(styleCNTIPS);
         cell = row.createCell((short) k++);
         cell.setCellValue("");
-        cell.setCellStyle(styleLeft);
+        cell.setCellStyle(styleCNTIPS);
         cell = row.createCell((short) k++);
         cell.setCellValue("申报总价");
-        cell.setCellStyle(styleLeft);
+        cell.setCellStyle(styleCNTIPS);
         cell = row.createCell((short) k++);
         cell.setCellValue("收件人地址");
-        cell.setCellStyle(styleLeft);
+        cell.setCellStyle(styleCNTIPS);
         cell = row.createCell((short) k++);
         cell.setCellValue("收件人电话");
-        cell.setCellStyle(styleLeft);
+        cell.setCellStyle(styleCNTIPS);
         Logisticslisting logisTemp = new Logisticslisting();
         // 第五步，写入实体数据   
         for (int i = 0; i < list.size(); i++)  
@@ -858,6 +983,19 @@ public class ExcelUtil {
             logisTemp = llist;
         }  
     }
+    
+    /**
+     * 判断是否包含字母
+     * @param str
+     * @return
+     */
+    public static boolean isZM(String str){
+    	Pattern patten = Pattern.compile(".*[a-zA-Z]+.*");
+    	Matcher isNum = patten.matcher(str);
+    	return isNum.matches();
+    }
+    
+    
     /**
 	 * 方法描述：测试方法
 	 * 

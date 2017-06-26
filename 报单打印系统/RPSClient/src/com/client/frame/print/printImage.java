@@ -120,7 +120,6 @@ public class printImage {
         g2.setBackground(Color.WHITE);
         g2.clearRect(0, 0, 350, 480);
         new PrintTest().print(g2, null, 0);
-        //new PrintTest().print_DEFAULT(g2, null, 0);
         ImageData image=SWTUtils.convertToSWT(bufferimg);
         imageLab.setImage(new Image(shell.getDisplay(),image));
         
