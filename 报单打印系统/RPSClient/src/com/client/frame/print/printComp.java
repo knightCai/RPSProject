@@ -26,7 +26,8 @@ import com.client.common.ExcelUtil;
 import com.client.common.FileUtil;
 import com.client.common.FrameUtil;
 import com.client.common.GlobalParam;
-import com.client.common.PrintTest;
+import com.client.common.PrintSplane15;
+import com.client.common.printSplaneMain;
 import com.client.frame.print.oddnumer.OddnumberDialog;
 import com.client.frame.print.oddnumer.UpdateLogisticsDialog;
 import com.client.model.contrllo.LogisticsListContrllo;
@@ -62,9 +63,10 @@ public class printComp extends Composite {
 	private Button btn_isshama;	//是否扫码枪模式
 	private Label lblkg;	//包裹总数
 	private String viewdeclarenum = ""; //打印预览选择的单号
+	private Text text_declarenum;	//报关单号
 
 	public printComp(Composite parent, int style) {  
-		super(parent, style);
+		super(parent, SWT.NONE);
 		logisContrllo = new LogisticsListContrllo();
 		oddnumContrllo = new OddnumberContrllo();
         composite = this;
@@ -117,7 +119,7 @@ public class printComp extends Composite {
 							FrameUtil.isError_systemmusic();
 							MessageDialog.openConfirm(getShell(), "系统提示","请选择需要打印的内容");
 						}else{
-							expressnum = items[0].getText(GlobalParam.SYSTEM_USER.getType() == 3?5:4);
+							expressnum = items[0].getText((GlobalParam.SYSTEM_USER.getType() == 1||GlobalParam.SYSTEM_USER.getType() == 3)?5:4);
 							viewdeclarenum = items[0].getText(3);
 							if(viewdeclarenum.equals("")){
 								FrameUtil.isError_systemmusic();
@@ -295,6 +297,7 @@ public class printComp extends Composite {
         label_1.setText("总运单号：");
         text_importnum = new Text(this, SWT.BORDER);
         GridData gd_textzydh = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+        gd_textzydh.heightHint = 25;
         gd_textzydh.widthHint = 122;
         text_importnum.setLayoutData(gd_textzydh);
         String max = logisContrllo.findMaxImportnum(GlobalParam.SYSTEM_LOGINUSER);
@@ -376,7 +379,7 @@ public class printComp extends Composite {
     private void createTable()  
     {
     	//如果当前用户类型是圆通
-    	if(GlobalParam.SYSTEM_USER.getType() == 3){
+    	if(GlobalParam.SYSTEM_USER.getType() == 1 || GlobalParam.SYSTEM_USER.getType() == 3){
     		//拉取圆通面单按钮
 	        Button btn_getDelNo = new Button(this, SWT.NONE);
 	        btn_getDelNo.addSelectionListener(new SelectionAdapter() {
@@ -387,6 +390,7 @@ public class printComp extends Composite {
 					if(!importnum.equals("")){
 						if(MessageDialog.openConfirm(getShell(), "系统提示", "确定要拉取面单号吗？该操作会对总运单号下所有未拉取面单的数据生效！")){
 							putCondition();
+							condition.add("usertype:"+GlobalParam.SYSTEM_USER.getType());
 							String[] result = logisContrllo.getYTOOddUpdateLog(condition).split(",");
 							if("000".equals(result[0])){
 								MessageDialog.openInformation(getShell(), "系统提示", "拉取面单号成功！");
@@ -420,9 +424,20 @@ public class printComp extends Composite {
         comisprint.add("未打印");
         comisprint.add("已打印");
         
+        Label label_declure = new Label(this, SWT.NONE);
+        label_declure.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+        label_declure.setText("报关单号：");
+        
+        text_declarenum = new Text(this, SWT.BORDER);
+        GridData gd_text_declarenum = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+        gd_text_declarenum.heightHint = 25;
+        gd_text_declarenum.widthHint = 125;
+        text_declarenum.setLayoutData(gd_text_declarenum);
+        new Label(this, SWT.NONE);
+        
         Button btnNewButton = new Button(this, SWT.NONE);
         btnNewButton.setFont(SWTResourceManager.getFont("Microsoft YaHei UI", 10, SWT.NORMAL));
-        GridData gd_btnNewButton = new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1);
+        GridData gd_btnNewButton = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
         gd_btnNewButton.heightHint = 36;
         gd_btnNewButton.widthHint = 118;
         btnNewButton.setLayoutData(gd_btnNewButton);
@@ -448,9 +463,6 @@ public class printComp extends Composite {
         new Label(this, SWT.NONE);
         new Label(this, SWT.NONE);
         new Label(this, SWT.NONE);
-        new Label(this, SWT.NONE);
-        new Label(this, SWT.NONE);
-        new Label(this, SWT.NONE);
     	// 表格布局  
         GridData gridData = new org.eclipse.swt.layout.GridData();  
         gridData.horizontalSpan = 17;
@@ -459,7 +471,7 @@ public class printComp extends Composite {
         gridData.grabExcessVerticalSpace = true;  
         gridData.verticalAlignment = SWT.FILL;  
     	// 创建表格，使用SWT.FULL_SELECTION样式，可同时选中一行  
-        table = new Table(composite, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION | SWT.MULTI);  
+        table = new Table(composite, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION | SWT.MULTI);
         table.setHeaderVisible(true);
         table.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 11, 1));
         table.setLayoutData(gridData);// 设置表格布局  
@@ -483,7 +495,7 @@ public class printComp extends Composite {
         String[] tableHeader = {"  导入序号     ", "   打印状态      ", "        报关单号        ", "        包裹单号        ","        收件人姓名        ",
         		"        收件人地址        ","        收件人电话        ","        总运单号        ",
         		"        实际重量        ","        货品名称        ","        规格型号        ","        导入时间        "};  
-        if(GlobalParam.SYSTEM_USER.getType() == 3){//圆通类型有大头笔信息
+        if(GlobalParam.SYSTEM_USER.getType() == 1 || GlobalParam.SYSTEM_USER.getType() == 3){//圆通类型有大头笔信息
         	tableHeader = new String[]{"  导入序号     ", "   打印状态      ", "        报关单号        ", "        大头笔        ", "        包裹单号        ","        收件人姓名        ",
             		"        收件人地址        ","        收件人电话        ","        总运单号        ",
             		"        实际重量        ","        货品名称        ","        规格型号        ","        导入时间        "};  
@@ -563,11 +575,15 @@ public class printComp extends Composite {
     	String importnum= text_importnum.getText();
     	int isprint = comisprint.getSelectionIndex();
     	String expressnum = text.getText();//获取运单号
+    	String declarenum = text_declarenum.getText();//获取报关单号
     	if(isprint>=0){
     		condition.add("isprint:"+isprint);
     	}
     	if(!expressnum.equals("")){
     		condition.add("expressnum:"+expressnum);
+    	}
+    	if(!declarenum.equals("")){
+    		condition.add("declarenum:"+declarenum);
     	}
     	condition.add("importnum:"+importnum);
 		//condition.add("createtime:"+dateCreate.getYear()+"-"+(dateCreate.getMonth()+1)+"-"+dateCreate.getDay());	//SWT 日期组件需要年月日单独拼接
@@ -593,7 +609,7 @@ public class printComp extends Composite {
 			//地址：省、市 与详细地址”|“分割存放在同一字段
 			String[] str = logis.getConsigneeaddr().split("\\|");
 			// {"导入序号", "打印状态", "报关单号", "物流单号","收件人姓名","收件人地址","收件人电话","总运单号","实际重量","货品名称","规格型号","导入时间"};  
-			if(GlobalParam.SYSTEM_USER.getType() == 3){
+			if(GlobalParam.SYSTEM_USER.getType() == 1 || GlobalParam.SYSTEM_USER.getType() == 3){
 				item.setText(new String[]{
 						"",
 						logis.getSerialnum(),
@@ -717,7 +733,7 @@ public class printComp extends Composite {
 						//调用打印机进行打印
 						//完成打印后提示音
 						FrameUtil.isOk_printmusic();
-						PrintTest.doPrint();
+						new printSplaneMain().doPrint();
 						afterPrint();
 					}else{
 						printImage pm = new printImage();

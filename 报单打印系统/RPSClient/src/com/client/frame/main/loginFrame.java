@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Text;
 import com.client.common.FileUtil;
 import com.client.common.FrameUtil;
 import com.client.common.GlobalParam;
+import com.client.frame.print.printSizeDialog;
 import com.client.frame.system.systemUp;
 import com.client.model.contrllo.SysparamContrllo;
 import com.client.model.contrllo.UserinfoContrllo;
@@ -131,9 +132,13 @@ public class loginFrame {
 								}
 								FileUtil.saveLoginInfo(user);
 								//记住当前登录用户账号
-								shell.dispose();
 								GlobalParam.SYSTEM_LOGINUSER = username;
 								GlobalParam.SYSTEM_USER = user;
+								if(user.getType() == 1){
+									printSizeDialog printType = new printSizeDialog(shell,  SWT.APPLICATION_MODAL | SWT.CLOSE);
+									Object obj = printType.open();
+								}
+								shell.dispose();
 								mainFrame mainwoindow = new mainFrame();
 								mainwoindow.open();
 						}else{

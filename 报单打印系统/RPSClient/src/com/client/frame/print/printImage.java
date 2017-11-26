@@ -19,7 +19,8 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import com.client.common.FrameUtil;
 import com.client.common.GlobalParam;
 import com.client.common.MatrixUtil;
-import com.client.common.PrintTest;
+import com.client.common.PrintSplane15;
+import com.client.common.PrintSplane18;
 import com.client.common.SWTUtils;
 
 import org.eclipse.swt.widgets.Text;
@@ -119,7 +120,11 @@ public class printImage {
 		Graphics2D g2 = (Graphics2D) bufferimg.getGraphics();
         g2.setBackground(Color.WHITE);
         g2.clearRect(0, 0, 350, 480);
-        new PrintTest().print(g2, null, 0);
+        if(GlobalParam.PRINT_PLANESIZE.equals("0")){
+        	new PrintSplane15().print(g2, null, 0);
+        }else{
+        	new PrintSplane18().print(g2, null, 0);
+        }
         ImageData image=SWTUtils.convertToSWT(bufferimg);
         imageLab.setImage(new Image(shell.getDisplay(),image));
         
@@ -351,8 +356,9 @@ public class printImage {
 	 * @throws Exception 
 	 */
 	private void initPrintParams() throws Exception{
-		String consignername = GlobalParam.NERNAME_OF_COUNTRYS.get(GlobalParam.PRINT_CONSIGNERCOUNTRY);
-		consignername = consignername==null?GlobalParam.PRINT_CONSIGNERNAME:consignername;
+		/*String consignername = GlobalParam.NERNAME_OF_COUNTRYS.get(GlobalParam.PRINT_CONSIGNERCOUNTRY);
+		consignername = consignername==null?GlobalParam.PRINT_CONSIGNERNAME:consignername;*/
+		String consignername = GlobalParam.PRINT_CONSIGNERNAME;
 		text_consignername.setText(consignername);
 		text_consigneraddr.setText(GlobalParam.PRINT_CONSIGNERADDR);;
 		text_consignerphone.setText(GlobalParam.PRINT_CONSIGNERPHONE);;
@@ -381,7 +387,11 @@ public class printImage {
 			//生成打印的图片并保存在指定目录
 			//FrameUtil.captureCompositeToImage(shell, composite,0,0,650,877,GlobalParam.PRINT_IMAGEPATH + GlobalParam.PRINT_IMPORTSER +"/"+GlobalParam.PRINT_DECLARENUM + ".jpg");
 			//调用打印机进行打印
-			PrintTest.doPrint();
+			if(GlobalParam.PRINT_PLANESIZE.equals("0")){
+	        	new PrintSplane15().doPrint();
+	        }else{
+	        	new PrintSplane18().doPrint();
+	        }
 			//ImagePrinterExample.ImagePrinter(shell);
 			flag = true;
 			shell.dispose();	//打印完成销毁窗口

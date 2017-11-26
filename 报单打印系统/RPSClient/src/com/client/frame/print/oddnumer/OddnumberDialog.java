@@ -185,7 +185,7 @@ public class OddnumberDialog extends Dialog {
 					if(logiscor.findLlistByParams(param).size()>0){
 						throw new Exception("总运单号：【"+llist.get(0).getImportnum()+"】系统中已导入，请修改总运单号！");
 					}
-					if(GlobalParam.SYSTEM_USER.getType() != 3){
+					if(GlobalParam.SYSTEM_USER.getType() != 1 && GlobalParam.SYSTEM_USER.getType() != 3){
 						int oddcount = 0;
 						//根据用户类型查询单号 1-系统 2-自定义
 						if(GlobalParam.SYSTEM_USER.getType() == 1){
@@ -264,6 +264,9 @@ public class OddnumberDialog extends Dialog {
 					}
 		   			continue;
 		   		}
+				if(temp.get(1).toString().equals("")&&!temp.get(3).toString().equals("")){
+					throw new Exception("总运单号不能为空!");
+				}
 				logis = new  Logisticslisting();
 				logis.setPkid(FrameUtil.getUUID());
 				logis.setDeclarenum("");
@@ -305,6 +308,10 @@ public class OddnumberDialog extends Dialog {
 						logis.setNetweight(temp.get(j++).toString());
 						logis.setPackagecount(temp.get(j++).toString());
 						logis.setCount(temp.get(j++).toString());
+						//判断是否为整数
+						/*if(!logis.getLegalnum().matches("^\\d+$$")){
+							throw new Exception("第一法定数量必须为整数!");
+						}*/
 					}
 					logis.setConsigneename(temp.get(j++).toString());
 					//地址内容：收货人省份+收货人城市+收货人详细地址
