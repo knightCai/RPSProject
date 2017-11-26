@@ -3,6 +3,7 @@ package com.client.frame.print.oddnumer;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -81,6 +82,8 @@ public class UpdateLogisticsDialog extends Dialog {
 	 */
 	private void createContents() {
 		shell = new Shell(getParent(), getStyle());
+		InputStream in = this.getClass().getResourceAsStream(GlobalParam.SOURCE_LOGONAME);
+		shell.setImage(new  Image(shell.getDisplay(), in));
 		shell.setBackgroundImage(new  Image(shell.getDisplay(), this.getClass().getResourceAsStream(GlobalParam.SOURCE_CS1)));
 		shell.setBackgroundMode(SWT.INHERIT_DEFAULT);
 		shell.setSize(483, 320);

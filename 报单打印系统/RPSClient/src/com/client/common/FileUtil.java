@@ -199,7 +199,7 @@ public class FileUtil {
     	//面单过滤条件集合
     	Map<String, String> numMap = new HashMap<String, String>();
     	//创建打印对象，需使用其绘图方法
-    	PrintTest print = new PrintTest();
+    	PrintSplane15 print = new PrintSplane15();
     	//定义bufferedImage、File对象
     	BufferedImage bufferimg;
     	File file,directiory;
@@ -245,7 +245,11 @@ public class FileUtil {
     			}
     		}
     		//2、生成图片
-    		bufferimg = new BufferedImage(300,430, BufferedImage.TYPE_INT_RGB);
+    		int height = 430;
+    		if(!GlobalParam.PRINT_PLANESIZE.equals("0")){
+    			height = 480;
+    		}
+    		bufferimg = new BufferedImage(300,height, BufferedImage.TYPE_INT_RGB);
     		directiory=new File(filepath+"/");
 	   	  	if(!directiory.exists()){
 	   	  		directiory.mkdirs();
@@ -254,8 +258,13 @@ public class FileUtil {
     		//设置背景为白色
     		Graphics2D g2 = (Graphics2D) bufferimg.getGraphics();
             g2.setBackground(Color.WHITE);
-            g2.clearRect(0, 0, 300, 430);
-            print.print(g2, null, 0);
+            if(GlobalParam.PRINT_PLANESIZE.equals("0")){
+            	g2.clearRect(0, 0, 300, height);
+            	new PrintSplane15().print(g2, null, 0);
+            }else{
+            	g2.clearRect(0, 0, 300, height);
+            	new PrintSplane18().print(g2, null, 0);
+            }
     		ImageIO.write(bufferimg, "png", file);
     	}
     	

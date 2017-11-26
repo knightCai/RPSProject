@@ -26,7 +26,6 @@ import org.eclipse.swt.widgets.Shell;
 
 import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
-
 /**
  * 窗口工具类
  * @author knight

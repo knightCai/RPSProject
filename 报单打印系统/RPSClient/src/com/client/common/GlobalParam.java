@@ -30,6 +30,7 @@ public class  GlobalParam {
 	public static String PRINT_IMAGEPATH = System.getProperty("user.dir")+"/rps_images/";		//生成的图片保存路径，也是打印图片路径
 	public static String PRINT_IMPORTSER = "0";		//导入批次
 	public static String PRINT_BIGPEN = "";//"05415-123-2312";		//大头笔信息
+	public static String PRINT_PLANESIZE = "0";//		//打印面单尺寸，0：10x15 1：10x18 默认为0
 	
 	/**
 	 * =================================国别地区代码表========================================
@@ -74,6 +75,9 @@ public class  GlobalParam {
 	public static String SOURCE_YTOLOGONAME = "/images/print/jglogo.png";		//圆通logo图标
 	public static String SOURCE_QDLOGONAME = "/images/print/qdlogo.png";		//青岛logo图标
 	public static String SOURCE_HYTLOGONAME = "/images/print/hytlogo.png";		//海悦通logo图标
+	public static String SOURCE_ISLOOKNAME = "/images/print/islook.png";		//已视验图标
+	public static String SOURCE_ISLOOKBWNAME = "/images/print/islookbw.png";		//已视验黑白图标
+	public static String SOURCE_ISSECURITYNAME = "/images/print/issecurity.png";		//已安检图标
 	//背景
 	public static String SOURCE_BGLOGIN = "/images/system/bg-login.jpg";		//登录界面背景
 	public static String SOURCE_CS1 = "/images/system/cs3.jpg";		//登录界面背景
@@ -83,7 +87,7 @@ public class  GlobalParam {
 	public static String SYSTEM_LOGINUSER = "admin";	//当前登录用户名
 	public static Userinfo SYSTEM_USER;	//当前登录用户
 	public static String SYSTEM_ADMINUSER = "admin";	//系统管理员
-	public final static String SYSTEM_VERRSION = "1.8.10";	//系统当前版本
+	public final static String SYSTEM_VERRSION = "1.9.3";	//系统当前版本
 	public static final String SYSTEM_SYSNAME = "报关打印系统";	//系统名称
 	public static final String DES_PASSWORD = "9588028820109132570743325311898426347857298773549468758875018579537757772163084478873699447306034466200616411960574122434059469100235892702736860872901247123456";		//DES密钥
 	
