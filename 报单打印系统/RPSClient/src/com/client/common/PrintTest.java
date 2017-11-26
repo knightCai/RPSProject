@@ -227,137 +227,140 @@ public class PrintTest   implements Printable{
 				g2.setStroke(new   BasicStroke(0.5f,   BasicStroke.CAP_BUTT,   BasicStroke.JOIN_MITER,   2.0f,   dash1,   0.0f));  
 				//g2.setStroke(bs_3);//设置线宽
 				//BufferedImage bufimag =  MatrixUtil.toBufferedImage(MatrixUtil.toBarCodeMatrix(GlobalParam.PRINT_DECLARENUM, 230, null));
-				BufferedImage bufimag =  MatrixUtil.write2D(GlobalParam.PRINT_DECLARENUM, 100, 20);
+				BufferedImage bufimag =  MatrixUtil.write2D(GlobalParam.PRINT_DECLARENUM, 120, 30);
+				BufferedImage bufimgJGLogo = ImageIO.read(this.getClass().getResourceAsStream(GlobalParam.SOURCE_HYTLOGONAME));
 				//面单头
 				//g2.drawLine(6, 10, 284, 10);// 上边框横线
 				//g2.drawLine(6, 10, 8,420);//左边框竖线
 				//g2.drawLine(284, 10, 284,420);//右边框竖线
-				g2.setFont(font2);
+				/*g2.setFont(font2);
 				String sendName ="LEADER EXPRESS 立达国际快递有限公司";
 				g2.drawString(sendName,2,20);
 				String sendTelephone = "LEADER EXPRESS CO.ltd";
 				g2.drawString(sendTelephone,30,35);
-				g2.setFont(font);
+				g2.setFont(font);*/
+				g2.drawImage(bufimgJGLogo, null,40,8);
 				/*String sendCompory = "LEADER EXPRESS CO.ltd";
- 	           g2.drawString(sendCompory, 12,55);*/
-				g2.drawImage(bufimag, null,170,13);
+ 	            g2.drawString(sendCompory, 12,55);*/
+				g2.drawImage(bufimag, null,160,13);
 				//g2.drawString(canvas_declarenum1, 150,20);
 				String text_declarenum1 = GlobalParam.PRINT_DECLARENUM;
-				g2.drawString(text_declarenum1, 180,45);
+				g2.drawString(text_declarenum1, 180,52);
 				//寄件人信息
-				g2.drawLine(4, 47, 294, 47);// 第二条横线
-				g2.drawLine(2, 47, 286, 47);
-				g2.drawLine(4, 50, 294, 50);// 第三条横线
-				g2.drawLine(2, 50, 286, 50);
+				g2.drawLine(4, 67, 294, 67);// 第二条横线
+				g2.drawLine(2, 67, 292, 67);
+				g2.drawLine(4, 70, 294, 70);// 第三条横线
+				g2.drawLine(2, 70, 292, 70);
 				String senduser = "寄件人/Form:";
-				g2.drawString(senduser,10,65);
+				g2.drawString(senduser,10,85);
 				String text_consignername = GlobalParam.NERNAME_OF_COUNTRYS.get(GlobalParam.PRINT_CONSIGNERCOUNTRY);
 				text_consignername = text_consignername==null?GlobalParam.PRINT_CONSIGNERNAME:text_consignername;
-				g2.drawString(text_consignername,80,65);
+				g2.drawString(text_consignername,80,85);
 				String sendAddress2 = "进口口岸:";
-				g2.drawString(sendAddress2,180,65);
+				g2.drawString(sendAddress2,180,85);
 				String text_passport = GlobalParam.PRINT_PASSPORT;
-				g2.drawString(text_passport,230,65);
+				g2.drawString(text_passport,230,85);
 				String sendAddress1 = "地址/Address:";
-				g2.drawString(sendAddress1,10,82);
+				g2.drawString(sendAddress1,10,102);
 				String sendphone = "电话/Tel:";
-				g2.drawString(sendphone,180,82);
+				g2.drawString(sendphone,180,102);
 				String text_consignerphone = GlobalParam.PRINT_CONSIGNERPHONE;
-				g2.drawString(text_consignerphone,225,82);
+				g2.drawString(text_consignerphone,225,102);
 				String text_consigneraddr = GlobalParam.PRINT_CONSIGNERADDR;
 				//drawStringMultiLine(g2, text_consigneraddr, 10, 15, 116);
-				g2.drawString(text_consigneraddr,15,95);
+				g2.drawString(text_consigneraddr,15,115);
 				//收件人信息
-				g2.drawLine(4, 103, 294, 103);// 第四条横线
-				g2.drawLine(2, 103, 286, 103);
-				g2.drawLine(4, 107, 294, 107);// 第四条横线
-				g2.drawLine(2, 107, 286, 107);
+				g2.drawLine(4, 123, 294, 123);// 第四条横线
+				g2.drawLine(2, 123, 292, 123);
+				g2.drawLine(4, 127, 294, 127);// 第四条横线
+				g2.drawLine(2, 127, 292, 127);
 				String acceptuser = "收件人/To:";
-				g2.drawString(acceptuser,10,120);
+				g2.drawString(acceptuser,10,140);
 				String text_consigneename = GlobalParam.PRINT_CONSIGNEENAME;
-				g2.drawString(text_consigneename,80,120);
+				g2.drawString(text_consigneename,80,140);
 				String acceptphone = "电话/Tel:";
-				g2.drawString(acceptphone,180,120);
+				g2.drawString(acceptphone,180,140);
 				String text_consigneephone = GlobalParam.PRINT_CONSIGNEEPHONE;
 				if(text_consigneephone.length()>11){
 					text_consigneephone = text_consigneephone.substring(0, 11)+"\r\n" +text_consigneephone.substring(11,text_consigneephone.length());
 				}
-				drawStringMultiLine(g2, text_consigneephone, 10, 225, 120);
+				drawStringMultiLine(g2, text_consigneephone, 10, 225, 140);
 				String acceptAddress = "地址/Address:";
-				g2.drawString(acceptAddress,10,135);
+				g2.drawString(acceptAddress,10,155);
 				String[] splitAddr = GlobalParam.PRINT_CONSIGNEEADDR.split("\\|");
 				//省市
 				g2.setFont(font1);//设置字体
-				g2.drawString(splitAddr[0]+" "+splitAddr[1],80,135);
+				g2.drawString(splitAddr[0]+" "+splitAddr[1],80,155);
 				g2.setFont(font);//设置字体
 				String text_consigneeaddr = splitAddr[2];
 				if(text_consigneeaddr.length()>28){
 					text_consigneeaddr = text_consigneeaddr.substring(0, 28)+"\r\n" +text_consigneeaddr.substring(28,text_consigneeaddr.length());
 				}
-				drawStringMultiLine(g2, text_consigneeaddr, 10, 15, 148);
+				drawStringMultiLine(g2, text_consigneeaddr, 10, 15, 170);
 				//g2.drawString(text_consigneeaddr,15,190);
 				//货物内容描述
-				g2.drawLine(2, 175, 2,248);//竖线
-				g2.drawLine(2, 173, 2,252);
-				g2.drawLine(4, 173, 294, 173);// 第五条横线
-				g2.drawLine(2, 173, 286, 173);
+				g2.drawLine(2, 195, 2,270);//竖线
+				g2.drawLine(2, 193, 2,272);
+				g2.drawLine(4, 193, 294, 193);// 第五条横线
+				g2.drawLine(2, 193, 292, 193);
 				String acceptA = "内容描述\\Names:";
-				g2.drawString(acceptA,10,185);
+				g2.drawString(acceptA,10,205);
 				String text_cargoname_cargotype = GlobalParam.PRINT_CARGONAME_CARGOTYPE;
-				drawStringMultiLine(g2, text_cargoname_cargotype, 10, 10, 200);
+				drawStringMultiLine(g2, text_cargoname_cargotype, 10, 10, 220);
 				//g2.drawString(text_cargoname_cargotype,10,245);
-				g2.drawLine(180, 175, 180,248);//竖线
-				g2.drawLine(180, 173, 180,250);
+				g2.drawLine(180, 195, 180,268);//竖线
+				g2.drawLine(180, 193, 180,270);
 				String acceptAb = "实际重量:";
-				g2.drawString(acceptAb,190,190);
+				g2.drawString(acceptAb,190,210);
 				String text_weight = GlobalParam.PRINT_WEIGHT+"Kg";
-				g2.drawString(text_weight,240,190);
-				g2.drawLine(180, 210, 291, 210);// 货物内容横线
-				g2.drawLine(182, 210, 293, 210);//
+				g2.drawString(text_weight,240,210);
+				g2.drawLine(180, 230, 291, 230);// 货物内容横线
+				g2.drawLine(182, 230, 293, 230);//
 				String acceptAbC = "原产地\\Origin:";
-				g2.drawString(acceptAbC,190,225);
+				g2.drawString(acceptAbC,190,245);
 				String text_consignercountry = GlobalParam.COUNTRYIDS.get(GlobalParam.PRINT_CONSIGNERCOUNTRY);
-				drawStringMultiLine(g2, text_consignercountry, 10, 210,240);
+				drawStringMultiLine(g2, text_consignercountry, 10, 210,260);
 				//g2.drawString(text_consignercountry,190,286);
-				g2.drawLine(294, 175, 294,248);//竖线
-				g2.drawLine(294, 173, 294,250);
+				g2.drawLine(294, 195, 294,268);//竖线
+				g2.drawLine(294, 193, 294,270);
 				//签名
-				g2.drawLine(4, 250, 294, 250);// 第五条横线
-				g2.drawLine(2, 250, 286, 250);
+				g2.drawLine(4, 270, 294, 270);// 第五条横线
+				g2.drawLine(2, 270, 292, 270);
 				String acceptqm = "收件人签名:";
-				g2.drawString(acceptqm,10,270);
+				g2.drawString(acceptqm,10,290);
 				String qssj = "签收时间:        	  年     月     日";
-				g2.drawString(qssj,140,270);
-				g2.drawLine(4, 275, 294, 275);// 第六条横线
-				g2.drawLine(2, 275, 286, 275);
-				g2.drawString(acceptuser,10,284);
-				g2.drawString(text_consigneename,80,284);
-				g2.drawString(acceptphone,180,284);
-				drawStringMultiLine(g2, text_consigneephone, 10,225,284);
-				g2.drawString(acceptAddress,10,302);
+				g2.drawString(qssj,140,290);
+				g2.drawLine(4, 295, 294, 295);// 第六条横线
+				g2.drawLine(2, 295, 292, 295);
+				g2.drawString(acceptuser,10,308);
+				g2.drawString(text_consigneename,80,308);
+				g2.drawString(acceptphone,180,308);
+				drawStringMultiLine(g2, text_consigneephone, 10,225,308);
+				g2.drawString(acceptAddress,10,322);
 				//省市
 				g2.setFont(font1);//设置字体
-				g2.drawString(splitAddr[0]+" "+splitAddr[1],80,302);
+				g2.drawString(splitAddr[0]+" "+splitAddr[1],80,322);
 				g2.setFont(font);//设置字体
-				drawStringMultiLine(g2, text_consigneeaddr, 10, 15, 315);
-				g2.drawLine(4, 335, 294, 335);// 第七条横线
-				g2.drawLine(2, 335, 286, 335);
+				drawStringMultiLine(g2, text_consigneeaddr, 10, 15, 335);
+				g2.drawLine(4, 355, 294, 355);// 第七条横线
+				g2.drawLine(2, 355, 292, 355);
 				//String canvas_declarenum2 = "条码";
 				//g2.drawRenderedImage(img, xform)dImage(img, at);
 				//报关单号条码
-				g2.drawImage(bufimag, null,5,338);
+				g2.drawImage(bufimag, null,5,358);
 				//g2.drawString(canvas_declarenum2,50,350);
 				String text_1 = GlobalParam.PRINT_DECLARENUM;
-				g2.drawString(text_1,20,370);
+				g2.drawString(text_1,30,398);
 				//g2.drawLine(7, 284, 284, 284);// 第八条横线
 				String gldh = "关联单号:";
-				g2.drawString(gldh,10,385);
+				g2.drawString(gldh,10,415);
 				String text_expressnum = GlobalParam.PRINT_EXPRESSNUM;
-				g2.drawString(text_expressnum,25,400);
+				g2.drawString(text_expressnum,60,415);
 				g2.setFont(font1);//设置字体
-				g2.drawString("已视验",140,385);
-				g2.drawString("寄件地址：西安咸阳国际机场新货运区A02二楼213",12,420);
+				g2.drawString("已视验",140,390);
+				//g2.drawString("寄件地址：西安咸阳国际机场新货运区A02二楼213",12,420);
 				//g2.drawLine(7, 420, 284, 420);// 下边框横线
+				g2.drawImage(bufimgJGLogo, null,200,360);
 				return PAGE_EXISTS;
 			default:
 				return NO_SUCH_PAGE;
@@ -395,7 +398,7 @@ public class PrintTest   implements Printable{
 				Font font2 = new Font("Microsoft YaHei UI", Font.BOLD,25);
 				Font font3 = new Font("Microsoft YaHei UI", Font.PLAIN,8);
 				Font font4 = new Font("Microsoft YaHei UI", Font.PLAIN,9);
-				Font font5 = new Font("Microsoft YaHei UI", Font.BOLD,16);
+				Font font5 = new Font("Microsoft YaHei UI", Font.PLAIN,30);
 				g2.setFont(font);//设置字体
 				//BasicStroke   bs_3=new   BasicStroke(0.5f);   
 				float[]   dash1   =   {2.0f}; 
@@ -404,16 +407,16 @@ public class PrintTest   implements Printable{
 				g2.setStroke(new   BasicStroke(0.5f,   BasicStroke.CAP_BUTT,   BasicStroke.JOIN_MITER,   2.0f,   dash1,   0.0f));  
 				//g2.setStroke(bs_3);//设置线宽
 				//BufferedImage bufimag =  MatrixUtil.toBufferedImage(MatrixUtil.toBarCodeMatrix(GlobalParam.PRINT_DECLARENUM, 230, null));
-				BufferedImage bufimag =  MatrixUtil.write2D(GlobalParam.PRINT_DECLARENUM, 100, 35);
+				BufferedImage bufimag =  MatrixUtil.write2D(GlobalParam.PRINT_DECLARENUM, 100, 26);
 				BufferedImage bufimag1 =  MatrixUtil.write2D(GlobalParam.PRINT_DECLARENUM, 110, 28);
 				BufferedImage bufimgJGLogo = ImageIO.read(this.getClass().getResourceAsStream(GlobalParam.SOURCE_YTOLOGONAME));
 				//面单头
 				g2.drawLine(6, 7, 284, 7);// 上边框横线
 				g2.drawLine(8, 7, 286, 7);
-				g2.drawLine(6, 7, 6,418);//左边框竖线
-				g2.drawLine(6, 9, 6,420);
-				g2.drawLine(286, 7, 286,418);//右边框竖线
-				g2.drawLine(286, 9, 286,420);
+				g2.drawLine(6, 7, 6,410);//左边框竖线
+				g2.drawLine(6, 9, 6,412);
+				g2.drawLine(286, 7, 286,410);//右边框竖线
+				g2.drawLine(286, 9, 286,412);
 				g2.setFont(font2);
 				String sendName ="YTO";
 				g2.drawString(sendName,12,37);
@@ -423,15 +426,17 @@ public class PrintTest   implements Printable{
 				g2.setFont(font);
 				g2.drawImage(bufimgJGLogo, null,165,10);
 				//寄件人信息
-				g2.drawLine(6, 47, 284, 47);// 第二条横线
-				g2.drawLine(8, 47, 286, 47);
-				g2.drawImage(bufimag, null,8,52);
+				g2.drawLine(6, 45, 284, 45);// 第二条横线
+				g2.drawLine(8, 45, 286, 45);
+				g2.drawImage(bufimag, null,140,73);
 				String text_declarenum1 = GlobalParam.PRINT_DECLARENUM;
 				g2.setFont(font3);
-				g2.drawString(text_declarenum1, 40,95);
-				g2.setFont(font1);
-				g2.drawString(GlobalParam.PRINT_BIGPEN,150,77);
+				g2.drawString(text_declarenum1, 170,108);
+				g2.setFont(font2);
+				g2.drawString(GlobalParam.PRINT_BIGPEN,60,68);
 				g2.setFont(font);
+				g2.drawLine(6, 70, 284, 70);// 横线
+				g2.drawLine(8, 70, 286, 70);
 				g2.drawString("订单号: "+GlobalParam.PRINT_EXPRESSNUM, 15,105);
 				g2.drawLine(6, 110, 284,110);// 第三条横线
 				g2.drawLine(8, 110, 286,110);
@@ -474,33 +479,33 @@ public class PrintTest   implements Printable{
 				g2.drawString(acceptAb,110,212);
 				g2.drawString("年    月   日",160,227);
 				//签名
-				g2.drawLine(6, 240, 284, 240);// 第六条横线
-				g2.drawLine(8, 240, 286, 240);
-				g2.drawImage(bufimag1, null,130,242);
+				g2.drawLine(6, 230, 284, 230);// 第六条横线
+				g2.drawLine(8, 230, 286, 230);
+				g2.drawImage(bufimag1, null,130,232);
 				g2.setFont(font3);
-				g2.drawString(text_declarenum1,160,277);
-				g2.drawLine(6, 282, 284, 282);// 第七条横线
-				g2.drawLine(8, 282, 286, 282);
+				g2.drawString(text_declarenum1,160,267);
+				g2.drawLine(6, 272, 274, 272);// 第七条横线
+				g2.drawLine(8, 272, 276, 272);
 				g2.setFont(font4);
 				String sendsUser = "寄件人：";
 				String sendstr1 = sendsUser + text_consignername + " " +text_consigneraddr;
-				g2.drawString(sendstr1.substring(0,sendstr1.length()>49?49:sendstr1.length()),15,297);
+				g2.drawString(sendstr1.substring(0,sendstr1.length()>49?49:sendstr1.length()),15,287);
 				g2.setFont(font);
 				//报关单号条码
-				g2.drawLine(6, 302, 284, 302);// 第八条横线
-				g2.drawLine(8, 302, 286, 302);
-				g2.drawString(acceptuser,15,315);
-				g2.drawString(text_consigneename + "    " +text_consigneephone,50,315);
-				drawStringMultiLine(g2, text_consigneeaddr, 10, 50, 332);
-				g2.drawLine(6, 350, 284, 350);// 第九条横线
-				g2.drawLine(8, 350, 286, 350);
+				g2.drawLine(6, 292, 284, 292);// 第八条横线
+				g2.drawLine(8, 292, 286, 292);
+				g2.drawString(acceptuser,15,305);
+				g2.drawString(text_consigneename + "    " +text_consigneephone,50,305);
+				drawStringMultiLine(g2, text_consigneeaddr, 10, 50, 322);
+				g2.drawLine(6, 340, 284, 340);// 第九条横线
+				g2.drawLine(8, 340, 286, 340);
 				g2.setFont(font3);
 				String acceptA = "内件描述/Name & Description of Contents:";
-				g2.drawString(acceptA,15,360);
+				g2.drawString(acceptA,15,350);
 				String text_cargoname_cargotype = GlobalParam.PRINT_CARGONAME_CARGOTYPE;
-				drawStringMultiLine(g2, text_cargoname_cargotype, 5, 15, 370);
-				g2.drawLine(6, 420, 284, 420);// 下边框横线
-				g2.drawLine(8, 420, 286, 420);
+				drawStringMultiLine(g2, text_cargoname_cargotype, 5, 15, 360);
+				g2.drawLine(6, 410, 284, 410);// 下边框横线
+				g2.drawLine(8, 410, 286, 410);
 				return PAGE_EXISTS;
 			default:
 				return NO_SUCH_PAGE;
@@ -550,25 +555,25 @@ public class PrintTest   implements Printable{
 				//g2.drawLine(6, 10, 284, 10);// 上边框横线
 				//g2.drawLine(6, 10, 8,420);//左边框竖线
 				//g2.drawLine(284, 10, 284,420);//右边框竖线
-				g2.drawImage(bufimgJGLogo, null,4,2);
-				g2.drawImage(bufimag, null,120,5);
+				g2.drawImage(bufimgJGLogo, null,4,8);
+				g2.drawImage(bufimag, null,120,11);
 				String text_declarenum1 = GlobalParam.PRINT_DECLARENUM;
-				wirteTextPU(g2, bufimag.getWidth(),120,30, text_declarenum1);
+				wirteTextPU(g2, bufimag.getWidth(),120,36, text_declarenum1);
 				//g2.drawString(text_declarenum1, 150,45);
 				//寄件人信息
-				g2.drawLine(4, 51, 294, 51);// 第二条横线
-				g2.drawLine(2, 51, 292, 51);
-				g2.drawLine(4, 50, 294, 50);// 第三条横线
-				g2.drawLine(2, 50, 292, 50);
+				g2.drawLine(4, 53, 294, 53);// 第二条横线
+				g2.drawLine(2, 53, 292, 53);
+				g2.drawLine(4, 54, 294, 54);// 第三条横线
+				g2.drawLine(2, 54, 292, 54);
 				String senduser = "寄件人:";
-				g2.drawString(senduser,10,65);
+				g2.drawString(senduser,10,66);
 				String text_consignername = GlobalParam.NERNAME_OF_COUNTRYS.get(GlobalParam.PRINT_CONSIGNERCOUNTRY);
 				text_consignername = text_consignername==null?GlobalParam.PRINT_CONSIGNERNAME:text_consignername;
-				g2.drawString(text_consignername,45,65);
+				g2.drawString(text_consignername,45,66);
 				String sendAddress2 = "邮编:";
-				g2.drawString(sendAddress2,180,65);
+				g2.drawString(sendAddress2,180,66);
 				String text_ub = "";
-				g2.drawString(text_ub,210,65);
+				g2.drawString(text_ub,210,66);
 				String sendAddress1 = "地址:";
 				g2.drawString(sendAddress1,10,82);
 				String text_consigneraddr = GlobalParam.PRINT_CONSIGNERADDR;
@@ -620,43 +625,43 @@ public class PrintTest   implements Printable{
 				g2.drawLine(4, 204, 294, 204);
 				g2.drawLine(2, 204, 292, 204);
 				String expNum = "订单ID:";
-				g2.drawString(expNum, 10, 240);
-				g2.drawImage(bufimagEXP, null,80,220);
-				wirteTextPU(g2, bufimagEXP.getWidth(),80,240, GlobalParam.PRINT_EXPRESSNUM);
+				g2.drawString(expNum, 10, 230);
+				g2.drawImage(bufimagEXP, null,80,210);
+				wirteTextPU(g2, bufimagEXP.getWidth(),80,230, GlobalParam.PRINT_EXPRESSNUM);
 				String acceptA = "内件:";
-				g2.drawString(acceptA,10,270);
+				g2.drawString(acceptA,10,260);
 				String text_cargoname_cargotype = GlobalParam.PRINT_CARGONAME_CARGOTYPE;
-				drawStringMultiLine(g2, text_cargoname_cargotype, 20, 50, 270);
-				g2.drawString(senduser,10,285);
-				g2.drawString(text_consignername,50,285);
-				g2.drawString(weight,160,285);
-				g2.drawString(text_weight,225,285);
-				g2.drawString(acceptAddress,10,300);
-				drawStringMultiLine(g2, text_consigneraddr, 10,50, 300);
-				g2.drawLine(4, 304, 294, 304);// 第六条横线
-				g2.drawLine(2, 304, 292, 304);
-				g2.drawLine(4, 305, 294, 305);
-				g2.drawLine(2, 305, 292, 305);
-				g2.drawString(acceptuser,10,320);
-				g2.drawString(text_consigneename,50,320);
-				g2.drawString(acceptphone,160,320);
-				drawStringMultiLine(g2, text_consigneephone, 10,190,320);
-				g2.drawString(acceptAddress,10,340);
+				drawStringMultiLine(g2, text_cargoname_cargotype, 20, 50, 260);
+				g2.drawString(senduser,10,275);
+				g2.drawString(text_consignername,50,275);
+				g2.drawString(weight,160,275);
+				g2.drawString(text_weight,225,275);
+				g2.drawString(acceptAddress,10,290);
+				drawStringMultiLine(g2, text_consigneraddr, 10,50, 290);
+				g2.drawLine(4, 294, 294, 294);// 第六条横线
+				g2.drawLine(2, 294, 292, 294);
+				g2.drawLine(4, 295, 294, 295);
+				g2.drawLine(2, 295, 292, 295);
+				g2.drawString(acceptuser,10,310);
+				g2.drawString(text_consigneename,50,310);
+				g2.drawString(acceptphone,160,310);
+				drawStringMultiLine(g2, text_consigneephone, 10,190,310);
+				g2.drawString(acceptAddress,10,325);
 				g2.setFont(font1);//设置字体
-				g2.drawString(splitAddr[0]+" "+splitAddr[1],50,340);
+				g2.drawString(splitAddr[0]+" "+splitAddr[1],50,325);
 				g2.setFont(font);//设置字体
-				drawStringMultiLine(g2, text_consigneeaddr, 10, 30, 355);
-				g2.drawLine(4, 374, 294, 374);// 第七条横线
-				g2.drawLine(2, 374, 292, 374);
-				g2.drawLine(4, 373, 294, 373);// 第七条横线
-				g2.drawLine(2, 373, 292, 373);
+				drawStringMultiLine(g2, text_consigneeaddr, 10, 30, 340);
+				g2.drawLine(4, 362, 294, 362);// 第七条横线
+				g2.drawLine(2, 362, 292, 362);
+				g2.drawLine(4, 361, 294, 361);// 第七条横线
+				g2.drawLine(2, 361, 292, 361);
 				//String canvas_declarenum2 = "条码";
 				//g2.drawRenderedImage(img, xform)dImage(img, at);
 				//报关单号条码
-				g2.drawImage(bufimag, null,5,380);
+				g2.drawImage(bufimag, null,5,365);
 				//g2.drawString(canvas_declarenum2,50,350);
-				wirteTextPU(g2, bufimag.getWidth(),5,405, text_declarenum1);
-				g2.drawImage(bufimgJGLogo, null,180,375);
+				wirteTextPU(g2, bufimag.getWidth(),5,390, text_declarenum1);
+				g2.drawImage(bufimgJGLogo, null,180,365);
 				return PAGE_EXISTS;
 			default:
 				return NO_SUCH_PAGE;
@@ -691,8 +696,8 @@ public class PrintTest   implements Printable{
 		pf.setOrientation(PageFormat.PORTRAIT);
 		//    通过Paper设置页面的空白边距和可打印区域。必须与实际打印纸张大小相符。
 		Paper p = new Paper();
-		p.setSize(700,860);//纸张大小 
-		p.setImageableArea(0,0, 310,420);//A4(595 X 842)设置打印区域，其实0，0应该是72，72，因为A4纸的默认X,Y边距是72
+		p.setSize(300,410);//纸张大小 
+		p.setImageableArea(0,0, 300,410);//A4(595 X 842)设置打印区域，其实0，0应该是72，72，因为A4纸的默认X,Y边距是72
 		pf.setPaper(p);
 		//    把 PageFormat 和 Printable 添加到书中，组成一个页面
 		book.append(new PrintTest(), pf);

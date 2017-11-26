@@ -253,11 +253,15 @@ public class OddnumberDialog extends Dialog {
 		List<Logisticslisting> llist = new ArrayList<Logisticslisting>();
 		Logisticslisting logis;
 		Logisticslisting logistemp = new Logisticslisting();
+		List<String> explist = new ArrayList<String>();
 		int i = 1;
 		try{
 			for(List temp:list){
 				int j = 0;
 				if(temp.get(0).toString().equals("")&&temp.get(1).toString().equals("")&&temp.get(2).toString().equals("")){
+					if(!temp.get(3).toString().equals("")||!temp.get(4).toString().equals("")){
+						throw new Exception("总运单号不能为空!");
+					}
 		   			continue;
 		   		}
 				logis = new  Logisticslisting();
@@ -319,6 +323,14 @@ public class OddnumberDialog extends Dialog {
 						logis.setConsigneeaddr(logistemp.getConsigneeaddr());
 						logis.setConsigneephone(logistemp.getConsigneephone());
 						logis.setConsignercardid(logistemp.getConsignercardid());
+					}else if(GlobalParam.SYSTEM_USER.getType() == 3){
+						String exptmp = logis.getConsignercardid();
+						for(String exp:explist){
+							if(exp.equals(exptmp)){
+								throw new Exception(exp+"身份证号码重复!");
+							}
+						}
+						explist.add(exptmp);
 					}
 					//验证净重数据格式是否正确
 					String flagNetWeight = logis.getNetweight();
@@ -333,9 +345,9 @@ public class OddnumberDialog extends Dialog {
 				   			throw new Exception("净重不能为0或小于0!");
 				   		}
 			   		}
-				}
-		   		if(!Pattern.compile("^\\d{15}|\\d{17}[0-9A-Z]$").matcher(logis.getConsignercardid()).matches()){
-					throw new Exception("身份证格式不正确!");
+			   		if(!Pattern.compile("^\\d{15}|\\d{17}[0-9A-Z]$").matcher(logis.getConsignercardid()).matches()){
+			   			throw new Exception("身份证格式不正确!");
+			   		}
 				}
 		   		logistemp = logis;
 		   		llist.add(logis);

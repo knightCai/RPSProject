@@ -73,6 +73,7 @@ public class  GlobalParam {
 	public static String SOURCE_LOGONAME = "/images/system/logo.ico";		//系统logo图标
 	public static String SOURCE_YTOLOGONAME = "/images/print/jglogo.png";		//圆通logo图标
 	public static String SOURCE_QDLOGONAME = "/images/print/qdlogo.png";		//青岛logo图标
+	public static String SOURCE_HYTLOGONAME = "/images/print/hytlogo.png";		//海悦通logo图标
 	//背景
 	public static String SOURCE_BGLOGIN = "/images/system/bg-login.jpg";		//登录界面背景
 	public static String SOURCE_CS1 = "/images/system/cs3.jpg";		//登录界面背景
@@ -82,7 +83,7 @@ public class  GlobalParam {
 	public static String SYSTEM_LOGINUSER = "admin";	//当前登录用户名
 	public static Userinfo SYSTEM_USER;	//当前登录用户
 	public static String SYSTEM_ADMINUSER = "admin";	//系统管理员
-	public final static String SYSTEM_VERRSION = "1.8.3";	//系统当前版本
+	public final static String SYSTEM_VERRSION = "1.8.10";	//系统当前版本
 	public static final String SYSTEM_SYSNAME = "报关打印系统";	//系统名称
 	public static final String DES_PASSWORD = "9588028820109132570743325311898426347857298773549468758875018579537757772163084478873699447306034466200616411960574122434059469100235892702736860872901247123456";		//DES密钥
 	

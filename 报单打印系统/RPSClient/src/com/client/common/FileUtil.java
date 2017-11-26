@@ -240,6 +240,7 @@ public class FileUtil {
 					GlobalParam.PRINT_DECLARENUM = logis.getDeclarenum();
 					GlobalParam.PRINT_CONSIGNERCOUNTRY = logis.getConsignercountry();
 					GlobalParam.PRINT_IMPORTSER = logis.getImportnum()+"";
+					GlobalParam.PRINT_BIGPEN = logis.getBigpen();
 					i++;
     			}
     		}
