@@ -209,7 +209,7 @@ public class ExcelUtil {
 	                {
 	                	cellValue = cell.toString() + "";
 	                }
-	                rowLst.add(cellValue);
+	                rowLst.add(cellValue.trim());
 	            }
 	            dataLst.add(rowLst);
 	        }
@@ -682,7 +682,7 @@ public class ExcelUtil {
         cell.setCellValue("英文品牌");  
         cell.setCellStyle(style);  
         cell = row.createCell((short) k++);
-        cell.setCellValue("重量");
+        cell.setCellValue("重量(kg)");
         cell.setCellStyle(style);
         cell = row.createCell((short) k++); 
         cell.setCellValue("收件人姓名");
@@ -723,7 +723,7 @@ public class ExcelUtil {
             cell.setCellValue(llist.getDeclarenum()); 
             cell.setCellStyle(styleLeft);
             cell = row.createCell((short) k++);
-            cell.setCellValue(llist.getConsigneename()); 
+            cell.setCellValue(llist.getCargoname()); 
             cell.setCellStyle(styleLeft);
             cell = row.createCell((short) k++);
             cell.setCellValue(llist.getBrand()); 
@@ -1008,6 +1008,6 @@ public class ExcelUtil {
     public static void main(String[] args) throws Exception
     {
     	String  str= "云南省^保山市^隆阳区永昌街道隆阳龙泉路延长线起亚4S店".replace("^","");
-    	System.out.println(str);
+    	System.out.println(Double.parseDouble("0.699"));
     }
 }
